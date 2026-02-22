@@ -1,7 +1,10 @@
 import os
+import json
+import tempfile
 from typing import Dict, List, Any, Tuple
 
 from google.cloud import bigquery
+from google.oauth2 import service_account
 from google.api_core.exceptions import GoogleAPIError
 
 
@@ -9,6 +12,15 @@ def _get_client() -> bigquery.Client:
     project_id = os.getenv("BQ_PROJECT_ID")
     if not project_id:
         raise ValueError("BQ_PROJECT_ID is not set")
+    
+    # Check for JSON credentials in environment variable
+    creds_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+    if creds_json:
+        creds_dict = json.loads(creds_json)
+        credentials = service_account.Credentials.from_service_account_info(creds_dict)
+        return bigquery.Client(project=project_id, credentials=credentials)
+    
+    # Fall back to default credentials (local development)
     return bigquery.Client(project=project_id)
 
 
