@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PayrollOS | Tablero de Nómina</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#13a4ec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101c22",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #e2e8f0;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body class="bg-background-light text-slate-900 antialiased font-display">
+    <div class="flex h-screen overflow-hidden">
+      <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0">
+        <div class="p-6 flex items-center gap-3">
+          <div class="bg-primary p-2 rounded-lg text-white">
+            <span class="material-symbols-outlined align-middle">account_balance_wallet</span>
+          </div>
+          <h1 class="text-xl font-bold tracking-tight text-slate-900">PayrollOS</h1>
+        </div>
+        <nav class="flex-1 px-4 py-4 space-y-1">
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary font-medium" href="#">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span>Dashboard</span>
+          </a>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors" href="#">
+            <span class="material-symbols-outlined">group</span>
+            <span>Empleados</span>
+          </a>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors" href="#">
+            <span class="material-symbols-outlined">receipt_long</span>
+            <span>Liquidaciones</span>
+          </a>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors" href="#">
+            <span class="material-symbols-outlined">analytics</span>
+            <span>Reportes de costo</span>
+          </a>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors" href="#">
+            <span class="material-symbols-outlined">history_edu</span>
+            <span>Compliance</span>
+          </a>
+          <div class="pt-4 pb-2 px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Sistema</div>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors" href="#">
+            <span class="material-symbols-outlined">settings</span>
+            <span>Configuración</span>
+          </a>
+        </nav>
+        <div class="p-4 mt-auto border-t border-slate-200">
+          <button class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold py-2.5 px-4 rounded-lg transition-all">
+            <span class="material-symbols-outlined text-sm">play_arrow</span>
+            <span>Ejecutar nómina</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="flex-1 overflow-y-auto custom-scrollbar bg-background-light">
+        <header class="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-slate-200 px-8 py-4 flex items-center justify-between">
+          <div class="flex items-center gap-4 flex-1 max-w-xl">
+            <div class="relative w-full">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+              <input
+                class="w-full pl-10 pr-4 py-2 bg-slate-100 border-none rounded-lg focus:ring-2 focus:ring-primary text-sm"
+                placeholder="Buscar empleados, reportes o transacciones..."
+                type="text"
+              />
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <button class="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+              <span class="material-symbols-outlined text-base">calendar_today</span>
+              <span id="period-label">Jan 2024 - Dec 2024</span>
+            </button>
+            <button class="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+              <span class="material-symbols-outlined text-base">download</span>
+              <span>Exportar CSV</span>
+            </button>
+            <div class="h-8 w-px bg-slate-200 mx-2"></div>
+            <div class="flex items-center gap-3">
+              <div class="text-right hidden sm:block">
+                <p class="text-sm font-semibold">Finanzas</p>
+                <p class="text-xs text-slate-500">Acceso Admin</p>
+              </div>
+              <div class="h-10 w-10 rounded-full bg-gradient-to-br from-primary/60 to-indigo-400 flex items-center justify-center text-white font-semibold">FA</div>
+            </div>
+          </div>
+        </header>
+
+        <div class="p-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8" id="kpi-grid">
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+              <div class="flex justify-between items-start mb-4">
+                <div class="p-2 bg-primary/10 rounded-lg text-primary">
+                  <span class="material-symbols-outlined">payments</span>
+                </div>
+                <span class="text-emerald-500 text-sm font-medium flex items-center bg-emerald-50 px-2 py-0.5 rounded-full">
+                  <span class="material-symbols-outlined text-xs">trending_up</span> 0.0%
+                </span>
+              </div>
+              <p class="text-slate-500 text-sm font-medium">Cargando...</p>
+              <h3 class="text-2xl font-bold mt-1">$0</h3>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+              <div class="flex items-center justify-between mb-8">
+                <div>
+                  <h3 class="text-lg font-bold">Comparativo mensual</h3>
+                  <p class="text-sm text-slate-500">Costo real vs proyectado (últimos 6 meses)</p>
+                </div>
+                <div class="flex gap-4">
+                  <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 bg-primary rounded-full"></div>
+                    <span class="text-xs text-slate-500">Costo real</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 bg-slate-200 rounded-full"></div>
+                    <span class="text-xs text-slate-500">Proyectado</span>
+                  </div>
+                </div>
+              </div>
+              <div class="h-64 flex items-end justify-between gap-4 px-2" id="monthly-bars"></div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+              <h3 class="text-lg font-bold mb-1">Desglose de costo</h3>
+              <p class="text-sm text-slate-500 mb-8">Distribución por componentes</p>
+              <div class="relative flex justify-center mb-8">
+                <svg class="w-40 h-40 transform -rotate-90" id="donut-chart"></svg>
+                <div class="absolute inset-0 flex items-center justify-center flex-col">
+                  <span class="text-2xl font-bold" id="donut-total">100%</span>
+                  <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">Total</span>
+                </div>
+              </div>
+              <div class="space-y-3" id="breakdown-list"></div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <h3 class="text-lg font-bold">Detalle por empleado</h3>
+              <div class="flex items-center gap-3">
+                <button class="text-sm font-medium px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">Filtros</button>
+                <button class="text-sm font-medium px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all">Agregar ajuste</button>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50">
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Empleado</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Rol</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Base</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Horas extra</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Comisión</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Provisiones</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Total</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Estado</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200" id="employee-table"></tbody>
+              </table>
+            </div>
+            <div class="px-6 py-4 border-t border-slate-200 flex items-center justify-between">
+              <p class="text-sm text-slate-500" id="table-summary">Mostrando 0 empleados</p>
+              <div class="flex items-center gap-2">
+                <button class="px-3 py-1 border border-slate-200 rounded text-sm hover:bg-slate-50">Anterior</button>
+                <button class="px-3 py-1 bg-primary text-white rounded text-sm">1</button>
+                <button class="px-3 py-1 border border-slate-200 rounded text-sm hover:bg-slate-50">2</button>
+                <button class="px-3 py-1 border border-slate-200 rounded text-sm hover:bg-slate-50">Siguiente</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const API_BASE = "http://localhost:8000";
+
+      const formatCurrency = (value, currency = "USD") => {
+        return new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency,
+          maximumFractionDigits: 0,
+        }).format(value || 0);
+      };
+
+      const formatPercent = (value) => `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
+
+      const trendClass = (trend) =>
+        trend === "down" ? "text-rose-500 bg-rose-50" : "text-emerald-500 bg-emerald-50";
+
+      const trendIcon = (trend) => (trend === "down" ? "trending_down" : "trending_up");
+
+      const statusClass = (status) => {
+        switch (status) {
+          case "Paid":
+            return "bg-emerald-100 text-emerald-800";
+          case "Processing":
+            return "bg-primary/10 text-primary";
+          case "Pending":
+            return "bg-amber-100 text-amber-800";
+          default:
+            return "bg-slate-100 text-slate-700";
+        }
+      };
+
+      const buildKPIs = (kpis, currency) => {
+        const grid = document.getElementById("kpi-grid");
+        grid.innerHTML = "";
+        const icons = ["payments", "person", "account_balance", "schedule"];
+
+        kpis.forEach((kpi, index) => {
+          const card = document.createElement("div");
+          card.className = "bg-white p-6 rounded-xl border border-slate-200 shadow-sm";
+          card.innerHTML = `
+            <div class="flex justify-between items-start mb-4">
+              <div class="p-2 bg-primary/10 rounded-lg text-primary">
+                <span class="material-symbols-outlined">${icons[index] || "insights"}</span>
+              </div>
+              <span class="text-sm font-medium flex items-center px-2 py-0.5 rounded-full ${trendClass(kpi.trend)}">
+                <span class="material-symbols-outlined text-xs">${trendIcon(kpi.trend)}</span>
+                ${formatPercent(kpi.change_pct)}
+              </span>
+            </div>
+            <p class="text-slate-500 text-sm font-medium">${kpi.label}</p>
+            <h3 class="text-2xl font-bold mt-1">${formatCurrency(kpi.value, currency)}</h3>
+          `;
+          grid.appendChild(card);
+        });
+      };
+
+      const buildMonthlyBars = (monthlyCosts, currency) => {
+        const container = document.getElementById("monthly-bars");
+        container.innerHTML = "";
+        const maxValue = Math.max(...monthlyCosts.map((item) => item.actual));
+
+        monthlyCosts.forEach((item) => {
+          const heightActual = (item.actual / maxValue) * 100;
+          const heightProjected = (item.projected / maxValue) * 100;
+
+          const wrapper = document.createElement("div");
+          wrapper.className = "flex flex-col items-center flex-1 gap-2";
+          wrapper.innerHTML = `
+            <div class="w-full bg-slate-100 rounded-t-lg relative" style="height: 180px;">
+              <div class="absolute bottom-0 w-full bg-primary rounded-t-lg" style="height: ${heightActual}%;"></div>
+              <div class="absolute bottom-0 w-full bg-slate-200 rounded-t-lg opacity-70" style="height: ${heightProjected}%;"></div>
+            </div>
+            <span class="text-xs font-medium text-slate-500">${item.month}</span>
+            <span class="text-[10px] text-slate-400">${formatCurrency(item.actual, currency)}</span>
+          `;
+          container.appendChild(wrapper);
+        });
+      };
+
+      const buildDonut = (breakdown) => {
+        const svg = document.getElementById("donut-chart");
+        const list = document.getElementById("breakdown-list");
+        svg.innerHTML = "";
+        list.innerHTML = "";
+
+        const radius = 70;
+        const circumference = 2 * Math.PI * radius;
+        const colors = ["#13a4ec", "#6366f1", "#f59e0b", "#10b981"];
+        let offset = 0;
+
+        breakdown.forEach((item, index) => {
+          const slice = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          slice.setAttribute("cx", "80");
+          slice.setAttribute("cy", "80");
+          slice.setAttribute("r", radius.toString());
+          slice.setAttribute("fill", "transparent");
+          slice.setAttribute("stroke", colors[index % colors.length]);
+          slice.setAttribute("stroke-width", "20");
+          slice.setAttribute("stroke-linecap", "round");
+          slice.setAttribute("stroke-dasharray", circumference.toString());
+          const dashOffset = circumference - (item.percent / 100) * circumference - offset;
+          slice.setAttribute("stroke-dashoffset", dashOffset.toString());
+          svg.appendChild(slice);
+
+          const row = document.createElement("div");
+          row.className = "flex items-center justify-between";
+          row.innerHTML = `
+            <div class="flex items-center gap-2">
+              <div class="w-2.5 h-2.5 rounded-full" style="background:${colors[index % colors.length]}"></div>
+              <span class="text-sm text-slate-600">${item.label}</span>
+            </div>
+            <span class="text-sm font-semibold">${item.percent.toFixed(0)}%</span>
+          `;
+          list.appendChild(row);
+
+          offset += (item.percent / 100) * circumference;
+        });
+      };
+
+      const buildEmployees = (employees, currency) => {
+        const table = document.getElementById("employee-table");
+        table.innerHTML = "";
+
+        employees.forEach((employee) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-semibold text-slate-600">
+                  ${employee.name.split(" ").map((part) => part[0]).join("").slice(0, 2)}
+                </div>
+                <div>
+                  <p class="text-sm font-semibold">${employee.name}</p>
+                  <p class="text-xs text-slate-500">${employee.id}</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-sm">${employee.role}</td>
+            <td class="px-6 py-4 text-sm text-right font-medium">${formatCurrency(employee.base_salary, currency)}</td>
+            <td class="px-6 py-4 text-sm text-right">${formatCurrency(employee.overtime, currency)}</td>
+            <td class="px-6 py-4 text-sm text-right">${employee.commission ? formatCurrency(employee.commission, currency) : "—"}</td>
+            <td class="px-6 py-4 text-sm text-right">${formatCurrency(employee.provisions, currency)}</td>
+            <td class="px-6 py-4 text-sm text-right font-bold text-slate-900">${formatCurrency(employee.total_cost, currency)}</td>
+            <td class="px-6 py-4 text-center">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusClass(employee.status)}">${employee.status}</span>
+            </td>
+          `;
+          table.appendChild(row);
+        });
+
+        const summary = document.getElementById("table-summary");
+        summary.textContent = `Mostrando 1 a ${employees.length} de ${employees.length} empleados`;
+      };
+
+      const loadDashboard = async () => {
+        try {
+          const response = await fetch(`${API_BASE}/api/overview`);
+          if (!response.ok) throw new Error("No se pudo cargar el tablero");
+          const data = await response.json();
+
+          document.getElementById("period-label").textContent = data.period;
+          buildKPIs(data.kpis, data.currency);
+          buildMonthlyBars(data.monthly_costs, data.currency);
+          buildDonut(data.cost_breakdown);
+          buildEmployees(data.employees, data.currency);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      loadDashboard();
+    </script>
+  </body>
+</html>
