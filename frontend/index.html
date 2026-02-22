@@ -186,13 +186,13 @@
                 <thead>
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Empleado</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Rol</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Base</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Horas extra</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Comisión</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Área</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Contrato</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Ingresos</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Descuentos</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Provisiones</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Total</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Estado</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">H. Extras</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Neto</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200" id="employee-table"></tbody>
@@ -331,39 +331,40 @@
         });
       };
 
-      const buildEmployees = (employees, currency) => {
+      const buildEmployees = (employees, currency, totalEmployees) => {
         const table = document.getElementById("employee-table");
         table.innerHTML = "";
 
         employees.forEach((employee) => {
+          const initials = (employee.nombre || "NN").split(" ").map((part) => part[0]).join("").slice(0, 2);
           const row = document.createElement("tr");
           row.innerHTML = `
             <td class="px-6 py-4">
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-semibold text-slate-600">
-                  ${employee.name.split(" ").map((part) => part[0]).join("").slice(0, 2)}
+                  ${initials}
                 </div>
                 <div>
-                  <p class="text-sm font-semibold">${employee.name}</p>
-                  <p class="text-xs text-slate-500">${employee.id}</p>
+                  <p class="text-sm font-semibold">${employee.nombre || "—"}</p>
+                  <p class="text-xs text-slate-500">${employee.cedula || "—"}</p>
                 </div>
               </div>
             </td>
-            <td class="px-6 py-4 text-sm">${employee.role}</td>
-            <td class="px-6 py-4 text-sm text-right font-medium">${formatCurrency(employee.base_salary, currency)}</td>
-            <td class="px-6 py-4 text-sm text-right">${formatCurrency(employee.overtime, currency)}</td>
-            <td class="px-6 py-4 text-sm text-right">${employee.commission ? formatCurrency(employee.commission, currency) : "—"}</td>
-            <td class="px-6 py-4 text-sm text-right">${formatCurrency(employee.provisions, currency)}</td>
-            <td class="px-6 py-4 text-sm text-right font-bold text-slate-900">${formatCurrency(employee.total_cost, currency)}</td>
-            <td class="px-6 py-4 text-center">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusClass(employee.status)}">${employee.status}</span>
+            <td class="px-6 py-4 text-sm">${employee.area || "—"}</td>
+            <td class="px-6 py-4 text-sm">
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">${employee.tipo_contrato || "—"}</span>
             </td>
+            <td class="px-6 py-4 text-sm text-right font-medium text-emerald-600">${formatCurrency(employee.total_ingresos, currency)}</td>
+            <td class="px-6 py-4 text-sm text-right text-rose-500">${formatCurrency(employee.total_descuentos, currency)}</td>
+            <td class="px-6 py-4 text-sm text-right">${formatCurrency(employee.total_provisiones, currency)}</td>
+            <td class="px-6 py-4 text-sm text-right">${formatCurrency(employee.horas_extras, currency)}</td>
+            <td class="px-6 py-4 text-sm text-right font-bold text-slate-900">${formatCurrency(employee.a_recibir, currency)}</td>
           `;
           table.appendChild(row);
         });
 
         const summary = document.getElementById("table-summary");
-        summary.textContent = `Mostrando 1 a ${employees.length} de ${employees.length} empleados`;
+        summary.textContent = `Mostrando 1 a ${employees.length} de ${totalEmployees || employees.length} empleados`;
       };
 
       const loadDashboard = async () => {
@@ -372,13 +373,17 @@
           if (!response.ok) throw new Error("No se pudo cargar el tablero");
           const data = await response.json();
 
-          document.getElementById("period-label").textContent = data.period;
-          buildKPIs(data.kpis, data.currency);
-          buildMonthlyBars(data.monthly_costs, data.currency);
-          buildDonut(data.cost_breakdown);
-          buildEmployees(data.employees, data.currency);
+          if (data.error) {
+            console.error("Error del servidor:", data.error);
+          }
+
+          document.getElementById("period-label").textContent = data.period || "2024";
+          if (data.kpis && data.kpis.length) buildKPIs(data.kpis, data.currency);
+          if (data.monthly_costs && data.monthly_costs.length) buildMonthlyBars(data.monthly_costs, data.currency);
+          if (data.cost_breakdown && data.cost_breakdown.length) buildDonut(data.cost_breakdown);
+          if (data.employees && data.employees.length) buildEmployees(data.employees, data.currency, data.total_employees);
         } catch (error) {
-          console.error(error);
+          console.error("Error cargando dashboard:", error);
         }
       };
 
