@@ -32,41 +32,68 @@ def _get_table_ref() -> str:
 
 
 def fetch_kpis() -> List[Dict[str, Any]]:
-    """Calcula KPIs agregados de la nómina."""
+    """Calcula KPIs agregados de la nómina según requerimientos del especialista."""
     client = _get_client()
     table = _get_table_ref()
     
     query = f"""
         SELECT
-            SUM(Total_INGRESOS) as total_ingresos,
-            SUM(Total_DESCUENTOS) as total_descuentos,
-            SUM(Total_PROVISIONES) as total_provisiones,
-            SUM(A_RECIBIR) as total_neto,
-            SUM(COALESCE(H_EXT_100, 0) + COALESCE(H_EXT_50, 0)) as total_horas_extras,
+            -- Costo total por empleado (ingresos + provisiones)
+            SUM(COALESCE(Total_INGRESOS, 0) + COALESCE(Total_PROVISIONES, 0)) as costo_total,
+            
+            -- Total empleados únicos
             COUNT(DISTINCT CEDULA) as total_empleados,
-            AVG(Total_INGRESOS) as promedio_ingreso
+            
+            -- Provisiones desglosadas (las que se guardan mensualmente)
+            SUM(COALESCE(DECIMO_13, 0)) as decimo_tercero,
+            SUM(COALESCE(DECIMO_14_S, 0)) as decimo_cuarto,
+            SUM(COALESCE(VACACIONES_PROVISIONES, 0)) as vacaciones_prov,
+            SUM(COALESCE(FOND_RESERVA, 0)) as fondos_reserva,
+            SUM(COALESCE(Total_PROVISIONES, 0)) as total_provisiones,
+            
+            -- Provisiones pagadas mensualmente
+            SUM(COALESCE(D13_MENS, 0)) as d13_mensual,
+            SUM(COALESCE(D14_MENS_SIE, 0)) as d14_mensual,
+            SUM(COALESCE(FOND_RESERV, 0)) as fondo_reserv_mensual,
+            
+            -- Horas extras
+            SUM(COALESCE(H_EXT_100, 0)) as horas_ext_100,
+            SUM(COALESCE(H_EXT_50, 0)) as horas_ext_50,
+            SUM(COALESCE(H_EXT_100, 0) + COALESCE(H_EXT_50, 0)) as total_horas_extras,
+            
+            -- Recargo nocturno
+            SUM(COALESCE(RECNOCTURNO, 0)) as recargo_nocturno,
+            
+            -- Neto a pagar
+            SUM(COALESCE(A_RECIBIR, 0)) as total_neto
         FROM {table}
     """
     
     result = client.query(query).result()
     row = list(result)[0]
     
-    total_ingresos = float(row.total_ingresos or 0)
+    costo_total = float(row.costo_total or 0)
+    total_empleados = int(row.total_empleados or 1)
     total_provisiones = float(row.total_provisiones or 0)
     total_horas_extras = float(row.total_horas_extras or 0)
-    promedio_ingreso = float(row.promedio_ingreso or 0)
+    total_neto = float(row.total_neto or 0)
+    
+    # Costo promedio por empleado (ingresos + provisiones)
+    costo_por_empleado = costo_total / total_empleados if total_empleados > 0 else 0
     
     return [
         {
             "label": "Costo Total Nómina",
-            "value": total_ingresos + total_provisiones,
+            "value": costo_total,
+            "subtitle": f"{total_empleados} empleados",
             "change_pct": 0.0,
             "trend": "up",
             "icon": "payments"
         },
         {
-            "label": "Promedio por Empleado",
-            "value": promedio_ingreso,
+            "label": "Costo por Empleado",
+            "value": costo_por_empleado,
+            "subtitle": "Ingresos + Provisiones",
             "change_pct": 0.0,
             "trend": "up",
             "icon": "person"
@@ -74,54 +101,70 @@ def fetch_kpis() -> List[Dict[str, Any]]:
         {
             "label": "Total Provisiones",
             "value": total_provisiones,
+            "subtitle": "D13 + D14 + Vac + F.Res",
             "change_pct": 0.0,
             "trend": "up",
-            "icon": "account_balance"
+            "icon": "savings"
         },
         {
             "label": "Horas Extras",
             "value": total_horas_extras,
+            "subtitle": "100% + 50%",
             "change_pct": 0.0,
             "trend": "up",
             "icon": "schedule"
+        },
+        {
+            "label": "Neto a Pagar",
+            "value": total_neto,
+            "subtitle": "Líquido empleados",
+            "change_pct": 0.0,
+            "trend": "up",
+            "icon": "account_balance_wallet"
         }
     ]
 
 
 def fetch_cost_breakdown() -> List[Dict[str, Any]]:
-    """Obtiene el desglose de costos por categoría."""
+    """Obtiene el desglose detallado de provisiones y costos."""
     client = _get_client()
     table = _get_table_ref()
     
     query = f"""
         SELECT
-            SUM(COALESCE(ANT_SUELDO, 0)) as salario_base,
-            SUM(COALESCE(Total_PROVISIONES, 0)) as provisiones,
-            SUM(COALESCE(H_EXT_100, 0) + COALESCE(H_EXT_50, 0) + COALESCE(RECNOCTURNO, 0)) as extras,
-            SUM(COALESCE(LUNCH, 0) + COALESCE(REMUN_UNIF, 0)) as beneficios,
-            SUM(COALESCE(Total_INGRESOS, 0)) as total
+            -- Provisiones que se guardan
+            SUM(COALESCE(DECIMO_13, 0)) as decimo_13,
+            SUM(COALESCE(DECIMO_14_S, 0)) as decimo_14,
+            SUM(COALESCE(VACACIONES_PROVISIONES, 0)) as vacaciones,
+            SUM(COALESCE(FOND_RESERVA, 0)) as fondos_reserva,
+            SUM(COALESCE(IESS_PATRONAL, 0)) as iess_patronal,
+            
+            -- Total para calcular porcentajes
+            SUM(COALESCE(Total_PROVISIONES, 0)) as total_provisiones
         FROM {table}
     """
     
     result = client.query(query).result()
     row = list(result)[0]
     
-    total = float(row.total or 1)
-    salario = float(row.salario_base or 0)
-    provisiones = float(row.provisiones or 0)
-    extras = float(row.extras or 0)
-    beneficios = float(row.beneficios or 0)
+    total = float(row.total_provisiones or 1)
+    decimo_13 = float(row.decimo_13 or 0)
+    decimo_14 = float(row.decimo_14 or 0)
+    vacaciones = float(row.vacaciones or 0)
+    fondos_reserva = float(row.fondos_reserva or 0)
+    iess_patronal = float(row.iess_patronal or 0)
     
     return [
-        {"label": "Salario Base", "percent": round((salario / total) * 100, 1) if total else 0, "value": salario},
-        {"label": "Provisiones", "percent": round((provisiones / total) * 100, 1) if total else 0, "value": provisiones},
-        {"label": "Horas Extras", "percent": round((extras / total) * 100, 1) if total else 0, "value": extras},
-        {"label": "Beneficios", "percent": round((beneficios / total) * 100, 1) if total else 0, "value": beneficios},
+        {"label": "Décimo Tercero", "percent": round((decimo_13 / total) * 100, 1) if total else 0, "value": decimo_13},
+        {"label": "Décimo Cuarto", "percent": round((decimo_14 / total) * 100, 1) if total else 0, "value": decimo_14},
+        {"label": "Vacaciones", "percent": round((vacaciones / total) * 100, 1) if total else 0, "value": vacaciones},
+        {"label": "Fondos Reserva", "percent": round((fondos_reserva / total) * 100, 1) if total else 0, "value": fondos_reserva},
+        {"label": "IESS Patronal", "percent": round((iess_patronal / total) * 100, 1) if total else 0, "value": iess_patronal},
     ]
 
 
 def fetch_monthly_costs() -> List[Dict[str, Any]]:
-    """Placeholder para costos mensuales."""
+    """Placeholder para costos mensuales - requiere campo de fecha/periodo en la tabla."""
     return [
         {"month": "Jul", "actual": 0, "projected": 0},
         {"month": "Ago", "actual": 0, "projected": 0},
