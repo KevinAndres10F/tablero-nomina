@@ -179,5 +179,3 @@ def fetch_overview() -> Dict[str, Any]:
             "total_employees": 0,
             "error": str(e)
         }
-        **METADATA,
-    }
