@@ -107,21 +107,9 @@
               </select>
             </div>
             <div class="flex items-center gap-2">
-              <label class="text-xs font-medium text-slate-500">MES</label>
-              <select id="filter-mes" class="text-sm border border-slate-200 rounded-lg px-3 py-1.5 bg-white focus:ring-2 focus:ring-primary focus:border-primary">
-                <option value="">Todos</option>
-                <option value="1">Enero</option>
-                <option value="2">Febrero</option>
-                <option value="3">Marzo</option>
-                <option value="4">Abril</option>
-                <option value="5">Mayo</option>
-                <option value="6">Junio</option>
-                <option value="7">Julio</option>
-                <option value="8">Agosto</option>
-                <option value="9">Septiembre</option>
-                <option value="10">Octubre</option>
-                <option value="11">Noviembre</option>
-                <option value="12">Diciembre</option>
+              <label class="text-xs font-medium text-slate-500">PERÍODO</label>
+              <select id="filter-periodo" class="text-sm border border-slate-200 rounded-lg px-3 py-1.5 bg-white focus:ring-2 focus:ring-primary focus:border-primary min-w-[150px]">
+                <option value="">Todos los períodos</option>
               </select>
             </div>
             <div class="flex items-center gap-2">
@@ -471,7 +459,8 @@
       // Estado global
       let allEmployees = [];
       let currentPage = 'dashboard';
-      let filters = { area: '', contrato: '', mes: '', empleado: '' };
+      let filters = { area: '', contrato: '', periodo: '', empleado: '' };
+      let filterOptions = { areas: [], contratos: [], periodos: [] };
 
       const formatCurrency = (value, currency = "USD") => {
         return new Intl.NumberFormat("es-ES", {
@@ -512,7 +501,7 @@
       });
 
       // Filtros
-      const populateFilters = (employees) => {
+      const populateFilters = (employees, filterOptions) => {
         const areas = [...new Set(employees.map(e => e.area).filter(Boolean))].sort();
         const contratos = [...new Set(employees.map(e => e.tipo_contrato).filter(Boolean))].sort();
         const nombres = employees.map(e => ({ nombre: e.nombre, cedula: e.cedula })).sort((a, b) => a.nombre.localeCompare(b.nombre));
@@ -520,33 +509,54 @@
         const areaSelect = document.getElementById('filter-area');
         const contratoSelect = document.getElementById('filter-contrato');
         const empleadoSelect = document.getElementById('filter-empleado');
+        const periodoSelect = document.getElementById('filter-periodo');
         
-        areaSelect.innerHTML = '<option value="">Todas</option>' + areas.map(a => `<option value="${a}">${a}</option>`).join('');
-        contratoSelect.innerHTML = '<option value="">Todos</option>' + contratos.map(c => `<option value="${c}">${c}</option>`).join('');
+        // Usar opciones del backend si están disponibles
+        const areasToUse = filterOptions?.areas?.length > 0 ? filterOptions.areas : areas;
+        const contratosToUse = filterOptions?.contratos?.length > 0 ? filterOptions.contratos : contratos;
+        
+        areaSelect.innerHTML = '<option value="">Todas</option>' + areasToUse.map(a => `<option value="${a}">${a}</option>`).join('');
+        contratoSelect.innerHTML = '<option value="">Todos</option>' + contratosToUse.map(c => `<option value="${c}">${c}</option>`).join('');
         empleadoSelect.innerHTML = '<option value="">Todos</option>' + nombres.map(n => `<option value="${n.cedula}">${n.nombre}</option>`).join('');
+        
+        // Poblar períodos desde la base de datos
+        if (filterOptions?.periodos?.length > 0) {
+          periodoSelect.innerHTML = '<option value="">Todos los períodos</option>' + 
+            filterOptions.periodos.map(p => `<option value="${p.value}">${p.label}</option>`).join('');
+        } else {
+          // Si no hay períodos en la BD, deshabilitar el filtro
+          periodoSelect.innerHTML = '<option value="">Sin períodos disponibles</option>';
+          periodoSelect.disabled = true;
+        }
       };
 
-      const applyFilters = () => {
+      const applyFilters = async () => {
         filters.area = document.getElementById('filter-area').value;
         filters.contrato = document.getElementById('filter-contrato').value;
-        filters.mes = document.getElementById('filter-mes').value;
+        filters.periodo = document.getElementById('filter-periodo').value;
         filters.empleado = document.getElementById('filter-empleado').value;
         
-        let filtered = [...allEmployees];
-        if (filters.area) filtered = filtered.filter(e => e.area === filters.area);
-        if (filters.contrato) filtered = filtered.filter(e => e.tipo_contrato === filters.contrato);
-        if (filters.empleado) filtered = filtered.filter(e => e.cedula === filters.empleado);
-        
-        updateAllViews(filtered);
+        // Si hay filtro de período, recargar datos del backend
+        if (filters.periodo) {
+          await loadDashboard(filters.periodo);
+        } else {
+          // Filtrar localmente para área, contrato y empleado
+          let filtered = [...allEmployees];
+          if (filters.area) filtered = filtered.filter(e => e.area === filters.area);
+          if (filters.contrato) filtered = filtered.filter(e => e.tipo_contrato === filters.contrato);
+          if (filters.empleado) filtered = filtered.filter(e => e.cedula === filters.empleado);
+          
+          updateAllViews(filtered);
+        }
       };
 
-      const clearFilters = () => {
+      const clearFilters = async () => {
         document.getElementById('filter-area').value = '';
         document.getElementById('filter-contrato').value = '';
-        document.getElementById('filter-mes').value = '';
+        document.getElementById('filter-periodo').value = '';
         document.getElementById('filter-empleado').value = '';
-        filters = { area: '', contrato: '', mes: '', empleado: '' };
-        updateAllViews(allEmployees);
+        filters = { area: '', contrato: '', periodo: '', empleado: '' };
+        await loadDashboard();
       };
 
       document.getElementById('apply-filters').addEventListener('click', applyFilters);
@@ -1014,9 +1024,15 @@
         return filtered;
       };
 
-      const loadDashboard = async () => {
+      const loadDashboard = async (periodo = null) => {
         try {
-          const response = await fetch(`${API_BASE}/api/overview`);
+          // Construir URL con parámetros de filtro
+          let url = `${API_BASE}/api/overview`;
+          if (periodo) {
+            url += `?periodo=${encodeURIComponent(periodo)}`;
+          }
+          
+          const response = await fetch(url);
           if (!response.ok) throw new Error("No se pudo cargar el tablero");
           const data = await response.json();
 
@@ -1024,16 +1040,23 @@
             console.error("Error del servidor:", data.error);
           }
 
-          document.getElementById("period-label").textContent = data.period || "2024";
+          document.getElementById("period-label").textContent = data.period || "Todos los períodos";
           
-          // Guardar empleados globalmente
+          // Guardar empleados y opciones de filtro globalmente
           allEmployees = data.employees || [];
+          filterOptions = data.filter_options || { areas: [], contratos: [], periodos: [] };
           
-          // Poblar filtros
-          populateFilters(allEmployees);
+          // Poblar filtros con opciones del backend
+          populateFilters(allEmployees, filterOptions);
+          
+          // Aplicar filtros locales si existen (área, contrato, empleado)
+          let displayEmployees = [...allEmployees];
+          if (filters.area) displayEmployees = displayEmployees.filter(e => e.area === filters.area);
+          if (filters.contrato) displayEmployees = displayEmployees.filter(e => e.tipo_contrato === filters.contrato);
+          if (filters.empleado) displayEmployees = displayEmployees.filter(e => e.cedula === filters.empleado);
           
           // Actualizar todas las vistas
-          updateAllViews(allEmployees);
+          updateAllViews(displayEmployees);
           
         } catch (error) {
           console.error("Error cargando dashboard:", error);

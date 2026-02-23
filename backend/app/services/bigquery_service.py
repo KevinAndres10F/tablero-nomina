@@ -1,7 +1,7 @@
 import os
 import json
 import tempfile
-from typing import Dict, List, Any, Tuple
+from typing import Dict, List, Any, Tuple, Optional
 
 from google.cloud import bigquery
 from google.oauth2 import service_account
@@ -31,7 +31,93 @@ def _get_table_ref() -> str:
     return f"`{project}.{dataset}.{table}`"
 
 
-def fetch_kpis() -> List[Dict[str, Any]]:
+def fetch_available_periods() -> List[Dict[str, Any]]:
+    """Obtiene los períodos (año-mes) disponibles en la base de datos."""
+    client = _get_client()
+    table = _get_table_ref()
+    
+    # Intentar obtener períodos de la columna PERIODO o MES si existe
+    # Si no existe, usar la tabla completa sin filtro de período
+    try:
+        # Primero intentamos con PERIODO
+        query = f"""
+            SELECT DISTINCT 
+                PERIODO as periodo
+            FROM {table}
+            WHERE PERIODO IS NOT NULL
+            ORDER BY PERIODO DESC
+        """
+        result = client.query(query).result()
+        periods = []
+        for row in result:
+            periodo = str(row.periodo)
+            # Parsear el período (formato esperado: YYYY-MM o similar)
+            if '-' in periodo:
+                parts = periodo.split('-')
+                year = parts[0]
+                month = parts[1] if len(parts) > 1 else '01'
+            else:
+                # Si es solo año o número
+                year = periodo[:4] if len(periodo) >= 4 else periodo
+                month = periodo[4:6] if len(periodo) >= 6 else '01'
+            
+            periods.append({
+                "value": periodo,
+                "year": year,
+                "month": month.zfill(2),
+                "label": f"{_month_name(int(month))} {year}"
+            })
+        return periods
+    except Exception as e:
+        # Si PERIODO no existe, retornar lista vacía (el filtro no aplicará)
+        print(f"No se pudo obtener períodos: {e}")
+        return []
+
+
+def _month_name(month: int) -> str:
+    """Retorna el nombre del mes en español."""
+    months = {
+        1: "Enero", 2: "Febrero", 3: "Marzo", 4: "Abril",
+        5: "Mayo", 6: "Junio", 7: "Julio", 8: "Agosto",
+        9: "Septiembre", 10: "Octubre", 11: "Noviembre", 12: "Diciembre"
+    }
+    return months.get(month, "")
+
+
+def fetch_filter_options() -> Dict[str, List[Any]]:
+    """Obtiene todas las opciones disponibles para filtros."""
+    client = _get_client()
+    table = _get_table_ref()
+    
+    query = f"""
+        SELECT DISTINCT 
+            AREA as area,
+            TIPO_CONTRATO as tipo_contrato
+        FROM {table}
+        WHERE AREA IS NOT NULL OR TIPO_CONTRATO IS NOT NULL
+    """
+    result = client.query(query).result()
+    
+    areas = set()
+    contratos = set()
+    
+    for row in result:
+        if row.area:
+            areas.add(row.area)
+        if row.tipo_contrato:
+            contratos.add(row.tipo_contrato)
+    
+    # Obtener períodos disponibles
+    periods = fetch_available_periods()
+    
+    return {
+        "areas": sorted(list(areas)),
+        "contratos": sorted(list(contratos)),
+        "periodos": periods
+    }
+
+
+def fetch_kpis(periodo: Optional[str] = None) -> List[Dict[str, Any]]:
     """Calcula KPIs agregados de la nómina según requerimientos del especialista."""
     client = _get_client()
     table = _get_table_ref()
@@ -175,12 +261,17 @@ def fetch_monthly_costs() -> List[Dict[str, Any]]:
     ]
 
 
-def fetch_employees(limit: int = 50, offset: int = 0) -> Tuple[List[Dict[str, Any]], int]:
+def fetch_employees(limit: int = 50, offset: int = 0, periodo: Optional[str] = None) -> Tuple[List[Dict[str, Any]], int]:
     """Obtiene el detalle de empleados con todos los campos necesarios."""
     client = _get_client()
     table = _get_table_ref()
     
-    count_query = f"SELECT COUNT(DISTINCT CEDULA) as total FROM {table}"
+    # Construir cláusula WHERE si hay período
+    where_clause = ""
+    if periodo:
+        where_clause = f"WHERE PERIODO = '{periodo}'"
+    
+    count_query = f"SELECT COUNT(*) as total FROM {table} {where_clause}"
     count_result = client.query(count_query).result()
     total = list(count_result)[0].total
     
@@ -210,6 +301,7 @@ def fetch_employees(limit: int = 50, offset: int = 0) -> Tuple[List[Dict[str, An
             COALESCE(PR_Q_IESS, 0) as pr_q_iess
             
         FROM {table}
+        {where_clause}
         ORDER BY Total_INGRESOS DESC
         LIMIT {limit} OFFSET {offset}
     """
@@ -220,13 +312,22 @@ def fetch_employees(limit: int = 50, offset: int = 0) -> Tuple[List[Dict[str, An
     return employees, total
 
 
-def fetch_overview() -> Dict[str, Any]:
-    """Obtiene todos los datos del dashboard."""
+def fetch_overview(periodo: Optional[str] = None) -> Dict[str, Any]:
+    """Obtiene todos los datos del dashboard con filtro opcional de período."""
     try:
         kpis = fetch_kpis()
         breakdown = fetch_cost_breakdown()
         monthly = fetch_monthly_costs()
-        employees, total_employees = fetch_employees()
+        employees, total_employees = fetch_employees(periodo=periodo)
+        filter_options = fetch_filter_options()
+        
+        # Determinar el período a mostrar
+        display_period = periodo if periodo else "Todos los períodos"
+        if filter_options.get("periodos") and not periodo:
+            # Si hay períodos disponibles, mostrar el rango
+            periods = filter_options["periodos"]
+            if len(periods) > 0:
+                display_period = f"{periods[-1]['label']} - {periods[0]['label']}" if len(periods) > 1 else periods[0]['label']
         
         return {
             "kpis": kpis,
@@ -234,8 +335,9 @@ def fetch_overview() -> Dict[str, Any]:
             "cost_breakdown": breakdown,
             "employees": employees,
             "currency": "USD",
-            "period": "2024",
-            "total_employees": total_employees
+            "period": display_period,
+            "total_employees": total_employees,
+            "filter_options": filter_options
         }
     except (GoogleAPIError, ValueError) as e:
         return {
@@ -246,5 +348,6 @@ def fetch_overview() -> Dict[str, Any]:
             "currency": "USD",
             "period": "2024",
             "total_employees": 0,
+            "filter_options": {"areas": [], "contratos": [], "periodos": []},
             "error": str(e)
         }

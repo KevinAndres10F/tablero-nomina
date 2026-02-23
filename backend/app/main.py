@@ -5,10 +5,11 @@ load_dotenv()
 
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
+from typing import Optional
 
-from app.services.bigquery_service import fetch_overview, fetch_employees
+from app.services.bigquery_service import fetch_overview, fetch_employees, fetch_filter_options
 
-app = FastAPI(title="PayrollOS Dashboard API", version="1.0.0")
+app = FastAPI(title="KAPIROLL Dashboard API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,10 +30,18 @@ def health_check() -> dict:
     }
 
 
+@app.get("/api/filters")
+def get_filters():
+    """Endpoint para obtener opciones de filtros disponibles."""
+    return fetch_filter_options()
+
+
 @app.get("/api/overview")
-def get_overview():
-    """Endpoint principal del dashboard."""
-    return fetch_overview()
+def get_overview(
+    periodo: Optional[str] = Query(default=None, description="Período en formato YYYY-MM")
+):
+    """Endpoint principal del dashboard con soporte para filtro de período."""
+    return fetch_overview(periodo=periodo)
 
 
 @app.get("/api/employees")
