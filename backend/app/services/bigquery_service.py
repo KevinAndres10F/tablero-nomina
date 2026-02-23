@@ -176,7 +176,7 @@ def fetch_monthly_costs() -> List[Dict[str, Any]]:
 
 
 def fetch_employees(limit: int = 50, offset: int = 0) -> Tuple[List[Dict[str, Any]], int]:
-    """Obtiene el detalle de empleados."""
+    """Obtiene el detalle de empleados con todos los campos necesarios."""
     client = _get_client()
     table = _get_table_ref()
     
@@ -190,11 +190,25 @@ def fetch_employees(limit: int = 50, offset: int = 0) -> Tuple[List[Dict[str, An
             NOMBRES as nombre,
             AREA as area,
             TIPO_CONTRATO as tipo_contrato,
+            FECHA_INGRESO as fecha_ingreso,
             Total_INGRESOS as total_ingresos,
             Total_DESCUENTOS as total_descuentos,
             Total_PROVISIONES as total_provisiones,
             A_RECIBIR as a_recibir,
-            (COALESCE(H_EXT_100, 0) + COALESCE(H_EXT_50, 0)) as horas_extras
+            (COALESCE(H_EXT_100, 0) + COALESCE(H_EXT_50, 0)) as horas_extras,
+            
+            -- Provisiones detalladas
+            COALESCE(DECIMO_13, 0) as decimo_13,
+            COALESCE(DECIMO_14_S, 0) as decimo_14,
+            COALESCE(VACACIONES_PROVISIONES, 0) as vacaciones_prov,
+            COALESCE(FOND_RESERVA, 0) as fondos_reserva,
+            COALESCE(IESS_PATRONAL, 0) as iess_patronal,
+            
+            -- IESS y Préstamos
+            COALESCE(IESS_PERSONAL, 0) as iess_personal,
+            COALESCE(PR_H_IESS, 0) as pr_h_iess,
+            COALESCE(PR_Q_IESS, 0) as pr_q_iess
+            
         FROM {table}
         ORDER BY Total_INGRESOS DESC
         LIMIT {limit} OFFSET {offset}
