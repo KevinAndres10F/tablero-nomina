@@ -91,6 +91,6 @@ EMPLOYEE_ROWS = [
 
 METADATA = {
     "currency": "USD",
-    "period": "Jan 2024 - Dec 2024",
+    "period": "Ene 2025 - Dic 2025",
     "generated_date": date.today().isoformat(),
 }

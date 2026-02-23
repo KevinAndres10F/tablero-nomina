@@ -346,7 +346,7 @@ def fetch_overview(periodo: Optional[str] = None) -> Dict[str, Any]:
             "cost_breakdown": [],
             "employees": [],
             "currency": "USD",
-            "period": "2024",
+            "period": "2025",
             "total_employees": 0,
             "filter_options": {"areas": [], "contratos": [], "periodos": []},
             "error": str(e)
