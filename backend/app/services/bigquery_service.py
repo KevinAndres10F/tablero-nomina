@@ -294,16 +294,140 @@ def fetch_cost_breakdown() -> List[Dict[str, Any]]:
     ]
 
 
-def fetch_monthly_costs() -> List[Dict[str, Any]]:
-    """Placeholder para costos mensuales - requiere campo de fecha/periodo en la tabla."""
-    return [
-        {"month": "Jul", "actual": 0, "projected": 0},
-        {"month": "Ago", "actual": 0, "projected": 0},
-        {"month": "Sep", "actual": 0, "projected": 0},
-        {"month": "Oct", "actual": 0, "projected": 0},
-        {"month": "Nov", "actual": 0, "projected": 0},
-        {"month": "Dic", "actual": 0, "projected": 0},
-    ]
+def fetch_monthly_costs(year: Optional[int] = None) -> List[Dict[str, Any]]:
+    """Obtiene los costos mensuales agrupados por período."""
+    client = _get_client()
+    table = _get_table_ref()
+    
+    where_clause = ""
+    if year:
+        where_clause = f"WHERE CAST(LEFT(CAST(PERIODO AS STRING), 4) AS INT64) = {year}"
+    
+    try:
+        query = f"""
+            SELECT
+                CAST(PERIODO AS STRING) as periodo,
+                SUM(COALESCE(Total_INGRESOS, 0) + COALESCE(Total_PROVISIONES, 0)) as costo_total,
+                SUM(COALESCE(Total_INGRESOS, 0)) as total_ingresos,
+                SUM(COALESCE(Total_PROVISIONES, 0)) as total_provisiones,
+                SUM(COALESCE(Total_DESCUENTOS, 0)) as total_descuentos,
+                COUNT(DISTINCT CEDULA) as num_empleados
+            FROM {table}
+            {where_clause}
+            GROUP BY PERIODO
+            ORDER BY periodo ASC
+        """
+        result = client.query(query).result()
+        
+        monthly = []
+        for row in result:
+            periodo = str(row.periodo).strip()
+            if '-' in periodo:
+                parts = periodo.split('-')
+                month_num = int(parts[1]) if len(parts) > 1 else 1
+                month_label = _month_name(month_num)[:3]
+            else:
+                month_label = periodo
+            
+            monthly.append({
+                "periodo": periodo,
+                "month": month_label,
+                "costo_total": float(row.costo_total or 0),
+                "ingresos": float(row.total_ingresos or 0),
+                "provisiones": float(row.total_provisiones or 0),
+                "descuentos": float(row.total_descuentos or 0),
+                "empleados": int(row.num_empleados or 0)
+            })
+        
+        return monthly
+    except Exception as e:
+        print(f"Error obteniendo costos mensuales: {e}")
+        return []
+
+
+def fetch_distribution_by_contract(year: Optional[int] = None) -> List[Dict[str, Any]]:
+    """Obtiene distribución de empleados por tipo de contrato."""
+    client = _get_client()
+    table = _get_table_ref()
+    
+    where_clause = ""
+    if year:
+        where_clause = f"WHERE CAST(LEFT(CAST(PERIODO AS STRING), 4) AS INT64) = {year}"
+    
+    try:
+        # Usamos el período más reciente para evitar duplicados
+        subquery = f"""
+            SELECT TIPO_CONTRATO, CEDULA, Total_INGRESOS,
+                   ROW_NUMBER() OVER (PARTITION BY CEDULA ORDER BY PERIODO DESC) as rn
+            FROM {table}
+            {where_clause}
+        """
+        query = f"""
+            SELECT 
+                TIPO_CONTRATO as tipo,
+                COUNT(DISTINCT CEDULA) as cantidad,
+                SUM(Total_INGRESOS) as total_ingresos
+            FROM ({subquery})
+            WHERE rn = 1 AND TIPO_CONTRATO IS NOT NULL
+            GROUP BY TIPO_CONTRATO
+            ORDER BY cantidad DESC
+        """
+        result = client.query(query).result()
+        
+        distribution = []
+        for row in result:
+            distribution.append({
+                "label": row.tipo or "Sin definir",
+                "count": int(row.cantidad or 0),
+                "value": float(row.total_ingresos or 0)
+            })
+        
+        return distribution
+    except Exception as e:
+        print(f"Error obteniendo distribución por contrato: {e}")
+        return []
+
+
+def fetch_distribution_by_area(year: Optional[int] = None) -> List[Dict[str, Any]]:
+    """Obtiene distribución de empleados por área."""
+    client = _get_client()
+    table = _get_table_ref()
+    
+    where_clause = ""
+    if year:
+        where_clause = f"WHERE CAST(LEFT(CAST(PERIODO AS STRING), 4) AS INT64) = {year}"
+    
+    try:
+        subquery = f"""
+            SELECT AREA, CEDULA, Total_INGRESOS,
+                   ROW_NUMBER() OVER (PARTITION BY CEDULA ORDER BY PERIODO DESC) as rn
+            FROM {table}
+            {where_clause}
+        """
+        query = f"""
+            SELECT 
+                AREA as area,
+                COUNT(DISTINCT CEDULA) as cantidad,
+                SUM(Total_INGRESOS) as total_ingresos
+            FROM ({subquery})
+            WHERE rn = 1 AND AREA IS NOT NULL
+            GROUP BY AREA
+            ORDER BY cantidad DESC
+        """
+        result = client.query(query).result()
+        
+        distribution = []
+        for row in result:
+            distribution.append({
+                "label": row.area or "Sin definir",
+                "count": int(row.cantidad or 0),
+                "value": float(row.total_ingresos or 0)
+            })
+        
+        return distribution
+    except Exception as e:
+        print(f"Error obteniendo distribución por área: {e}")
+        return []
 
 
 def fetch_employees(limit: int = 50, offset: int = 0, periodo: Optional[str] = None, year: Optional[int] = None) -> Tuple[List[Dict[str, Any]], int]:
@@ -369,8 +493,12 @@ def fetch_overview(periodo: Optional[str] = None, year: Optional[int] = None) ->
         
         kpis = fetch_kpis(periodo=periodo, year=effective_year)
         breakdown = fetch_cost_breakdown()
-        monthly = fetch_monthly_costs()
+        monthly = fetch_monthly_costs(year=effective_year)
         employees, total_employees = fetch_employees(periodo=periodo, year=effective_year)
+        
+        # Distribuciones para gráficas de pastel
+        dist_contrato = fetch_distribution_by_contract(year=effective_year)
+        dist_area = fetch_distribution_by_area(year=effective_year)
         
         # Determinar el período/año a mostrar
         if periodo:
@@ -385,11 +513,14 @@ def fetch_overview(periodo: Optional[str] = None, year: Optional[int] = None) ->
             "monthly_costs": monthly,
             "cost_breakdown": breakdown,
             "employees": employees,
+            "distribution_contrato": dist_contrato,
+            "distribution_area": dist_area,
             "currency": "USD",
             "period": display_period,
             "total_employees": total_employees,
             "filter_options": filter_options,
-            "selected_year": effective_year
+            "selected_year": effective_year,
+            "selected_periodo": periodo
         }
     except (GoogleAPIError, ValueError) as e:
         return {
@@ -397,6 +528,8 @@ def fetch_overview(periodo: Optional[str] = None, year: Optional[int] = None) ->
             "monthly_costs": [],
             "cost_breakdown": [],
             "employees": [],
+            "distribution_contrato": [],
+            "distribution_area": [],
             "currency": "USD",
             "period": "2025",
             "total_employees": 0,
