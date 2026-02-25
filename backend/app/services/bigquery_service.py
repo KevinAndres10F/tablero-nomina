@@ -449,6 +449,7 @@ def fetch_employees(limit: int = 50, offset: int = 0, periodo: Optional[str] = N
             AREA as area,
             TIPO_CONTRATO as tipo_contrato,
             FECHA_INGRESO as fecha_ingreso,
+            CAST(PERIODO AS STRING) as periodo,
             Total_INGRESOS as total_ingresos,
             Total_DESCUENTOS as total_descuentos,
             Total_PROVISIONES as total_provisiones,
@@ -474,7 +475,7 @@ def fetch_employees(limit: int = 50, offset: int = 0, periodo: Optional[str] = N
             
         FROM {table}
         {where_clause}
-        ORDER BY Total_INGRESOS DESC
+        ORDER BY PERIODO, Total_INGRESOS DESC
         LIMIT {limit} OFFSET {offset}
     """
     

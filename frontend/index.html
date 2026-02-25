@@ -293,9 +293,9 @@
           <!-- Scatter Plot de Provisiones -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-              <h3 class="text-lg font-bold mb-2">Dispersión de Provisiones por Empleado</h3>
-              <p class="text-sm text-slate-500 mb-6">Cada punto representa un empleado</p>
-              <div class="relative h-72" id="scatter-container">
+              <h3 class="text-lg font-bold mb-2">Evolución de Provisiones por Período</h3>
+              <p class="text-sm text-slate-500 mb-4">Total y desglose mensual</p>
+              <div class="relative h-80" id="scatter-container">
                 <canvas id="scatter-chart"></canvas>
               </div>
             </div>
@@ -1055,44 +1055,123 @@
         document.getElementById('prov-vac').textContent = formatCurrency(vac, currency);
         document.getElementById('prov-iess').textContent = formatCurrency(iessP, currency);
         
-        // Scatter Plot
+        // Agrupar datos por período
+        const periodoData = {};
+        employees.forEach(e => {
+          const periodo = e.periodo || 'Sin período';
+          if (!periodoData[periodo]) {
+            periodoData[periodo] = { decimo_13: 0, decimo_14: 0, vacaciones_prov: 0, fondos_reserva: 0, iess_patronal: 0, total: 0 };
+          }
+          periodoData[periodo].decimo_13 += (e.decimo_13 || 0);
+          periodoData[periodo].decimo_14 += (e.decimo_14 || 0);
+          periodoData[periodo].vacaciones_prov += (e.vacaciones_prov || 0);
+          periodoData[periodo].fondos_reserva += (e.fondos_reserva || 0);
+          periodoData[periodo].iess_patronal += (e.iess_patronal || 0);
+          periodoData[periodo].total += (e.decimo_13 || 0) + (e.decimo_14 || 0) + (e.vacaciones_prov || 0) + (e.fondos_reserva || 0) + (e.iess_patronal || 0);
+        });
+        
+        // Ordenar períodos cronológicamente
+        const sortedPeriodos = Object.keys(periodoData).sort();
+        
+        // Line Chart por período
         const ctx = document.getElementById('scatter-chart');
         if (scatterChart) scatterChart.destroy();
         
-        const scatterData = employees.map((e, i) => ({
-          x: i + 1,
-          y: e.total_provisiones || 0,
-          label: e.nombre
-        }));
-        
         scatterChart = new Chart(ctx, {
-          type: 'scatter',
+          type: 'line',
           data: {
-            datasets: [{
-              label: 'Provisiones por Empleado',
-              data: scatterData,
-              backgroundColor: '#13a4ec',
-              borderColor: '#13a4ec',
-              pointRadius: 8,
-              pointHoverRadius: 12
-            }]
+            labels: sortedPeriodos,
+            datasets: [
+              {
+                label: 'Total',
+                data: sortedPeriodos.map(p => periodoData[p].total),
+                borderColor: '#13a4ec',
+                backgroundColor: 'rgba(19, 164, 236, 0.1)',
+                fill: true,
+                tension: 0.3,
+                borderWidth: 3,
+                pointRadius: 6,
+                pointHoverRadius: 10
+              },
+              {
+                label: 'D13',
+                data: sortedPeriodos.map(p => periodoData[p].decimo_13),
+                borderColor: '#f59e0b',
+                backgroundColor: 'transparent',
+                borderWidth: 2,
+                tension: 0.3,
+                pointRadius: 4,
+                pointHoverRadius: 8
+              },
+              {
+                label: 'D14',
+                data: sortedPeriodos.map(p => periodoData[p].decimo_14),
+                borderColor: '#6366f1',
+                backgroundColor: 'transparent',
+                borderWidth: 2,
+                tension: 0.3,
+                pointRadius: 4,
+                pointHoverRadius: 8
+              },
+              {
+                label: 'Vacaciones',
+                data: sortedPeriodos.map(p => periodoData[p].vacaciones_prov),
+                borderColor: '#10b981',
+                backgroundColor: 'transparent',
+                borderWidth: 2,
+                tension: 0.3,
+                pointRadius: 4,
+                pointHoverRadius: 8
+              },
+              {
+                label: 'Fondos Reserva',
+                data: sortedPeriodos.map(p => periodoData[p].fondos_reserva),
+                borderColor: '#8b5cf6',
+                backgroundColor: 'transparent',
+                borderWidth: 2,
+                tension: 0.3,
+                pointRadius: 4,
+                pointHoverRadius: 8
+              },
+              {
+                label: 'IESS Patronal',
+                data: sortedPeriodos.map(p => periodoData[p].iess_patronal),
+                borderColor: '#ef4444',
+                backgroundColor: 'transparent',
+                borderWidth: 2,
+                tension: 0.3,
+                pointRadius: 4,
+                pointHoverRadius: 8
+              }
+            ]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: {
+              mode: 'index',
+              intersect: false
+            },
             plugins: {
               tooltip: {
                 callbacks: {
-                  label: (ctx) => {
-                    const point = scatterData[ctx.dataIndex];
-                    return `${point.label}: ${formatCurrency(point.y, currency)}`;
-                  }
+                  label: (ctx) => `${ctx.dataset.label}: ${formatCurrency(ctx.raw, currency)}`
                 }
+              },
+              legend: {
+                position: 'bottom',
+                labels: { usePointStyle: true, padding: 15 }
               }
             },
             scales: {
-              x: { title: { display: true, text: 'Empleado #' } },
-              y: { title: { display: true, text: 'Provisiones ($)' } }
+              x: { 
+                title: { display: true, text: 'Período' },
+                grid: { display: false }
+              },
+              y: { 
+                title: { display: true, text: 'Monto ($)' },
+                beginAtZero: true
+              }
             }
           }
         });
@@ -1110,7 +1189,7 @@
         ];
         
         const maxValue = Math.max(...breakdown.map(b => b.value));
-        const colors = ["#13a4ec", "#6366f1", "#10b981", "#f59e0b", "#ef4444"];
+        const colors = ["#f59e0b", "#6366f1", "#10b981", "#8b5cf6", "#ef4444"];
         
         breakdown.forEach((item, index) => {
           const heightPercent = maxValue > 0 ? (item.value / maxValue) * 100 : 0;
