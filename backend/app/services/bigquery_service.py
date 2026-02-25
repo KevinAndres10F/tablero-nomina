@@ -499,7 +499,7 @@ def fetch_overview(periodo: Optional[str] = None, year: Optional[int] = None) ->
         kpis = fetch_kpis(periodo=periodo, year=effective_year)
         breakdown = fetch_cost_breakdown()
         monthly = fetch_monthly_costs(year=effective_year)
-        employees, total_employees = fetch_employees(periodo=periodo, year=effective_year)
+        employees, total_employees = fetch_employees(limit=500, periodo=periodo, year=effective_year)
         
         # Distribuciones para gráficas de pastel
         dist_contrato = fetch_distribution_by_contract(year=effective_year)
