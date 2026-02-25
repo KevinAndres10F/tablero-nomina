@@ -36,40 +36,49 @@ def fetch_available_periods() -> List[Dict[str, Any]]:
     client = _get_client()
     table = _get_table_ref()
     
-    # Intentar obtener períodos de la columna PERIODO o MES si existe
-    # Si no existe, usar la tabla completa sin filtro de período
     try:
-        # Primero intentamos con PERIODO
         query = f"""
             SELECT DISTINCT 
-                PERIODO as periodo
+                CAST(PERIODO AS STRING) as periodo
             FROM {table}
             WHERE PERIODO IS NOT NULL
-            ORDER BY PERIODO DESC
+            ORDER BY periodo DESC
         """
         result = client.query(query).result()
         periods = []
+        seen = set()  # Para evitar duplicados
+        
         for row in result:
-            periodo = str(row.periodo)
-            # Parsear el período (formato esperado: YYYY-MM o similar)
-            if '-' in periodo:
-                parts = periodo.split('-')
-                year = parts[0]
-                month = parts[1] if len(parts) > 1 else '01'
-            else:
-                # Si es solo año o número
-                year = periodo[:4] if len(periodo) >= 4 else periodo
-                month = periodo[4:6] if len(periodo) >= 6 else '01'
+            periodo = str(row.periodo).strip()
+            if periodo in seen or not periodo:
+                continue
+            seen.add(periodo)
             
-            periods.append({
-                "value": periodo,
-                "year": year,
-                "month": month.zfill(2),
-                "label": f"{_month_name(int(month))} {year}"
-            })
+            # Parsear el período (formato esperado: YYYY-MM)
+            try:
+                if '-' in periodo:
+                    parts = periodo.split('-')
+                    year = parts[0]
+                    month = parts[1] if len(parts) > 1 else '01'
+                else:
+                    year = periodo[:4] if len(periodo) >= 4 else periodo
+                    month = periodo[4:6] if len(periodo) >= 6 else '01'
+                
+                month_int = int(month)
+                month_name = _month_name(month_int)
+                
+                periods.append({
+                    "value": periodo,
+                    "year": year,
+                    "month": month.zfill(2),
+                    "label": f"{month_name} {year}"
+                })
+            except (ValueError, IndexError) as parse_error:
+                print(f"Error parseando período '{periodo}': {parse_error}")
+                continue
+                
         return periods
     except Exception as e:
-        # Si PERIODO no existe, retornar lista vacía (el filtro no aplicará)
         print(f"No se pudo obtener períodos: {e}")
         return []
 
@@ -144,7 +153,7 @@ def _build_where_clause(periodo: Optional[str] = None, year: Optional[int] = Non
     """Construye la cláusula WHERE basada en los filtros."""
     conditions = []
     if periodo:
-        conditions.append(f"PERIODO = '{periodo}'")
+        conditions.append(f"CAST(PERIODO AS STRING) = '{periodo}'")
     elif year:
         conditions.append(f"CAST(LEFT(CAST(PERIODO AS STRING), 4) AS INT64) = {year}")
     
