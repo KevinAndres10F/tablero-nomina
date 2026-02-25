@@ -38,10 +38,11 @@ def get_filters():
 
 @app.get("/api/overview")
 def get_overview(
-    periodo: Optional[str] = Query(default=None, description="Período en formato YYYY-MM")
+    periodo: Optional[str] = Query(default=None, description="Período en formato YYYY-MM"),
+    year: Optional[int] = Query(default=None, description="Año para filtrar")
 ):
-    """Endpoint principal del dashboard con soporte para filtro de período."""
-    return fetch_overview(periodo=periodo)
+    """Endpoint principal del dashboard con soporte para filtro de período y año."""
+    return fetch_overview(periodo=periodo, year=year)
 
 
 @app.get("/api/employees")

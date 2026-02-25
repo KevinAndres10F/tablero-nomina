@@ -84,6 +84,27 @@ def _month_name(month: int) -> str:
     return months.get(month, "")
 
 
+def fetch_available_years() -> List[int]:
+    """Obtiene los años únicos disponibles en la base de datos."""
+    client = _get_client()
+    table = _get_table_ref()
+    
+    try:
+        query = f"""
+            SELECT DISTINCT 
+                CAST(LEFT(CAST(PERIODO AS STRING), 4) AS INT64) as year
+            FROM {table}
+            WHERE PERIODO IS NOT NULL
+            ORDER BY year DESC
+        """
+        result = client.query(query).result()
+        years = [int(row.year) for row in result if row.year]
+        return years if years else [2025]  # Default a 2025 si no hay datos
+    except Exception as e:
+        print(f"No se pudo obtener años: {e}")
+        return [2025]
+
+
 def fetch_filter_options() -> Dict[str, List[Any]]:
     """Obtiene todas las opciones disponibles para filtros."""
     client = _get_client()
@@ -107,20 +128,34 @@ def fetch_filter_options() -> Dict[str, List[Any]]:
         if row.tipo_contrato:
             contratos.add(row.tipo_contrato)
     
-    # Obtener períodos disponibles
+    # Obtener períodos y años disponibles
     periods = fetch_available_periods()
+    years = fetch_available_years()
     
     return {
         "areas": sorted(list(areas)),
         "contratos": sorted(list(contratos)),
-        "periodos": periods
+        "periodos": periods,
+        "years": years
     }
 
 
-def fetch_kpis(periodo: Optional[str] = None) -> List[Dict[str, Any]]:
+def _build_where_clause(periodo: Optional[str] = None, year: Optional[int] = None) -> str:
+    """Construye la cláusula WHERE basada en los filtros."""
+    conditions = []
+    if periodo:
+        conditions.append(f"PERIODO = '{periodo}'")
+    elif year:
+        conditions.append(f"CAST(LEFT(CAST(PERIODO AS STRING), 4) AS INT64) = {year}")
+    
+    return f"WHERE {' AND '.join(conditions)}" if conditions else ""
+
+
+def fetch_kpis(periodo: Optional[str] = None, year: Optional[int] = None) -> List[Dict[str, Any]]:
     """Calcula KPIs agregados de la nómina según requerimientos del especialista."""
     client = _get_client()
     table = _get_table_ref()
+    where_clause = _build_where_clause(periodo, year)
     
     query = f"""
         SELECT
@@ -153,6 +188,7 @@ def fetch_kpis(periodo: Optional[str] = None) -> List[Dict[str, Any]]:
             -- Neto a pagar
             SUM(COALESCE(A_RECIBIR, 0)) as total_neto
         FROM {table}
+        {where_clause}
     """
     
     result = client.query(query).result()
@@ -261,15 +297,13 @@ def fetch_monthly_costs() -> List[Dict[str, Any]]:
     ]
 
 
-def fetch_employees(limit: int = 50, offset: int = 0, periodo: Optional[str] = None) -> Tuple[List[Dict[str, Any]], int]:
+def fetch_employees(limit: int = 50, offset: int = 0, periodo: Optional[str] = None, year: Optional[int] = None) -> Tuple[List[Dict[str, Any]], int]:
     """Obtiene el detalle de empleados con todos los campos necesarios."""
     client = _get_client()
     table = _get_table_ref()
     
-    # Construir cláusula WHERE si hay período
-    where_clause = ""
-    if periodo:
-        where_clause = f"WHERE PERIODO = '{periodo}'"
+    # Construir cláusula WHERE
+    where_clause = _build_where_clause(periodo, year)
     
     count_query = f"SELECT COUNT(*) as total FROM {table} {where_clause}"
     count_result = client.query(count_query).result()
@@ -312,22 +346,30 @@ def fetch_employees(limit: int = 50, offset: int = 0, periodo: Optional[str] = N
     return employees, total
 
 
-def fetch_overview(periodo: Optional[str] = None) -> Dict[str, Any]:
-    """Obtiene todos los datos del dashboard con filtro opcional de período."""
+def fetch_overview(periodo: Optional[str] = None, year: Optional[int] = None) -> Dict[str, Any]:
+    """Obtiene todos los datos del dashboard con filtro opcional de período y año."""
     try:
-        kpis = fetch_kpis()
-        breakdown = fetch_cost_breakdown()
-        monthly = fetch_monthly_costs()
-        employees, total_employees = fetch_employees(periodo=periodo)
         filter_options = fetch_filter_options()
         
-        # Determinar el período a mostrar
-        display_period = periodo if periodo else "Todos los períodos"
-        if filter_options.get("periodos") and not periodo:
-            # Si hay períodos disponibles, mostrar el rango
-            periods = filter_options["periodos"]
-            if len(periods) > 0:
-                display_period = f"{periods[-1]['label']} - {periods[0]['label']}" if len(periods) > 1 else periods[0]['label']
+        # Si no se especifica año, usar el más reciente disponible
+        effective_year = year
+        if not effective_year and not periodo:
+            available_years = filter_options.get("years", [])
+            if available_years:
+                effective_year = available_years[0]  # El más reciente (ordenados DESC)
+        
+        kpis = fetch_kpis(periodo=periodo, year=effective_year)
+        breakdown = fetch_cost_breakdown()
+        monthly = fetch_monthly_costs()
+        employees, total_employees = fetch_employees(periodo=periodo, year=effective_year)
+        
+        # Determinar el período/año a mostrar
+        if periodo:
+            display_period = periodo
+        elif effective_year:
+            display_period = str(effective_year)
+        else:
+            display_period = "Todos los años"
         
         return {
             "kpis": kpis,
@@ -337,7 +379,8 @@ def fetch_overview(periodo: Optional[str] = None) -> Dict[str, Any]:
             "currency": "USD",
             "period": display_period,
             "total_employees": total_employees,
-            "filter_options": filter_options
+            "filter_options": filter_options,
+            "selected_year": effective_year
         }
     except (GoogleAPIError, ValueError) as e:
         return {
@@ -348,6 +391,6 @@ def fetch_overview(periodo: Optional[str] = None) -> Dict[str, Any]:
             "currency": "USD",
             "period": "2025",
             "total_employees": 0,
-            "filter_options": {"areas": [], "contratos": [], "periodos": []},
+            "filter_options": {"areas": [], "contratos": [], "periodos": [], "years": []},
             "error": str(e)
         }
