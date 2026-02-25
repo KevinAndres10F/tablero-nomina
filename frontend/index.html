@@ -617,17 +617,30 @@
         const areasToUse = filterOptions?.areas?.length > 0 ? filterOptions.areas : areas;
         const contratosToUse = filterOptions?.contratos?.length > 0 ? filterOptions.contratos : contratos;
         
-        areaSelect.innerHTML = '<option value="">Todas</option>' + areasToUse.map(a => `<option value="${a}">${a}</option>`).join('');
-        contratoSelect.innerHTML = '<option value="">Todos</option>' + contratosToUse.map(c => `<option value="${c}">${c}</option>`).join('');
-        empleadoSelect.innerHTML = '<option value="">Todos</option>' + nombres.map(n => `<option value="${n.cedula}">${n.nombre}</option>`).join('');
+        // Preservar filtros seleccionados
+        const currentArea = filters.area;
+        const currentContrato = filters.contrato;
+        const currentEmpleado = filters.empleado;
+        const currentPeriodo = filters.periodo;
+        
+        areaSelect.innerHTML = '<option value="">Todas</option>' + areasToUse.map(a => 
+          `<option value="${a}" ${a === currentArea ? 'selected' : ''}>${a}</option>`
+        ).join('');
+        contratoSelect.innerHTML = '<option value="">Todos</option>' + contratosToUse.map(c => 
+          `<option value="${c}" ${c === currentContrato ? 'selected' : ''}>${c}</option>`
+        ).join('');
+        empleadoSelect.innerHTML = '<option value="">Todos</option>' + nombres.map(n => 
+          `<option value="${n.cedula}" ${n.cedula === currentEmpleado ? 'selected' : ''}>${n.nombre}</option>`
+        ).join('');
         
         // Poblar períodos desde la base de datos
         if (filterOptions?.periodos?.length > 0) {
           periodoSelect.innerHTML = '<option value="">Todos los períodos</option>' + 
-            filterOptions.periodos.map(p => `<option value="${p.value}">${p.label}</option>`).join('');
+            filterOptions.periodos.map(p => 
+              `<option value="${p.value}" ${p.value === currentPeriodo ? 'selected' : ''}>${p.label}</option>`
+            ).join('');
           periodoSelect.disabled = false;
         } else {
-          // Si no hay períodos en la BD, deshabilitar el filtro
           periodoSelect.innerHTML = '<option value="">Sin períodos disponibles</option>';
           periodoSelect.disabled = true;
         }
@@ -702,12 +715,42 @@
         buildEmpleadosPage(employees, currency);
         buildHorasExtraPage(employees, currency, dashboardData);
         
-        // Dashboard: gráficas usando datos del backend si están disponibles
-        if (dashboardData) {
-          buildMonthlyLineChart(dashboardData.monthly_costs || [], currency);
-          buildPieChart('contrato', dashboardData.distribution_contrato || []);
-          buildPieChart('area', dashboardData.distribution_area || []);
-        }
+        // Calcular distribuciones localmente desde empleados filtrados
+        const distContrato = calcDistribution(employees, 'tipo_contrato');
+        const distArea = calcDistribution(employees, 'area');
+        
+        // Calcular costos mensuales desde empleados filtrados
+        const monthlyCosts = calcMonthlyCosts(employees);
+        
+        buildMonthlyLineChart(monthlyCosts, currency);
+        buildPieChart('contrato', distContrato);
+        buildPieChart('area', distArea);
+      };
+      
+      // Calcular distribución por campo
+      const calcDistribution = (employees, field) => {
+        const counts = {};
+        employees.forEach(e => {
+          const value = e[field] || 'Sin definir';
+          counts[value] = (counts[value] || 0) + 1;
+        });
+        return Object.entries(counts)
+          .map(([label, count]) => ({ label, count }))
+          .sort((a, b) => b.count - a.count);
+      };
+      
+      // Calcular costos mensuales desde empleados
+      const calcMonthlyCosts = (employees) => {
+        const monthly = {};
+        employees.forEach(e => {
+          const periodo = e.periodo || 'Sin período';
+          if (!monthly[periodo]) {
+            monthly[periodo] = { periodo, total_ingresos: 0, total_provisiones: 0 };
+          }
+          monthly[periodo].total_ingresos += (e.total_ingresos || 0);
+          monthly[periodo].total_provisiones += (e.total_provisiones || 0);
+        });
+        return Object.values(monthly).sort((a, b) => a.periodo.localeCompare(b.periodo));
       };
 
       const buildKPIs = (kpis, currency) => {
