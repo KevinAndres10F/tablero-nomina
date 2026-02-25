@@ -455,6 +455,11 @@ def fetch_employees(limit: int = 50, offset: int = 0, periodo: Optional[str] = N
             A_RECIBIR as a_recibir,
             (COALESCE(H_EXT_100, 0) + COALESCE(H_EXT_50, 0)) as horas_extras,
             
+            -- Horas extras detalladas
+            COALESCE(H_EXT_100, 0) as h_ext_100,
+            COALESCE(H_EXT_50, 0) as h_ext_50,
+            COALESCE(RECNOCTURNO, 0) as recnocturno,
+            
             -- Provisiones detalladas
             COALESCE(DECIMO_13, 0) as decimo_13,
             COALESCE(DECIMO_14_S, 0) as decimo_14,
