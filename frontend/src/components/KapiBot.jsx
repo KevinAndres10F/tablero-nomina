@@ -7,7 +7,10 @@ const WELCOME_MESSAGE = {
   text: "Hola, soy KapiBot. ¿En qué tema de nómina te ayudo hoy?",
 };
 
-function KapiBot({ scriptUrl }) {
+const DEFAULT_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbxnniWYzz7sUmv1-d0NemTSix9Smzmkvf2V542E--IPmEX3uK5k8X-K8WK-nSmY1uMs/exec";
+
+function KapiBot({ scriptUrl = DEFAULT_SCRIPT_URL }) {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);

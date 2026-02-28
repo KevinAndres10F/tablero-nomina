@@ -22,7 +22,7 @@ interface ChatErrorResponse {
 type ChatResponse = ChatSuccessResponse | ChatErrorResponse;
 
 interface KapiBotProps {
-  scriptUrl: string;
+  scriptUrl?: string;
 }
 
 const WELCOME_MESSAGE: ChatMessage = {
@@ -31,6 +31,9 @@ const WELCOME_MESSAGE: ChatMessage = {
   text: "Hola, soy KapiBot. ¿En qué tema de nómina te ayudo hoy?",
 };
 
+const DEFAULT_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbxnniWYzz7sUmv1-d0NemTSix9Smzmkvf2V542E--IPmEX3uK5k8X-K8WK-nSmY1uMs/exec";
+
 const createMessageId = () => {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
     return crypto.randomUUID();
@@ -38,7 +41,7 @@ const createMessageId = () => {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
 
-export default function KapiBot({ scriptUrl }: KapiBotProps) {
+export default function KapiBot({ scriptUrl = DEFAULT_SCRIPT_URL }: KapiBotProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
