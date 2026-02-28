@@ -1,15 +1,21 @@
 import os
+import json
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 from dotenv import load_dotenv
 
 load_dotenv()
 
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from typing import Optional
 
 from app.services.bigquery_service import fetch_overview, fetch_employees, fetch_filter_options
 
 app = FastAPI(title="KAPIROLL Dashboard API", version="1.0.0")
+
+DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxnniWYzz7sUmv1-d0NemTSix9Smzmkvf2V542E--IPmEX3uK5k8X-K8WK-nSmY1uMs/exec"
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,6 +24,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+
+class ChatRequest(BaseModel):
+    question: str
+
+
+class ChatResponse(BaseModel):
+    ok: bool
+    answer: Optional[str] = None
+    error: Optional[str] = None
 
 
 @app.get("/api/health")
@@ -58,3 +74,39 @@ def get_employees(
         "limit": limit,
         "offset": offset
     }
+
+
+@app.post("/api/chat", response_model=ChatResponse)
+def chat_with_kapibot(payload: ChatRequest):
+    question = (payload.question or "").strip()
+    if not question:
+        return {"ok": False, "error": "La pregunta está vacía."}
+
+    script_url = os.getenv("APPS_SCRIPT_CHAT_URL", DEFAULT_APPS_SCRIPT_URL)
+    body = json.dumps({"action": "CHAT", "question": question}).encode("utf-8")
+    request = Request(
+        script_url,
+        data=body,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+
+    try:
+        with urlopen(request, timeout=30) as response:
+            raw = response.read().decode("utf-8")
+    except HTTPError as exc:
+        return {"ok": False, "error": f"Apps Script HTTP {exc.code}"}
+    except URLError:
+        return {"ok": False, "error": "No se pudo conectar con Apps Script."}
+    except TimeoutError:
+        return {"ok": False, "error": "Tiempo de espera agotado con Apps Script."}
+
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        return {"ok": False, "error": "Respuesta inválida de Apps Script."}
+
+    if not data.get("ok"):
+        return {"ok": False, "error": data.get("error", "Error desde Apps Script")}
+
+    return {"ok": True, "answer": data.get("answer", "")}
