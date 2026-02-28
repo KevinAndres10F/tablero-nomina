@@ -95,6 +95,11 @@ def chat_with_kapibot(payload: ChatRequest):
         with urlopen(request, timeout=30) as response:
             raw = response.read().decode("utf-8")
     except HTTPError as exc:
+        if exc.code in (401, 403):
+            return {
+                "ok": False,
+                "error": "Apps Script requiere acceso público. En Deploy > Manage deployments > Web app configura 'Execute as: Me' y 'Who has access: Anyone'.",
+            }
         return {"ok": False, "error": f"Apps Script HTTP {exc.code}"}
     except URLError:
         return {"ok": False, "error": "No se pudo conectar con Apps Script."}
