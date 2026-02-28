@@ -15,7 +15,7 @@ from app.services.bigquery_service import fetch_overview, fetch_employees, fetch
 
 app = FastAPI(title="KAPIROLL Dashboard API", version="1.0.0")
 
-DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxnniWYzz7sUmv1-d0NemTSix9Smzmkvf2V542E--IPmEX3uK5k8X-K8WK-nSmY1uMs/exec"
+DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxgrmepTnAYHCNwp6slXLlPbBsz7VltZ8Hy2V2PL116HjFpLBdrbYOyEZBB9BL00Nzr/exec"
 
 app.add_middleware(
     CORSMiddleware,
