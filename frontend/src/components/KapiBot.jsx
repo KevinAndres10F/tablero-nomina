@@ -8,7 +8,7 @@ const WELCOME_MESSAGE = {
 };
 
 const DEFAULT_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxZsEXDNoyhHp4pNTYTS6nAYjL8LzTIYnRivuk21ae-H4Rgt1w1O68lIs7GldqtW628/exec";
+  "https://script.google.com/macros/s/AKfycbxSQ3QjSPyqbRFy6q5UzLAChO2lz-612Vp9Up4PlolmnocjvbeJoJnnOTMKXQaU6m-k/exec";
 
 function KapiBot({ scriptUrl = DEFAULT_SCRIPT_URL }) {
   const [isOpen, setIsOpen] = useState(false);
