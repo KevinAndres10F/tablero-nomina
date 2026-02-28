@@ -32,7 +32,7 @@ const WELCOME_MESSAGE: ChatMessage = {
 };
 
 const DEFAULT_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxSQ3QjSPyqbRFy6q5UzLAChO2lz-612Vp9Up4PlolmnocjvbeJoJnnOTMKXQaU6m-k/exec";
+  "https://script.google.com/macros/s/AKfycbz3OLCQMEurr7NDg0IZ9ctm0I5cVDHw32CS3IVNnD_EJ9oRnjNeYQxZ6kJkiqTTPNCe/exec";
 
 const createMessageId = () => {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
