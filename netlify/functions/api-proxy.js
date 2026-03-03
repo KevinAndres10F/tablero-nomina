@@ -55,9 +55,12 @@ exports.handler = async (event) => {
     };
   }
 
-  const splat = event.path.replace(/^\/\.netlify\/functions\/api-proxy\/?/, "");
+  const rawSplat = event.path.replace(/^\/\.netlify\/functions\/api-proxy\/?/, "");
+  const splat = rawSplat.replace(/^\/+/, "").replace(/^api\/+/, "");
   const query = event.rawQuery ? `?${event.rawQuery}` : "";
-  const targetUrl = `${backendOrigin}/api/${splat}${query}`;
+  const targetUrl = splat
+    ? `${backendOrigin}/api/${splat}${query}`
+    : `${backendOrigin}/api${query}`;
 
   const timeoutMs = Number(process.env.BACKEND_PROXY_TIMEOUT_MS || 15000);
 
