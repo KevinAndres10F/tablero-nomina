@@ -88,6 +88,7 @@ La configuración ya está preparada para usar un proxy interno de Netlify:
 Solo falta configurar en Netlify (Site settings → Environment variables):
 
 - `BACKEND_API_ORIGIN=http://TU_IPV4_DE_HETZNER`
+- `BACKEND_PROXY_TIMEOUT_MS=15000` (opcional)
 
 Ejemplo real:
 
@@ -107,6 +108,10 @@ Si no tienes dominio, puedes publicar el backend con la IPv4 pública del servid
 5. Redeploy en Netlify.
 
 Con esto el frontend sigue usando `/api/*` (como antes con Render) y Netlify reenvía al backend en tu IP de Hetzner.
+
+Notas del proxy Netlify:
+- Si pones solo la IP (sin `http://`), el proxy la normaliza automáticamente.
+- Si pones `.../api`, el proxy corrige la ruta para evitar duplicar `/api/api`.
 
 ## Variables de entorno (BigQuery)
 - BQ_PROJECT_ID

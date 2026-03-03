@@ -1,6 +1,8 @@
 import os
 import json
-import tempfile
+import time
+import threading
+from functools import lru_cache
 from typing import Dict, List, Any, Tuple, Optional
 
 from google.cloud import bigquery
@@ -8,22 +10,39 @@ from google.oauth2 import service_account
 from google.api_core.exceptions import GoogleAPIError
 
 
+FILTER_OPTIONS_TTL_SECONDS = int(os.getenv("FILTER_OPTIONS_TTL_SECONDS", "300"))
+OVERVIEW_CACHE_TTL_SECONDS = int(os.getenv("OVERVIEW_CACHE_TTL_SECONDS", "45"))
+_filter_options_cache: Optional[Dict[str, List[Any]]] = None
+_filter_options_cached_at: float = 0.0
+_filter_options_lock = threading.Lock()
+_overview_cache: Dict[Tuple[Optional[str], Optional[int]], Tuple[float, Dict[str, Any]]] = {}
+_overview_cache_lock = threading.Lock()
+
+
+@lru_cache(maxsize=1)
+def _get_cached_credentials():
+    creds_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+    if not creds_json:
+        return None
+    creds_dict = json.loads(creds_json)
+    return service_account.Credentials.from_service_account_info(creds_dict)
+
+
+@lru_cache(maxsize=1)
 def _get_client() -> bigquery.Client:
     project_id = os.getenv("BQ_PROJECT_ID")
     if not project_id:
         raise ValueError("BQ_PROJECT_ID is not set")
-    
-    # Check for JSON credentials in environment variable
-    creds_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
-    if creds_json:
-        creds_dict = json.loads(creds_json)
-        credentials = service_account.Credentials.from_service_account_info(creds_dict)
+
+    credentials = _get_cached_credentials()
+    if credentials:
         return bigquery.Client(project=project_id, credentials=credentials)
-    
+
     # Fall back to default credentials (local development)
     return bigquery.Client(project=project_id)
 
 
+@lru_cache(maxsize=1)
 def _get_table_ref() -> str:
     project = os.getenv("BQ_PROJECT_ID")
     dataset = os.getenv("BQ_DATASET")
@@ -116,6 +135,13 @@ def fetch_available_years() -> List[int]:
 
 def fetch_filter_options() -> Dict[str, List[Any]]:
     """Obtiene todas las opciones disponibles para filtros."""
+    global _filter_options_cache, _filter_options_cached_at
+
+    with _filter_options_lock:
+        now = time.time()
+        if _filter_options_cache and (now - _filter_options_cached_at) < FILTER_OPTIONS_TTL_SECONDS:
+            return _filter_options_cache
+
     client = _get_client()
     table = _get_table_ref()
     
@@ -141,12 +167,18 @@ def fetch_filter_options() -> Dict[str, List[Any]]:
     periods = fetch_available_periods()
     years = fetch_available_years()
     
-    return {
+    response = {
         "areas": sorted(list(areas)),
         "contratos": sorted(list(contratos)),
         "periodos": periods,
         "years": years
     }
+
+    with _filter_options_lock:
+        _filter_options_cache = response
+        _filter_options_cached_at = time.time()
+
+    return response
 
 
 def _build_where_clause(periodo: Optional[str] = None, year: Optional[int] = None) -> str:
@@ -438,12 +470,9 @@ def fetch_employees(limit: int = 50, offset: int = 0, periodo: Optional[str] = N
     # Construir cláusula WHERE
     where_clause = _build_where_clause(periodo, year)
     
-    count_query = f"SELECT COUNT(*) as total FROM {table} {where_clause}"
-    count_result = client.query(count_query).result()
-    total = list(count_result)[0].total
-    
     query = f"""
         SELECT
+            COUNT(*) OVER() as total_rows,
             CEDULA as cedula,
             NOMBRES as nombre,
             AREA as area,
@@ -480,13 +509,26 @@ def fetch_employees(limit: int = 50, offset: int = 0, periodo: Optional[str] = N
     """
     
     result = client.query(query).result()
-    employees = [dict(row) for row in result]
+    total = 0
+    employees = []
+    for row in result:
+        if total == 0:
+            total = int(row.total_rows or 0)
+        employee = dict(row)
+        employee.pop("total_rows", None)
+        employees.append(employee)
     
     return employees, total
 
 
 def fetch_overview(periodo: Optional[str] = None, year: Optional[int] = None) -> Dict[str, Any]:
     """Obtiene todos los datos del dashboard con filtro opcional de período y año."""
+    cache_key = (periodo, year)
+    with _overview_cache_lock:
+        cached_item = _overview_cache.get(cache_key)
+        if cached_item and (time.time() - cached_item[0]) < OVERVIEW_CACHE_TTL_SECONDS:
+            return cached_item[1]
+
     try:
         filter_options = fetch_filter_options()
         
@@ -514,7 +556,7 @@ def fetch_overview(periodo: Optional[str] = None, year: Optional[int] = None) ->
         else:
             display_period = "Todos los años"
         
-        return {
+        response = {
             "kpis": kpis,
             "monthly_costs": monthly,
             "cost_breakdown": breakdown,
@@ -528,6 +570,11 @@ def fetch_overview(periodo: Optional[str] = None, year: Optional[int] = None) ->
             "selected_year": effective_year,
             "selected_periodo": periodo
         }
+
+        with _overview_cache_lock:
+            _overview_cache[cache_key] = (time.time(), response)
+
+        return response
     except (GoogleAPIError, ValueError) as e:
         return {
             "kpis": [],
