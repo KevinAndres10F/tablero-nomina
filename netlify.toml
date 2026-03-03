@@ -2,8 +2,11 @@
   publish = "frontend"
   command = "echo 'No build needed'"
 
+[functions]
+  directory = "netlify/functions"
+
 [[redirects]]
   from = "/api/*"
-  to = "https://tablero-nomina-api.onrender.com/api/:splat"
+  to = "/.netlify/functions/api-proxy/:splat"
   status = 200
   force = true
