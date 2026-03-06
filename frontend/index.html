@@ -639,7 +639,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-      const API_BASE = (window.__KAPIROLL_API_BASE__ || "").replace(/\/$/, "");
+      const DEFAULT_RENDER_API_BASE = "https://kapiroll-api.onrender.com";
+      const API_BASE = (window.__KAPIROLL_API_BASE__ || DEFAULT_RENDER_API_BASE).replace(/\/$/, "");
       const API_PREFIX = API_BASE ? `${API_BASE}/api` : "/api";
       const KAPIBOT_API_URL = `${API_PREFIX}/chat`;
       

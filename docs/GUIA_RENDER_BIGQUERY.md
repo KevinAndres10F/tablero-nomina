@@ -25,17 +25,18 @@ Esperado:
 - `/api/health` con `"data_source": "bigquery"`
 - `/api/overview` con `employees` y `kpis` con datos
 
-## 3) Variables en Netlify
+## 3) Frontend en Render
 
-- `BACKEND_API_ORIGIN=https://kapiroll-api.onrender.com`
-- `RENDER_API_ORIGIN=https://kapiroll-api.onrender.com`
-- `BACKEND_PROXY_TIMEOUT_MS=25000`
-- `NETLIFY_DIRECT_SHEETS=false`
+Despliega tambien el servicio estatico `kapiroll-web` desde el mismo `render.yaml`.
 
-Luego hacer redeploy de Netlify.
+- Servicio: `kapiroll-web`
+- Publica: `frontend/`
+- URL esperada: `https://kapiroll-web.onrender.com`
+
+El frontend ya apunta por defecto a `https://kapiroll-api.onrender.com`.
 
 ## 4) Diagnostico rapido
 
 1. Si `/api/health` no muestra `bigquery`, revisar `DATA_SOURCE`.
 2. Si `/api/overview` devuelve `error`, revisar permisos del Service Account.
-3. Si frontend falla pero backend responde, revisar variables de Netlify.
+3. Si frontend falla pero backend responde, redeploy de `kapiroll-web` y revisar consola del navegador.

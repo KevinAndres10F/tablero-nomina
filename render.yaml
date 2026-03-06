@@ -26,3 +26,12 @@ services:
         sync: false
       - key: PYTHON_VERSION
         value: 3.11.0
+
+  - type: static
+    name: kapiroll-web
+    rootDir: frontend
+    staticPublishPath: .
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
