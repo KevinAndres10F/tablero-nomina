@@ -78,6 +78,42 @@
         color: #e5e7eb;
       }
 
+      .theme-switch input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .theme-switch-track {
+        width: 46px;
+        height: 26px;
+        border-radius: 999px;
+        background: #cbd5e1;
+        position: relative;
+        transition: background-color 0.2s ease;
+      }
+
+      .theme-switch-track::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 20px;
+        height: 20px;
+        border-radius: 999px;
+        background: #ffffff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+        transition: transform 0.2s ease;
+      }
+
+      .theme-switch input:checked + .theme-switch-track {
+        background: #13a4ec;
+      }
+
+      .theme-switch input:checked + .theme-switch-track::after {
+        transform: translateX(20px);
+      }
+
       .custom-scrollbar::-webkit-scrollbar {
         width: 6px;
       }
@@ -195,10 +231,12 @@
                 <span class="material-symbols-outlined text-base">download</span>
                 <span>Exportar CSV</span>
               </button>
-              <button id="theme-toggle" class="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors" title="Cambiar tema">
+              <label for="theme-toggle" class="theme-switch flex items-center gap-3 bg-white border border-slate-200 px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors cursor-pointer" title="Cambiar tema">
                 <span id="theme-toggle-icon" class="material-symbols-outlined text-base">dark_mode</span>
                 <span id="theme-toggle-label">Modo nocturno</span>
-              </button>
+                <input id="theme-toggle" type="checkbox" role="switch" aria-label="Cambiar modo nocturno" />
+                <span class="theme-switch-track" aria-hidden="true"></span>
+              </label>
               <div class="h-8 w-px bg-slate-200 mx-2"></div>
               <div class="flex items-center gap-3">
                 <div class="text-right hidden sm:block">
@@ -639,6 +677,8 @@
         document.documentElement.classList.toggle('dark', isDark);
         const icon = document.getElementById('theme-toggle-icon');
         const label = document.getElementById('theme-toggle-label');
+        const toggle = document.getElementById('theme-toggle');
+        if (toggle) toggle.checked = isDark;
         if (icon) icon.textContent = isDark ? 'light_mode' : 'dark_mode';
         if (label) label.textContent = isDark ? 'Modo claro' : 'Modo nocturno';
       };
@@ -650,9 +690,8 @@
 
         const toggle = document.getElementById('theme-toggle');
         if (!toggle) return;
-        toggle.addEventListener('click', () => {
-          const isDark = document.documentElement.classList.contains('dark');
-          const next = isDark ? 'light' : 'dark';
+        toggle.addEventListener('change', () => {
+          const next = toggle.checked ? 'dark' : 'light';
           localStorage.setItem('kapiroll-theme', next);
           applyTheme(next);
         });
