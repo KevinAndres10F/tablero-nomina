@@ -484,12 +484,16 @@ const proxyRequest = async (targetUrl, event, timeoutMs) => {
 };
 
 exports.handler = async (event) => {
-  const backendOrigin = normalizeBackendOrigin(process.env.BACKEND_API_ORIGIN || "");
+  const backendOrigin = normalizeBackendOrigin(
+    process.env.BACKEND_API_ORIGIN
+      || process.env.RENDER_API_ORIGIN
+      || "https://kapiroll-api.onrender.com"
+  );
 
-  const forceSheetsOnly = (process.env.DATA_SOURCE || "sheets").toLowerCase() === "sheets";
+  const allowDirectSheetsFallback = (process.env.NETLIFY_DIRECT_SHEETS || "false").toLowerCase() === "true";
 
-  // Si se configura modo sheets o no hay backend, responde directo desde Google Sheet.
-  if (forceSheetsOnly || !backendOrigin) {
+  // Modo opcional: servir directo desde Sheet en Netlify (solo si se habilita explícitamente).
+  if (allowDirectSheetsFallback || !backendOrigin) {
     const sheetResponse = await tryServeFromSheet(event);
     if (sheetResponse) return sheetResponse;
   }
@@ -497,7 +501,7 @@ exports.handler = async (event) => {
   if (!backendOrigin) {
     return jsonResponse(500, {
       ok: false,
-      error: "Falta BACKEND_API_ORIGIN y no se pudo servir desde Google Sheet",
+      error: "No hay BACKEND_API_ORIGIN/RENDER_API_ORIGIN y fallo el fallback de Google Sheet",
     });
   }
 
@@ -513,16 +517,18 @@ exports.handler = async (event) => {
   try {
     return await proxyRequest(targetUrl, event, timeoutMs);
   } catch (error) {
-    // Fallback: si backend falla, intenta servir directamente desde Google Sheet.
-    const sheetResponse = await tryServeFromSheet(event);
-    if (sheetResponse) return sheetResponse;
+    if (allowDirectSheetsFallback) {
+      // Fallback opcional: si backend falla, intenta servir directamente desde Google Sheet.
+      const sheetResponse = await tryServeFromSheet(event);
+      if (sheetResponse) return sheetResponse;
+    }
 
     try {
       return await proxyRequest(targetUrl, event, timeoutMs);
     } catch (retryError) {
       return jsonResponse(502, {
         ok: false,
-        error: "No se pudo conectar con el backend en Hetzner",
+        error: "No se pudo conectar con el backend en Render",
         detail: retryError.message,
         target: targetUrl,
       });

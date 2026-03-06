@@ -95,22 +95,37 @@ Por defecto el frontend usa `/api` en el mismo origen. Si necesitas otro host, d
 
 También puedes mantener frontend en Netlify y redirigir `/api/*` en `netlify.toml` al dominio de Hetzner.
 
-### Configuración para kapi-nomina.netlify.app
-La configuración ya está preparada para usar un proxy interno de Netlify:
+### Configuracion recomendada: Backend en Render + Frontend en Netlify
+La configuracion esta preparada para usar un proxy interno de Netlify hacia Render:
 
 - Función: `netlify/functions/api-proxy.js`
 - Redirect: `/api/*` → `/.netlify/functions/api-proxy/:splat`
 
-Solo falta configurar en Netlify (Site settings → Environment variables):
+1. Despliega/actualiza el backend en Render con `render.yaml`.
+2. En Render configura variables del servicio `kapiroll-api`:
 
-- `BACKEND_API_ORIGIN=http://TU_IPV4_DE_HETZNER`
-- `BACKEND_PROXY_TIMEOUT_MS=15000` (opcional)
+- `DATA_SOURCE=sheets`
+- `GOOGLE_SHEET_ID=1pyzugIeZBDCMq0kTCyWBis9toyzTXWmubGjLhng9vhk`
+- `GOOGLE_SHEET_SOURCE_MODE=api`
+- `GOOGLE_APPLICATION_CREDENTIALS_JSON={...}` (obligatorio para hoja privada)
 
-Ejemplo real:
+3. En Netlify (Site settings -> Environment variables):
 
-- `BACKEND_API_ORIGIN=http://65.21.XXX.XXX`
+- `BACKEND_API_ORIGIN=https://kapiroll-api.onrender.com`
+- `RENDER_API_ORIGIN=https://kapiroll-api.onrender.com` (opcional, fallback)
+- `BACKEND_PROXY_TIMEOUT_MS=25000` (recomendado en Render Free)
+- `NETLIFY_DIRECT_SHEETS=false`
 
-Después, redeploy del sitio para aplicar la variable.
+4. Redeploy en Netlify.
+
+Solo si quieres fallback directo desde Sheet en Netlify (no recomendado para hoja privada):
+
+- `NETLIFY_DIRECT_SHEETS=true`
+
+- `BACKEND_API_ORIGIN=https://kapiroll-api.onrender.com`
+- `BACKEND_PROXY_TIMEOUT_MS=25000` (opcional)
+
+Despues, redeploy del sitio para aplicar variables.
 
 ### Sin dominio (igual que Render, pero en Hetzner)
 Si no tienes dominio, puedes publicar el backend con la IPv4 pública del servidor.
