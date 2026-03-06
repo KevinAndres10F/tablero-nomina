@@ -1,10 +1,10 @@
 # PayrollOS - Tablero de Nómina
 
-Tablero de visualización tipo Power BI con backend en FastAPI y datos de BigQuery.
+Tablero de visualización tipo Power BI con backend en FastAPI y datos desde Google Sheets (con BigQuery como alternativa).
 
 ## Requisitos
 - Python 3.10+
-- Credenciales de servicio de BigQuery (opcional para usar datos reales)
+- Credenciales de servicio de Google (recomendado si la hoja no es publica)
 
 ## Backend
 1. Copia el archivo de ejemplo y configura tus variables:
@@ -16,6 +16,22 @@ Tablero de visualización tipo Power BI con backend en FastAPI y datos de BigQue
 
 El endpoint principal es:
 - GET /api/overview
+
+### Fuente de datos por defecto: Google Sheets
+Se usa por defecto la hoja:
+
+- `https://docs.google.com/spreadsheets/d/1pyzugIeZBDCMq0kTCyWBis9toyzTXWmubGjLhng9vhk`
+
+Variables recomendadas en `backend/.env`:
+
+- `DATA_SOURCE=sheets`
+- `GOOGLE_SHEET_ID=1pyzugIeZBDCMq0kTCyWBis9toyzTXWmubGjLhng9vhk`
+- `GOOGLE_SHEET_SOURCE_MODE=auto`
+
+Notas de acceso:
+
+- Si la hoja es privada, comparte la hoja con el email del Service Account usado en `GOOGLE_APPLICATION_CREDENTIALS_JSON`.
+- Si la hoja es publica, el backend puede leer por CSV sin credenciales.
 
 ### Despliegue backend en Hetzner (VPS)
 El repositorio incluye plantilla lista para migrar desde Render:
@@ -113,11 +129,17 @@ Notas del proxy Netlify:
 - Si pones solo la IP (sin `http://`), el proxy la normaliza automáticamente.
 - Si pones `.../api`, el proxy corrige la ruta para evitar duplicar `/api/api`.
 
-## Variables de entorno (BigQuery)
+## Variables de entorno (Sheets + BigQuery)
+- DATA_SOURCE (`sheets` o `bigquery`)
+- GOOGLE_SHEET_ID
+- GOOGLE_SHEET_SOURCE_MODE (`auto`, `api`, `csv`)
+- GOOGLE_SHEET_GID (opcional, para CSV)
+- GOOGLE_SHEET_TAB (opcional, para API)
+- GOOGLE_SHEET_RANGE (opcional, default `A:ZZ`)
 - BQ_PROJECT_ID
 - BQ_DATASET
-- BQ_TABLE_PAYROLL
-- GOOGLE_APPLICATION_CREDENTIALS (opcional)
+- BQ_TABLE
+- GOOGLE_APPLICATION_CREDENTIALS_JSON (opcional si Sheet publica, requerido para Sheet privada o BigQuery)
 
 ## Nota
-Mientras no se configuren las variables de entorno, la API devuelve datos de ejemplo para desarrollo.
+Si hay problemas de permisos en Google Sheets, la API devolvera `error` en `/api/overview` con el detalle para diagnostico.

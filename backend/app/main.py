@@ -11,11 +11,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
 
-from app.services.bigquery_service import fetch_overview, fetch_employees, fetch_filter_options
+from app.services import bigquery_service, google_sheets_service
 
 app = FastAPI(title="KAPIROLL Dashboard API", version="1.0.0")
 
 DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzOoZm5eWkQtxg6waM0zDDT5H9DZCT1ykfgBlGWnmSi37pwmnPHLWbxd1r7T2aGgV_7/exec"
+
+
+def _get_data_service():
+    source = os.getenv("DATA_SOURCE", "sheets").strip().lower()
+    if source == "bigquery":
+        return bigquery_service
+    return google_sheets_service
 
 app.add_middleware(
     CORSMiddleware,
@@ -38,8 +45,11 @@ class ChatResponse(BaseModel):
 
 @app.get("/api/health")
 def health_check() -> dict:
+    data_source = os.getenv("DATA_SOURCE", "sheets").strip().lower()
     return {
         "status": "ok",
+        "data_source": data_source,
+        "google_sheet_id": os.getenv("GOOGLE_SHEET_ID", "1pyzugIeZBDCMq0kTCyWBis9toyzTXWmubGjLhng9vhk"),
         "project": os.getenv("BQ_PROJECT_ID", "not-set"),
         "dataset": os.getenv("BQ_DATASET", "not-set"),
         "table": os.getenv("BQ_TABLE", "not-set")
@@ -49,7 +59,7 @@ def health_check() -> dict:
 @app.get("/api/filters")
 def get_filters():
     """Endpoint para obtener opciones de filtros disponibles."""
-    return fetch_filter_options()
+    return _get_data_service().fetch_filter_options()
 
 
 @app.get("/api/overview")
@@ -58,7 +68,7 @@ def get_overview(
     year: Optional[int] = Query(default=None, description="Año para filtrar")
 ):
     """Endpoint principal del dashboard con soporte para filtro de período y año."""
-    return fetch_overview(periodo=periodo, year=year)
+    return _get_data_service().fetch_overview(periodo=periodo, year=year)
 
 
 @app.get("/api/employees")
@@ -67,7 +77,7 @@ def get_employees(
     offset: int = Query(default=0, ge=0)
 ):
     """Endpoint para paginación de empleados."""
-    employees, total = fetch_employees(limit=limit, offset=offset)
+    employees, total = _get_data_service().fetch_employees(limit=limit, offset=offset)
     return {
         "employees": employees,
         "total": total,
