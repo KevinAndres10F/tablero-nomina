@@ -6,6 +6,7 @@ services:
     plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
     rootDir: backend
     envVars:
       - key: DATA_SOURCE
@@ -24,11 +25,13 @@ services:
         sync: false
       - key: GOOGLE_APPLICATION_CREDENTIALS_JSON
         sync: false
+      - key: APPS_SCRIPT_CHAT_URL
+        sync: false
       - key: PYTHON_VERSION
         value: 3.11.0
 
   - type: static
-    name: kapiroll-web
+    name: tablero-nomina-web
     rootDir: frontend
     staticPublishPath: .
     routes:

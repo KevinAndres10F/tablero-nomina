@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>KAPIROLL | Tablero de Nómina</title>
+    <title>tablero_nomina | Tablero de Nomina</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
@@ -133,7 +133,7 @@
           <div class="bg-primary p-2 rounded-lg text-white">
             <span class="material-symbols-outlined align-middle">account_balance_wallet</span>
           </div>
-          <h1 class="text-xl font-bold tracking-tight text-slate-900">KAPIROLL</h1>
+          <h1 class="text-xl font-bold tracking-tight text-slate-900">TABLERO_NOMINA</h1>
         </div>
         <nav class="flex-1 px-4 py-4 space-y-1">
           <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary font-medium" href="#" data-page="dashboard">
@@ -639,8 +639,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-      const DEFAULT_RENDER_API_BASE = "https://kapiroll-api.onrender.com";
-      const API_BASE = (window.__KAPIROLL_API_BASE__ || DEFAULT_RENDER_API_BASE).replace(/\/$/, "");
+      const DEFAULT_RENDER_API_BASE = "https://tablero-nomina.onrender.com";
+      const API_BASE = (window.__TABLERO_NOMINA_API_BASE__ || window.__KAPIROLL_API_BASE__ || DEFAULT_RENDER_API_BASE).replace(/\/$/, "");
       const API_PREFIX = API_BASE ? `${API_BASE}/api` : "/api";
       const KAPIBOT_API_URL = `${API_PREFIX}/chat`;
       
@@ -685,7 +685,7 @@
       };
 
       const initTheme = () => {
-        const saved = localStorage.getItem('kapiroll-theme');
+        const saved = localStorage.getItem('tablero-nomina-theme');
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         applyTheme(saved || (prefersDark ? 'dark' : 'light'));
 
@@ -693,7 +693,7 @@
         if (!toggle) return;
         toggle.addEventListener('change', () => {
           const next = toggle.checked ? 'dark' : 'light';
-          localStorage.setItem('kapiroll-theme', next);
+          localStorage.setItem('tablero-nomina-theme', next);
           applyTheme(next);
         });
       };
@@ -703,8 +703,8 @@
           const response = await fetch(`${API_PREFIX}/health`);
           if (!response.ok) return;
           const health = await response.json();
-          if ((health.data_source || '').toLowerCase() !== 'sheets') {
-            showBanner('El backend no esta en modo Google Sheets. Configura DATA_SOURCE=sheets para ver los datos de la hoja.', 'warning');
+          if ((health.data_source || '').toLowerCase() !== 'bigquery') {
+            showBanner('El backend no esta en modo BigQuery. Configura DATA_SOURCE=bigquery para esta version del tablero.', 'warning');
           }
         } catch (_error) {
           // Si health falla, loadDashboard mostrara el error principal.
@@ -1860,7 +1860,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'nomina_kapiroll.csv';
+        a.download = 'nomina_tablero_nomina.csv';
         a.click();
       });
 

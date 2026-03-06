@@ -104,6 +104,10 @@ Si necesitas usar otro backend, define en `frontend/index.html`:
 ```
 
 ### Despliegue completo en Render (backend + frontend)
+Guia detallada paso a paso:
+
+- `docs/GUIA_DEPLOY_RENDER_PASO_A_PASO.md`
+
 1. En Render crea un Blueprint usando este repositorio (usa `render.yaml`).
 2. Se crearán dos servicios:
 - `kapiroll-api` (FastAPI)
