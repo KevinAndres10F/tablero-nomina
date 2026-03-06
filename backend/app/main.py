@@ -19,7 +19,7 @@ DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzOoZm5eWkQtx
 
 
 def _get_data_service():
-    source = os.getenv("DATA_SOURCE", "sheets").strip().lower()
+    source = os.getenv("DATA_SOURCE", "bigquery").strip().lower()
     if source == "bigquery":
         return bigquery_service
     return google_sheets_service
@@ -45,7 +45,7 @@ class ChatResponse(BaseModel):
 
 @app.get("/api/health")
 def health_check() -> dict:
-    data_source = os.getenv("DATA_SOURCE", "sheets").strip().lower()
+    data_source = os.getenv("DATA_SOURCE", "bigquery").strip().lower()
     return {
         "status": "ok",
         "data_source": data_source,

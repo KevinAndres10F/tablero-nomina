@@ -1,6 +1,6 @@
 # PayrollOS - Tablero de Nómina
 
-Tablero de visualización tipo Power BI con backend en FastAPI y datos desde Google Sheets (con BigQuery como alternativa).
+Tablero de visualización tipo Power BI con backend en FastAPI y datos de BigQuery (Google Sheets queda como alternativa opcional).
 
 ## Requisitos
 - Python 3.10+
@@ -17,8 +17,19 @@ Tablero de visualización tipo Power BI con backend en FastAPI y datos desde Goo
 El endpoint principal es:
 - GET /api/overview
 
-### Fuente de datos por defecto: Google Sheets
-Se usa por defecto la hoja:
+### Fuente de datos por defecto: BigQuery
+El backend vuelve a operar como antes, consultando BigQuery.
+
+Variables recomendadas en `backend/.env`:
+
+- `DATA_SOURCE=bigquery`
+- `BQ_PROJECT_ID=<tu-proyecto>`
+- `BQ_DATASET=<tu-dataset>`
+- `BQ_TABLE=<tu-tabla>`
+- `GOOGLE_APPLICATION_CREDENTIALS_JSON={...}`
+
+### Fuente alternativa: Google Sheets (opcional)
+Si necesitas usar Sheet temporalmente:
 
 - `https://docs.google.com/spreadsheets/d/1pyzugIeZBDCMq0kTCyWBis9toyzTXWmubGjLhng9vhk`
 
@@ -144,8 +155,8 @@ Notas del proxy Netlify:
 - Si pones solo la IP (sin `http://`), el proxy la normaliza automáticamente.
 - Si pones `.../api`, el proxy corrige la ruta para evitar duplicar `/api/api`.
 
-## Variables de entorno (Sheets + BigQuery)
-- DATA_SOURCE (`sheets` o `bigquery`)
+## Variables de entorno (BigQuery + Sheets)
+- DATA_SOURCE (`bigquery` o `sheets`)
 - GOOGLE_SHEET_ID
 - GOOGLE_SHEET_SOURCE_MODE (`auto`, `api`, `csv`)
 - GOOGLE_SHEET_GID (opcional, para CSV)
@@ -157,4 +168,4 @@ Notas del proxy Netlify:
 - GOOGLE_APPLICATION_CREDENTIALS_JSON (opcional si Sheet publica, requerido para Sheet privada o BigQuery)
 
 ## Nota
-Si hay problemas de permisos en Google Sheets, la API devolvera `error` en `/api/overview` con el detalle para diagnostico.
+Si `DATA_SOURCE=bigquery`, el dashboard usa BigQuery como antes. Si `DATA_SOURCE=sheets`, usa Google Sheets.
