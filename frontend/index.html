@@ -34,6 +34,50 @@
       body {
         font-family: "Inter", sans-serif;
       }
+
+      .dark body {
+        background: #0b1220;
+      }
+
+      .dark .bg-white {
+        background-color: #111827 !important;
+      }
+
+      .dark .bg-background-light,
+      .dark main.bg-background-light {
+        background-color: #0b1220 !important;
+      }
+
+      .dark .text-slate-900,
+      .dark .text-slate-700,
+      .dark .text-slate-600,
+      .dark .text-slate-500 {
+        color: #d1d5db !important;
+      }
+
+      .dark .text-slate-400 {
+        color: #9ca3af !important;
+      }
+
+      .dark .border-slate-200,
+      .dark .divide-slate-200 > * + * {
+        border-color: #374151 !important;
+      }
+
+      .dark .bg-slate-50,
+      .dark .bg-slate-100 {
+        background-color: #1f2937 !important;
+      }
+
+      .dark .hover\:bg-slate-50:hover {
+        background-color: #1f2937 !important;
+      }
+
+      .dark input,
+      .dark select {
+        color: #e5e7eb;
+      }
+
       .custom-scrollbar::-webkit-scrollbar {
         width: 6px;
       }
@@ -151,6 +195,10 @@
                 <span class="material-symbols-outlined text-base">download</span>
                 <span>Exportar CSV</span>
               </button>
+              <button id="theme-toggle" class="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors" title="Cambiar tema">
+                <span id="theme-toggle-icon" class="material-symbols-outlined text-base">dark_mode</span>
+                <span id="theme-toggle-label">Modo nocturno</span>
+              </button>
               <div class="h-8 w-px bg-slate-200 mx-2"></div>
               <div class="flex items-center gap-3">
                 <div class="text-right hidden sm:block">
@@ -162,6 +210,8 @@
             </div>
           </div>
         </header>
+
+        <div id="data-status-banner" class="hidden mx-8 mt-4 rounded-lg border px-4 py-3 text-sm"></div>
 
         <!-- PÁGINA: DASHBOARD -->
         <div class="p-8 page-content" id="page-dashboard">
@@ -561,6 +611,65 @@
       let filters = { area: '', contrato: '', periodo: '', empleado: '', year: '' };
       let filterOptions = { areas: [], contratos: [], periodos: [], years: [] };
       let lastDashboardData = null;  // Guardar datos del dashboard para gráficas
+
+      const getBanner = () => document.getElementById('data-status-banner');
+
+      const showBanner = (message, type = 'error') => {
+        const banner = getBanner();
+        if (!banner) return;
+
+        banner.classList.remove('hidden', 'border-rose-200', 'bg-rose-50', 'text-rose-700', 'border-amber-200', 'bg-amber-50', 'text-amber-700');
+        if (type === 'warning') {
+          banner.classList.add('border-amber-200', 'bg-amber-50', 'text-amber-700');
+        } else {
+          banner.classList.add('border-rose-200', 'bg-rose-50', 'text-rose-700');
+        }
+        banner.textContent = message;
+      };
+
+      const hideBanner = () => {
+        const banner = getBanner();
+        if (!banner) return;
+        banner.classList.add('hidden');
+        banner.textContent = '';
+      };
+
+      const applyTheme = (theme) => {
+        const isDark = theme === 'dark';
+        document.documentElement.classList.toggle('dark', isDark);
+        const icon = document.getElementById('theme-toggle-icon');
+        const label = document.getElementById('theme-toggle-label');
+        if (icon) icon.textContent = isDark ? 'light_mode' : 'dark_mode';
+        if (label) label.textContent = isDark ? 'Modo claro' : 'Modo nocturno';
+      };
+
+      const initTheme = () => {
+        const saved = localStorage.getItem('kapiroll-theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+
+        const toggle = document.getElementById('theme-toggle');
+        if (!toggle) return;
+        toggle.addEventListener('click', () => {
+          const isDark = document.documentElement.classList.contains('dark');
+          const next = isDark ? 'light' : 'dark';
+          localStorage.setItem('kapiroll-theme', next);
+          applyTheme(next);
+        });
+      };
+
+      const verifyDataSource = async () => {
+        try {
+          const response = await fetch(`${API_PREFIX}/health`);
+          if (!response.ok) return;
+          const health = await response.json();
+          if ((health.data_source || '').toLowerCase() !== 'sheets') {
+            showBanner('El backend no esta en modo Google Sheets. Configura DATA_SOURCE=sheets para ver los datos de la hoja.', 'warning');
+          }
+        } catch (_error) {
+          // Si health falla, loadDashboard mostrara el error principal.
+        }
+      };
 
       const formatCurrency = (value, currency = "USD") => {
         return new Intl.NumberFormat("es-ES", {
@@ -1738,6 +1847,9 @@
 
           if (data.error) {
             console.error("Error del servidor:", data.error);
+            showBanner(`No se pudieron cargar datos desde Google Sheets. Detalle: ${data.error}`, 'error');
+          } else {
+            hideBanner();
           }
 
           // Guardar datos del dashboard globalmente
@@ -1763,9 +1875,14 @@
           
           // Actualizar todas las vistas, pasando los datos del dashboard
           updateAllViews(displayEmployees, data);
+
+          if (!data.error && displayEmployees.length === 0) {
+            showBanner('No hay registros para los filtros seleccionados. Prueba limpiarlos o revisar la hoja de Google Sheets.', 'warning');
+          }
           
         } catch (error) {
           console.error("Error cargando dashboard:", error);
+          showBanner('Error de conexion con la API del tablero. Verifica backend y proxy de Netlify.', 'error');
         }
       };
 
@@ -1776,7 +1893,9 @@
         await loadDashboard(null, selectedYear);
       });
 
+      initTheme();
       initKapiBotUI();
+      verifyDataSource();
       loadDashboard();
     </script>
   </body>

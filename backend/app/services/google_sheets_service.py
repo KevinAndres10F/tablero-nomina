@@ -102,6 +102,37 @@ def _normalize_period(value: Any) -> str:
         month = int(compact.group(2))
         return f"{year:04d}-{month:02d}"
 
+    # Formatos de texto: ene 2025, enero-2025, 2025 enero
+    month_tokens = {
+        "ene": 1, "enero": 1,
+        "feb": 2, "febrero": 2,
+        "mar": 3, "marzo": 3,
+        "abr": 4, "abril": 4,
+        "may": 5, "mayo": 5,
+        "jun": 6, "junio": 6,
+        "jul": 7, "julio": 7,
+        "ago": 8, "agosto": 8,
+        "sep": 9, "sept": 9, "septiembre": 9,
+        "oct": 10, "octubre": 10,
+        "nov": 11, "noviembre": 11,
+        "dic": 12, "diciembre": 12,
+    }
+    text = _normalize_text(raw)
+    text = re.sub(r"[^a-z0-9 ]+", " ", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    token_match_1 = re.match(r"^([a-z]+)\s+(\d{4})$", text)
+    token_match_2 = re.match(r"^(\d{4})\s+([a-z]+)$", text)
+    if token_match_1:
+        month = month_tokens.get(token_match_1.group(1))
+        year = int(token_match_1.group(2))
+        if month:
+            return f"{year:04d}-{month:02d}"
+    if token_match_2:
+        year = int(token_match_2.group(1))
+        month = month_tokens.get(token_match_2.group(2))
+        if month:
+            return f"{year:04d}-{month:02d}"
+
     return raw
 
 
@@ -144,6 +175,8 @@ def _header_aliases() -> Dict[str, str]:
         "nombres": "nombre",
         "nombre": "nombre",
         "apellidosynombres": "nombre",
+        "nombresyapellidos": "nombre",
+        "nombrecompleto": "nombre",
         "area": "area",
         "departamento": "area",
         "tipocontrato": "tipo_contrato",
@@ -184,6 +217,38 @@ def _header_aliases() -> Dict[str, str]:
     }
 
 
+def _resolve_canonical_key(raw_key: str) -> str:
+    normalized = _normalize_header(raw_key)
+    aliases = _header_aliases()
+    if normalized in aliases:
+        return aliases[normalized]
+
+    # Fallback por coincidencia parcial para encabezados no estandar.
+    partials = [
+        ("ced", "cedula"),
+        ("identif", "cedula"),
+        ("nombre", "nombre"),
+        ("apellido", "nombre"),
+        ("area", "area"),
+        ("depart", "area"),
+        ("contrato", "tipo_contrato"),
+        ("period", "periodo"),
+        ("ingres", "total_ingresos"),
+        ("descuent", "total_descuentos"),
+        ("provision", "total_provisiones"),
+        ("recibir", "a_recibir"),
+        ("neto", "a_recibir"),
+        ("noct", "recnocturno"),
+        ("iesspat", "iess_patronal"),
+        ("iessper", "iess_personal"),
+    ]
+    for token, canonical in partials:
+        if token in normalized:
+            return canonical
+
+    return ""
+
+
 def _empty_employee_row() -> Dict[str, Any]:
     return {
         "cedula": "",
@@ -211,11 +276,10 @@ def _empty_employee_row() -> Dict[str, Any]:
 
 
 def _map_raw_row(record: Dict[str, Any]) -> Dict[str, Any]:
-    aliases = _header_aliases()
     row = _empty_employee_row()
 
     for key, value in record.items():
-        canonical_key = aliases.get(_normalize_header(key), "")
+        canonical_key = _resolve_canonical_key(key)
         if not canonical_key:
             continue
 
@@ -342,7 +406,11 @@ def _fetch_sheet_rows() -> List[Dict[str, Any]]:
                 raise
 
     message = "; ".join(errors) if errors else "No fue posible leer datos del Sheet"
-    raise ValueError(message)
+    guidance = (
+        " Configura GOOGLE_APPLICATION_CREDENTIALS_JSON y comparte la hoja con el Service Account, "
+        "o publica la hoja para acceso CSV."
+    )
+    raise ValueError(message + guidance)
 
 
 def _get_sheet_rows() -> List[Dict[str, Any]]:
