@@ -486,8 +486,6 @@ const proxyRequest = async (targetUrl, event, timeoutMs) => {
 exports.handler = async (event) => {
   const backendOrigin = normalizeBackendOrigin(
     process.env.BACKEND_API_ORIGIN
-      || process.env.RENDER_API_ORIGIN
-      || "https://kapiroll-api.onrender.com"
   );
 
   const allowDirectSheetsFallback = (process.env.NETLIFY_DIRECT_SHEETS || "false").toLowerCase() === "true";
@@ -501,7 +499,7 @@ exports.handler = async (event) => {
   if (!backendOrigin) {
     return jsonResponse(500, {
       ok: false,
-      error: "No hay BACKEND_API_ORIGIN/RENDER_API_ORIGIN y fallo el fallback de Google Sheet",
+      error: "No hay BACKEND_API_ORIGIN configurado y fallo el fallback de Google Sheet",
     });
   }
 
@@ -528,7 +526,7 @@ exports.handler = async (event) => {
     } catch (retryError) {
       return jsonResponse(502, {
         ok: false,
-        error: "No se pudo conectar con el backend en Render",
+        error: "No se pudo conectar con el backend configurado",
         detail: retryError.message,
         target: targetUrl,
       });
