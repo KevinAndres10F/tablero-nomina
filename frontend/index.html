@@ -297,6 +297,68 @@
         box-shadow: -12px 0 35px rgba(2, 6, 23, 0.2);
       }
 
+      .advanced-grid {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .advanced-card {
+        border: 1px solid var(--border-soft);
+        border-radius: 0.85rem;
+        background: var(--surface);
+        padding: 1rem;
+      }
+
+      .tiny-label {
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 700;
+      }
+
+      .toast-stack {
+        position: fixed;
+        right: 1rem;
+        bottom: 1rem;
+        z-index: 95;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+
+      .toast {
+        min-width: 260px;
+        max-width: 320px;
+        border: 1px solid var(--border-soft);
+        border-radius: 0.75rem;
+        background: var(--surface-strong);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow-strong);
+        padding: 0.7rem 0.8rem;
+        font-size: 0.82rem;
+      }
+
+      .onboarding-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 90;
+        background: rgba(2, 6, 23, 0.6);
+        backdrop-filter: blur(4px);
+      }
+
+      .onboarding-overlay.hidden {
+        display: none;
+      }
+
+      .onboarding-card {
+        width: min(620px, calc(100% - 2rem));
+        border-radius: 1rem;
+        border: 1px solid var(--border-soft);
+        background: var(--surface-strong);
+        box-shadow: var(--shadow-strong);
+      }
+
       #kpi-grid > div {
         animation: fadeUp 0.55s ease both;
       }
@@ -703,6 +765,77 @@
           </div>
 
           <div id="alerts-strip" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"></div>
+
+          <div class="advanced-grid grid-cols-1 xl:grid-cols-3 mb-8" id="advanced-suite">
+            <div class="advanced-card xl:col-span-2">
+              <div class="flex items-center justify-between mb-3">
+                <p class="tiny-label">Centro de Alertas</p>
+                <button id="add-alert-task" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">Nueva tarea</button>
+              </div>
+              <div id="alerts-workflow" class="space-y-2 mb-3"></div>
+              <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                <input id="alert-owner" class="rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="Responsable" />
+                <input id="alert-note" class="rounded-lg border border-slate-200 px-3 py-2 text-sm sm:col-span-2" placeholder="Accion a ejecutar" />
+                <input id="alert-deadline" type="date" class="rounded-lg border border-slate-200 px-3 py-2 text-sm" />
+              </div>
+            </div>
+            <div class="advanced-card">
+              <p class="tiny-label mb-3">Escenarios What-if</p>
+              <div class="space-y-2">
+                <label class="text-xs text-slate-500">Ajuste salarial %</label>
+                <input id="sim-salary" type="range" min="-15" max="30" value="0" class="w-full" />
+                <label class="text-xs text-slate-500">Variacion horas extra %</label>
+                <input id="sim-he" type="range" min="-50" max="80" value="0" class="w-full" />
+                <label class="text-xs text-slate-500">Cambio de estructura %</label>
+                <input id="sim-structure" type="range" min="-20" max="20" value="0" class="w-full" />
+              </div>
+              <div id="sim-result" class="mt-3 rounded-lg border border-slate-200 bg-white p-3 text-sm text-slate-600"></div>
+            </div>
+
+            <div class="advanced-card">
+              <p class="tiny-label mb-3">Presupuesto vs Real</p>
+              <div class="space-y-2">
+                <input id="budget-input" type="number" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="Presupuesto mensual" />
+                <button id="budget-save" class="w-full rounded-lg bg-primary text-white px-3 py-2 text-sm font-semibold">Guardar presupuesto</button>
+              </div>
+              <div id="budget-result" class="mt-3 rounded-lg border border-slate-200 bg-white p-3 text-sm"></div>
+            </div>
+            <div class="advanced-card xl:col-span-2">
+              <p class="tiny-label mb-3">Objetivos por Área</p>
+              <div id="goals-area" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+            </div>
+
+            <div class="advanced-card">
+              <p class="tiny-label mb-3">Forecast 6M</p>
+              <div id="forecast-summary" class="space-y-2 text-sm"></div>
+            </div>
+            <div class="advanced-card">
+              <p class="tiny-label mb-3">Detección de Anomalías</p>
+              <div id="anomaly-summary" class="space-y-2 text-sm"></div>
+            </div>
+            <div class="advanced-card">
+              <p class="tiny-label mb-3">Cohortes de Talento</p>
+              <div id="cohort-summary" class="space-y-2 text-sm"></div>
+            </div>
+
+            <div class="advanced-card xl:col-span-3">
+              <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                <p class="tiny-label">Timeline + Driver Tree + Tabla Smart</p>
+                <div class="flex items-center gap-2">
+                  <button id="save-view" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">Guardar vista</button>
+                  <button id="load-view" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">Cargar vista</button>
+                  <button id="story-mode" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">Story 2 min</button>
+                </div>
+              </div>
+              <input id="timeline-range" type="range" min="0" max="0" value="0" class="w-full mb-3" />
+              <div id="timeline-label" class="text-sm text-slate-600 mb-3"></div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div id="driver-tree" class="rounded-lg border border-slate-200 bg-white p-3 text-sm"></div>
+                <div id="telemetry-panel" class="rounded-lg border border-slate-200 bg-white p-3 text-sm"></div>
+                <div id="audit-panel" class="rounded-lg border border-slate-200 bg-white p-3 text-sm"></div>
+              </div>
+            </div>
+          </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8" id="kpi-grid">
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
@@ -1157,6 +1290,27 @@
       </div>
     </aside>
 
+    <div id="onboarding-overlay" class="onboarding-overlay hidden">
+      <div class="flex h-full items-center justify-center px-4">
+        <div class="onboarding-card p-6">
+          <p class="tiny-label mb-2">Onboarding Inteligente</p>
+          <h3 class="text-2xl font-bold mb-2">Bienvenido al centro de control de nómina</h3>
+          <p class="text-sm text-slate-600 mb-4">Usa <strong>Ctrl/Cmd + K</strong> para comandos rápidos, ajusta el rol en header y explora el módulo avanzado para forecast, anomalías, simulaciones y auditoría.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 text-sm">
+            <div class="rounded-lg border border-slate-200 p-3 bg-white">1. Define rol y filtros</div>
+            <div class="rounded-lg border border-slate-200 p-3 bg-white">2. Revisa semáforos y alertas</div>
+            <div class="rounded-lg border border-slate-200 p-3 bg-white">3. Simula y exporta decisiones</div>
+          </div>
+          <div class="flex justify-end gap-2">
+            <button id="onboarding-skip" class="rounded-lg border border-slate-200 px-3 py-2 text-sm">No mostrar</button>
+            <button id="onboarding-close" class="rounded-lg bg-primary text-white px-3 py-2 text-sm font-semibold">Entendido</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast-stack" class="toast-stack"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script>
@@ -1180,6 +1334,13 @@
       let selectedRole = 'ceo';
       let lastFilteredEmployees = [];
       let currentCommandItems = [];
+      let timelineData = [];
+      const FEATURE_FLAGS = {
+        advancedSuite: true,
+        anomalyDetection: true,
+        forecast: true,
+        telemetry: true,
+      };
 
       const ROLE_PAGE_ACCESS = {
         ceo: ['dashboard', 'provisiones', 'iess', 'horas-extra'],
@@ -1188,6 +1349,31 @@
       };
 
       const getBanner = () => document.getElementById('data-status-banner');
+
+      const logTelemetry = (event, payload = {}) => {
+        if (!FEATURE_FLAGS.telemetry) return;
+        const key = 'tablero_telemetry';
+        const current = JSON.parse(localStorage.getItem(key) || '[]');
+        current.push({ event, payload, ts: new Date().toISOString() });
+        localStorage.setItem(key, JSON.stringify(current.slice(-120)));
+      };
+
+      const logAudit = (action, detail = '') => {
+        const key = 'tablero_audit_log';
+        const current = JSON.parse(localStorage.getItem(key) || '[]');
+        current.push({ action, detail, user: 'KAPI', ts: new Date().toISOString() });
+        localStorage.setItem(key, JSON.stringify(current.slice(-150)));
+      };
+
+      const pushToast = (message, tone = 'ok') => {
+        const stack = document.getElementById('toast-stack');
+        if (!stack) return;
+        const toast = document.createElement('div');
+        toast.className = `toast border-l-4 ${tone === 'risk' ? 'border-red-500' : tone === 'warn' ? 'border-amber-500' : 'border-emerald-500'}`;
+        toast.textContent = message;
+        stack.appendChild(toast);
+        setTimeout(() => toast.remove(), 4200);
+      };
 
       const showBanner = (message, type = 'error') => {
         const banner = getBanner();
@@ -1218,6 +1404,283 @@
         if (toggle) toggle.checked = isDark;
         if (icon) icon.textContent = isDark ? 'light_mode' : 'dark_mode';
         if (label) label.textContent = isDark ? 'Modo claro' : 'Modo nocturno';
+        logTelemetry('theme_change', { theme });
+      };
+
+      const renderTelemetryPanel = () => {
+        const panel = document.getElementById('telemetry-panel');
+        if (!panel) return;
+        const items = JSON.parse(localStorage.getItem('tablero_telemetry') || '[]');
+        const counts = items.reduce((acc, i) => {
+          acc[i.event] = (acc[i.event] || 0) + 1;
+          return acc;
+        }, {});
+        const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 4);
+        panel.innerHTML = `
+          <p class="tiny-label mb-2">Telemetría de uso</p>
+          ${top.map(([event, count]) => `<div class="flex justify-between py-1 border-b border-slate-100"><span>${event}</span><strong>${count}</strong></div>`).join('') || '<p class="text-slate-500">Sin eventos aun.</p>'}
+        `;
+      };
+
+      const renderAuditPanel = () => {
+        const panel = document.getElementById('audit-panel');
+        if (!panel) return;
+        const items = JSON.parse(localStorage.getItem('tablero_audit_log') || '[]').slice(-4).reverse();
+        panel.innerHTML = `
+          <p class="tiny-label mb-2">Auditoría</p>
+          ${items.map((i) => `<div class="py-1 border-b border-slate-100"><p class="font-semibold">${i.action}</p><p class="text-xs text-slate-500">${i.detail} · ${new Date(i.ts).toLocaleString('es-EC')}</p></div>`).join('') || '<p class="text-slate-500">Sin actividad auditada.</p>'}
+        `;
+      };
+
+      const renderAlertsWorkflow = () => {
+        const box = document.getElementById('alerts-workflow');
+        if (!box) return;
+        const tasks = JSON.parse(localStorage.getItem('tablero_alert_tasks') || '[]');
+        box.innerHTML = tasks.map((t, idx) => `
+          <div class="rounded-lg border border-slate-200 bg-white p-2.5 flex items-center justify-between gap-2">
+            <div>
+              <p class="text-sm font-semibold">${t.note || 'Sin acción'}</p>
+              <p class="text-xs text-slate-500">${t.owner || 'Sin responsable'} · ${t.deadline || 'Sin fecha'} · ${t.status}</p>
+            </div>
+            <button class="text-xs px-2 py-1 rounded border border-slate-200 hover:bg-slate-50" data-task-done="${idx}">Marcar</button>
+          </div>
+        `).join('') || '<p class="text-sm text-slate-500">Sin tareas de alertas.</p>';
+
+        box.querySelectorAll('[data-task-done]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const index = Number(btn.dataset.taskDone);
+            const current = JSON.parse(localStorage.getItem('tablero_alert_tasks') || '[]');
+            if (!current[index]) return;
+            current[index].status = 'resuelto';
+            localStorage.setItem('tablero_alert_tasks', JSON.stringify(current));
+            logAudit('alerta_resuelta', current[index].note || '');
+            pushToast('Alerta marcada como resuelta');
+            renderAlertsWorkflow();
+          });
+        });
+      };
+
+      const addAlertTask = () => {
+        const owner = document.getElementById('alert-owner')?.value?.trim();
+        const note = document.getElementById('alert-note')?.value?.trim();
+        const deadline = document.getElementById('alert-deadline')?.value;
+        if (!note) {
+          pushToast('Ingresa una acción para la alerta', 'warn');
+          return;
+        }
+        const current = JSON.parse(localStorage.getItem('tablero_alert_tasks') || '[]');
+        current.push({ owner, note, deadline, status: 'abierto' });
+        localStorage.setItem('tablero_alert_tasks', JSON.stringify(current.slice(-30)));
+        logAudit('alerta_creada', note);
+        pushToast('Tarea de alerta creada');
+        renderAlertsWorkflow();
+      };
+
+      const updateSimulator = () => {
+        const s = Number(document.getElementById('sim-salary')?.value || 0);
+        const he = Number(document.getElementById('sim-he')?.value || 0);
+        const st = Number(document.getElementById('sim-structure')?.value || 0);
+        const result = document.getElementById('sim-result');
+        if (!result) return;
+        const baseCost = lastFilteredEmployees.reduce((sum, e) => sum + (e.total_ingresos || 0) + (e.total_provisiones || 0), 0);
+        const baseHe = lastFilteredEmployees.reduce((sum, e) => sum + (e.h_ext_100 || 0) + (e.h_ext_50 || 0) + (e.recnocturno || 0), 0);
+        const adjusted = baseCost * (1 + (s + st) / 100) + baseHe * (he / 100);
+        const delta = adjusted - baseCost;
+        result.innerHTML = `<p>Base: <strong>${formatCurrency(baseCost, 'USD')}</strong></p><p>Escenario: <strong>${formatCurrency(adjusted, 'USD')}</strong></p><p class="${delta >= 0 ? 'text-rose-600' : 'text-emerald-600'}">Impacto: ${formatCurrency(delta, 'USD')} (${formatPercent(baseCost ? (delta / baseCost) * 100 : 0)})</p>`;
+      };
+
+      const updateBudgetVsReal = () => {
+        const budget = Number(localStorage.getItem('tablero_budget') || 0);
+        const result = document.getElementById('budget-result');
+        if (!result) return;
+        const real = lastFilteredEmployees.reduce((sum, e) => sum + (e.total_ingresos || 0) + (e.total_provisiones || 0), 0);
+        const delta = real - budget;
+        const pct = budget > 0 ? (delta / budget) * 100 : 0;
+        result.innerHTML = `
+          <p>Presupuesto: <strong>${formatCurrency(budget, 'USD')}</strong></p>
+          <p>Real: <strong>${formatCurrency(real, 'USD')}</strong></p>
+          <p class="${delta > 0 ? 'text-rose-600' : 'text-emerald-600'}">Desviación: ${formatCurrency(delta, 'USD')} (${formatPercent(pct)})</p>
+        `;
+      };
+
+      const renderGoalsByArea = () => {
+        const node = document.getElementById('goals-area');
+        if (!node) return;
+        const byArea = {};
+        lastFilteredEmployees.forEach((e) => {
+          const area = e.area || 'Sin area';
+          byArea[area] = (byArea[area] || 0) + (e.total_ingresos || 0) + (e.total_provisiones || 0);
+        });
+        const goals = JSON.parse(localStorage.getItem('tablero_area_goals') || '{}');
+        node.innerHTML = Object.entries(byArea).slice(0, 6).map(([area, value]) => {
+          const goal = goals[area] || Math.round(value * 0.96);
+          const pct = goal > 0 ? Math.min(160, (value / goal) * 100) : 0;
+          return `
+            <div class="rounded-lg border border-slate-200 bg-white p-3">
+              <div class="flex justify-between mb-1"><span class="text-sm font-semibold">${area}</span><span class="text-xs text-slate-500">Meta ${formatCurrency(goal, 'USD')}</span></div>
+              <div class="h-2.5 bg-slate-100 rounded-full mb-1"><div class="h-2.5 rounded-full ${pct > 110 ? 'bg-rose-500' : 'bg-emerald-500'}" style="width:${Math.min(100, pct)}%"></div></div>
+              <p class="text-xs text-slate-500">Real ${formatCurrency(value, 'USD')} · ${pct.toFixed(0)}%</p>
+            </div>
+          `;
+        }).join('') || '<p class="text-sm text-slate-500">Sin áreas disponibles.</p>';
+      };
+
+      const renderForecast = () => {
+        const node = document.getElementById('forecast-summary');
+        if (!node) return;
+        const monthly = (lastDashboardData?.monthly_costs || calcMonthlyCosts(lastFilteredEmployees)).map((m) => m.costo_total ?? ((m.total_ingresos || 0) + (m.total_provisiones || 0)));
+        if (monthly.length < 2) {
+          node.innerHTML = '<p class="text-slate-500">Se requieren al menos 2 periodos para proyectar.</p>';
+          return;
+        }
+        const trend = monthly[monthly.length - 1] - monthly[monthly.length - 2];
+        const forecasts = Array.from({ length: 6 }, (_, i) => monthly[monthly.length - 1] + trend * (i + 1));
+        node.innerHTML = forecasts.map((v, i) => `<div class="flex justify-between"><span>M+${i + 1}</span><strong>${formatCurrency(v, 'USD')}</strong></div>`).join('');
+      };
+
+      const renderAnomalies = () => {
+        const node = document.getElementById('anomaly-summary');
+        if (!node) return;
+        const values = lastFilteredEmployees.map((e) => (e.total_ingresos || 0) + (e.total_provisiones || 0));
+        if (values.length < 5) {
+          node.innerHTML = '<p class="text-slate-500">Muestra insuficiente para detectar anomalías.</p>';
+          return;
+        }
+        const mean = values.reduce((a, b) => a + b, 0) / values.length;
+        const variance = values.reduce((s, v) => s + ((v - mean) ** 2), 0) / values.length;
+        const std = Math.sqrt(variance);
+        const outliers = lastFilteredEmployees.filter((e) => {
+          const v = (e.total_ingresos || 0) + (e.total_provisiones || 0);
+          return std > 0 && Math.abs((v - mean) / std) > 2;
+        }).slice(0, 5);
+        node.innerHTML = outliers.map((e) => `<div class="border-b border-slate-100 py-1"><strong>${e.nombre || 'Sin nombre'}</strong><p class="text-xs text-slate-500">${formatCurrency((e.total_ingresos || 0) + (e.total_provisiones || 0), 'USD')}</p></div>`).join('') || '<p class="text-emerald-600">Sin anomalías relevantes.</p>';
+      };
+
+      const renderCohorts = () => {
+        const node = document.getElementById('cohort-summary');
+        if (!node) return;
+        const now = new Date();
+        const buckets = { '0-1y': 0, '1-3y': 0, '3y+': 0 };
+        lastFilteredEmployees.forEach((e) => {
+          const d = e.fecha_ingreso ? new Date(e.fecha_ingreso) : null;
+          const y = d && !Number.isNaN(d.getTime()) ? (now - d) / (1000 * 60 * 60 * 24 * 365) : 0;
+          if (y < 1) buckets['0-1y'] += 1;
+          else if (y < 3) buckets['1-3y'] += 1;
+          else buckets['3y+'] += 1;
+        });
+        node.innerHTML = Object.entries(buckets).map(([k, v]) => `<div class="flex justify-between"><span>${k}</span><strong>${v}</strong></div>`).join('');
+      };
+
+      const renderDriverTree = () => {
+        const node = document.getElementById('driver-tree');
+        if (!node) return;
+        const ingresos = lastFilteredEmployees.reduce((s, e) => s + (e.total_ingresos || 0), 0);
+        const provisiones = lastFilteredEmployees.reduce((s, e) => s + (e.total_provisiones || 0), 0);
+        const descuentos = lastFilteredEmployees.reduce((s, e) => s + (e.total_descuentos || 0), 0);
+        const he = lastFilteredEmployees.reduce((s, e) => s + (e.h_ext_100 || 0) + (e.h_ext_50 || 0) + (e.recnocturno || 0), 0);
+        node.innerHTML = `
+          <p class="tiny-label mb-2">Driver Tree variación</p>
+          <div class="space-y-1">
+            <div class="flex justify-between"><span>Ingresos</span><strong>${formatCurrency(ingresos, 'USD')}</strong></div>
+            <div class="flex justify-between"><span>Provisiones</span><strong>${formatCurrency(provisiones, 'USD')}</strong></div>
+            <div class="flex justify-between"><span>Descuentos</span><strong>${formatCurrency(descuentos, 'USD')}</strong></div>
+            <div class="flex justify-between"><span>Horas extra</span><strong>${formatCurrency(he, 'USD')}</strong></div>
+          </div>
+        `;
+      };
+
+      const setupTimeline = () => {
+        const range = document.getElementById('timeline-range');
+        const label = document.getElementById('timeline-label');
+        if (!range || !label) return;
+        timelineData = (lastDashboardData?.monthly_costs || calcMonthlyCosts(lastFilteredEmployees)).map((m) => ({
+          periodo: m.periodo || m.month || '-',
+          costo_total: m.costo_total ?? ((m.total_ingresos || 0) + (m.total_provisiones || 0)),
+        })).sort((a, b) => String(a.periodo).localeCompare(String(b.periodo)));
+        const max = Math.max(0, timelineData.length - 1);
+        range.max = String(max);
+        range.value = String(max);
+        const current = timelineData[max];
+        label.textContent = current ? `Periodo activo: ${current.periodo} · ${formatCurrency(current.costo_total, 'USD')}` : 'Sin timeline disponible';
+      };
+
+      const applyTimelineSelection = () => {
+        const range = document.getElementById('timeline-range');
+        const label = document.getElementById('timeline-label');
+        if (!range || !label || !timelineData.length) return;
+        const idx = Number(range.value);
+        const current = timelineData[idx];
+        if (!current) return;
+        label.textContent = `Periodo activo: ${current.periodo} · ${formatCurrency(current.costo_total, 'USD')}`;
+        document.getElementById('filter-periodo').value = current.periodo;
+        filters.periodo = current.periodo;
+        applyFilters();
+      };
+
+      const saveCurrentView = () => {
+        const view = { ...filters, role: selectedRole };
+        localStorage.setItem('tablero_saved_view', JSON.stringify(view));
+        pushToast('Vista guardada');
+        logAudit('vista_guardada', JSON.stringify(view));
+      };
+
+      const loadSavedView = async () => {
+        const raw = localStorage.getItem('tablero_saved_view');
+        if (!raw) {
+          pushToast('No hay vista guardada', 'warn');
+          return;
+        }
+        const view = JSON.parse(raw);
+        if (view.role) {
+          document.getElementById('role-selector').value = view.role;
+          applyRolePreset(view.role, false);
+        }
+        filters = { ...filters, ...view };
+        await loadDashboard(filters.periodo || null, filters.year || null);
+        pushToast('Vista cargada');
+      };
+
+      const startStoryMode = () => {
+        openPresentationMode();
+        setPresentationAutoplay(true);
+        setTimeout(() => {
+          closePresentationMode();
+          pushToast('Story mode finalizado');
+        }, 120000);
+      };
+
+      const runSmokeChecks = () => {
+        const checks = [
+          ['role-selector', !!document.getElementById('role-selector')],
+          ['command-palette', !!document.getElementById('command-palette')],
+          ['alerts-strip', !!document.getElementById('alerts-strip')],
+          ['kpi-grid', !!document.getElementById('kpi-grid')],
+          ['presentation-overlay', !!document.getElementById('presentation-overlay')],
+          ['drilldown-drawer', !!document.getElementById('drilldown-drawer')],
+        ];
+        const failed = checks.filter(([, ok]) => !ok).map(([id]) => id);
+        if (!failed.length) {
+          pushToast('Smoke test OK: componentes criticos disponibles');
+          logAudit('smoke_test', 'ok');
+        } else {
+          pushToast(`Smoke test con fallos: ${failed.join(', ')}`, 'risk');
+          logAudit('smoke_test', `fallos:${failed.join(',')}`);
+        }
+      };
+
+      const renderAdvancedSuite = () => {
+        if (!FEATURE_FLAGS.advancedSuite) return;
+        renderAlertsWorkflow();
+        updateSimulator();
+        updateBudgetVsReal();
+        renderGoalsByArea();
+        if (FEATURE_FLAGS.forecast) renderForecast();
+        if (FEATURE_FLAGS.anomalyDetection) renderAnomalies();
+        renderCohorts();
+        renderDriverTree();
+        renderTelemetryPanel();
+        renderAuditPanel();
+        setupTimeline();
       };
 
       const initTheme = () => {
@@ -1597,6 +2060,7 @@
             { label: 'Abrir modo presentación', hint: 'Narrativa mensual', action: () => openPresentationMode() },
             { label: 'Exportar CSV', hint: 'Descarga datos tabulares', action: () => document.getElementById('export-csv')?.click() },
             { label: 'Exportar PDF ejecutivo', hint: 'Resumen listo para comité', action: () => exportExecutivePdf() },
+            { label: 'Ejecutar smoke test UX', hint: 'Valida flujo critico in-app', action: () => runSmokeChecks() },
           ];
 
           return [...pages, ...actions];
@@ -2198,6 +2662,7 @@
         buildPieChart('contrato', distContrato);
         buildPieChart('area', distArea);
         setupScrollReveal();
+        renderAdvancedSuite();
       };
       
       // Calcular distribución por campo
@@ -3123,6 +3588,15 @@
         try {
           buildDashboardSkeleton();
 
+          const cacheKey = `tablero_cache_${periodo || 'all'}_${year || 'all'}`;
+          const cacheRaw = localStorage.getItem(cacheKey);
+          if (cacheRaw) {
+            const cached = JSON.parse(cacheRaw);
+            if (Date.now() - cached.ts < 5 * 60 * 1000) {
+              updateAllViews(cached.data.employees || [], cached.data);
+            }
+          }
+
           // Construir URL con parámetros de filtro
           let url = `${API_PREFIX}/overview`;
           const params = new URLSearchParams();
@@ -3143,6 +3617,24 @@
 
           // Guardar datos del dashboard globalmente
           lastDashboardData = data;
+          localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data }));
+
+          const years = data?.filter_options?.years || [];
+          const currentYear = String(filters.year || data.selected_year || '');
+          const yearToPrefetch = years.find((y) => String(y) !== currentYear);
+          if (yearToPrefetch) {
+            const prefetchKey = `tablero_cache_all_${yearToPrefetch}`;
+            if (!localStorage.getItem(prefetchKey)) {
+              fetch(`${API_PREFIX}/overview?year=${yearToPrefetch}`)
+                .then((res) => (res.ok ? res.json() : null))
+                .then((prefetched) => {
+                  if (prefetched) {
+                    localStorage.setItem(prefetchKey, JSON.stringify({ ts: Date.now(), data: prefetched }));
+                  }
+                })
+                .catch(() => {});
+            }
+          }
 
           // Actualizar el filtro de año seleccionado
           if (data.selected_year) {
@@ -3185,6 +3677,7 @@
 
       document.getElementById('role-selector')?.addEventListener('change', async (e) => {
         applyRolePreset(e.target.value);
+        logAudit('rol_actualizado', e.target.value);
         await loadDashboard(filters.periodo || null, filters.year || null);
       });
 
@@ -3224,10 +3717,37 @@
         }
       });
 
+      document.getElementById('add-alert-task')?.addEventListener('click', addAlertTask);
+      document.getElementById('sim-salary')?.addEventListener('input', updateSimulator);
+      document.getElementById('sim-he')?.addEventListener('input', updateSimulator);
+      document.getElementById('sim-structure')?.addEventListener('input', updateSimulator);
+      document.getElementById('budget-save')?.addEventListener('click', () => {
+        const value = Number(document.getElementById('budget-input')?.value || 0);
+        localStorage.setItem('tablero_budget', String(value));
+        logAudit('presupuesto_guardado', String(value));
+        updateBudgetVsReal();
+      });
+      document.getElementById('timeline-range')?.addEventListener('input', applyTimelineSelection);
+      document.getElementById('save-view')?.addEventListener('click', saveCurrentView);
+      document.getElementById('load-view')?.addEventListener('click', loadSavedView);
+      document.getElementById('story-mode')?.addEventListener('click', startStoryMode);
+
+      document.getElementById('onboarding-close')?.addEventListener('click', () => {
+        document.getElementById('onboarding-overlay')?.classList.add('hidden');
+        localStorage.setItem('tablero_onboarding_seen', '1');
+      });
+      document.getElementById('onboarding-skip')?.addEventListener('click', () => {
+        document.getElementById('onboarding-overlay')?.classList.add('hidden');
+        localStorage.setItem('tablero_onboarding_seen', '1');
+      });
+
       initCommandPalette();
       applyRolePreset(selectedRole, false);
       initTheme();
       initKapiBotUI();
+      if (!localStorage.getItem('tablero_onboarding_seen')) {
+        document.getElementById('onboarding-overlay')?.classList.remove('hidden');
+      }
       verifyDataSource();
       loadDashboard();
     </script>
