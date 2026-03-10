@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>tablero_nomina | Tablero de Nomina</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <script id="tailwind-config">
       tailwind.config = {
@@ -13,12 +13,15 @@
         theme: {
           extend: {
             colors: {
-              primary: "#13a4ec",
-              "background-light": "#f6f7f8",
-              "background-dark": "#101c22",
+              primary: "#0f766e",
+              "primary-soft": "#14b8a6",
+              "accent-warm": "#f97316",
+              "background-light": "#f4f6f8",
+              "background-dark": "#0f172a",
             },
             fontFamily: {
-              display: ["Inter", "sans-serif"],
+              display: ["Space Grotesk", "sans-serif"],
+              sans: ["Plus Jakarta Sans", "sans-serif"],
             },
             borderRadius: {
               DEFAULT: "0.25rem",
@@ -31,21 +34,253 @@
       };
     </script>
     <style>
+      :root {
+        --bg-main: #f4f6f8;
+        --text-main: #0f172a;
+        --text-muted: #475569;
+        --surface: rgba(255, 255, 255, 0.78);
+        --surface-strong: rgba(255, 255, 255, 0.92);
+        --border-soft: rgba(148, 163, 184, 0.24);
+        --shadow-soft: 0 10px 35px rgba(15, 23, 42, 0.08);
+        --shadow-strong: 0 20px 45px rgba(15, 23, 42, 0.12);
+      }
+
       body {
-        font-family: "Inter", sans-serif;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background: var(--bg-main);
+        color: var(--text-main);
+      }
+
+      .brand-title,
+      h1,
+      h2,
+      h3 {
+        font-family: "Space Grotesk", sans-serif;
+      }
+
+      .ambient-orb {
+        position: absolute;
+        border-radius: 999px;
+        filter: blur(60px);
+        opacity: 0.45;
+        animation: drift 18s ease-in-out infinite;
+      }
+
+      .ambient-orb.teal {
+        width: 28rem;
+        height: 28rem;
+        left: -8rem;
+        top: -9rem;
+        background: radial-gradient(circle at 40% 40%, #2dd4bf 0%, #0f766e 70%);
+      }
+
+      .ambient-orb.orange {
+        width: 24rem;
+        height: 24rem;
+        right: -6rem;
+        top: 25%;
+        background: radial-gradient(circle at 50% 50%, #fb923c 0%, #f97316 70%);
+        animation-delay: -6s;
+      }
+
+      .ambient-orb.blue {
+        width: 20rem;
+        height: 20rem;
+        left: 35%;
+        bottom: -6rem;
+        background: radial-gradient(circle at 50% 50%, #38bdf8 0%, #0ea5e9 70%);
+        animation-delay: -10s;
+      }
+
+      .hero-glow {
+        background:
+          radial-gradient(130% 180% at 0% 0%, rgba(15, 118, 110, 0.18) 0%, rgba(15, 118, 110, 0) 55%),
+          radial-gradient(120% 150% at 100% 20%, rgba(249, 115, 22, 0.16) 0%, rgba(249, 115, 22, 0) 45%),
+          var(--surface-strong);
+        border: 1px solid var(--border-soft);
+        box-shadow: var(--shadow-strong);
+      }
+
+      .glass-card,
+      main .bg-white {
+        background: var(--surface);
+        border-color: var(--border-soft) !important;
+        backdrop-filter: blur(9px);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .data-table thead tr {
+        background: rgba(248, 250, 252, 0.9);
+      }
+
+      .data-table tbody tr {
+        transition: background-color 0.2s ease;
+      }
+
+      .data-table tbody tr:hover {
+        background: rgba(148, 163, 184, 0.08);
+      }
+
+      .insight-pill {
+        border: 1px solid var(--border-soft);
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(6px);
+      }
+
+      .dark .insight-pill {
+        background: rgba(30, 41, 59, 0.65);
+      }
+
+      .empty-state {
+        border: 1px dashed rgba(148, 163, 184, 0.5);
+        background: linear-gradient(135deg, rgba(15, 118, 110, 0.06), rgba(56, 189, 248, 0.05));
+      }
+
+      .skeleton {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.75rem;
+        background: rgba(148, 163, 184, 0.18);
+      }
+
+      .skeleton::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        transform: translateX(-100%);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+        animation: shimmer 1.4s infinite;
+      }
+
+      .dark .skeleton {
+        background: rgba(51, 65, 85, 0.65);
+      }
+
+      .page-content {
+        animation: fadeUp 0.45s ease;
+      }
+
+      .reveal-on-scroll {
+        opacity: 0;
+        transform: translateY(18px) scale(0.99);
+        transition: opacity 0.45s ease, transform 0.45s ease;
+      }
+
+      .reveal-on-scroll.is-visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      .insight-help-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 20px;
+        width: 20px;
+        border-radius: 999px;
+        border: 1px solid var(--border-soft);
+        background: rgba(255, 255, 255, 0.8);
+        color: #0f766e;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .dark .insight-help-btn {
+        background: rgba(30, 41, 59, 0.8);
+      }
+
+      #insight-tooltip {
+        position: fixed;
+        z-index: 70;
+        max-width: 320px;
+        border-radius: 0.75rem;
+        border: 1px solid var(--border-soft);
+        background: var(--surface-strong);
+        backdrop-filter: blur(12px);
+        box-shadow: var(--shadow-strong);
+        padding: 0.65rem 0.75rem;
+        font-size: 0.75rem;
+        color: var(--text-main);
+        pointer-events: none;
+      }
+
+      #insight-tooltip.hidden {
+        display: none;
+      }
+
+      .presentation-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 80;
+        background:
+          radial-gradient(110% 140% at 0% 0%, rgba(20, 184, 166, 0.2), transparent 45%),
+          radial-gradient(80% 100% at 100% 10%, rgba(249, 115, 22, 0.2), transparent 50%),
+          rgba(2, 6, 23, 0.9);
+        backdrop-filter: blur(6px);
+      }
+
+      .presentation-overlay.hidden {
+        display: none;
+      }
+
+      .presentation-card {
+        background: rgba(15, 23, 42, 0.72);
+        border: 1px solid rgba(148, 163, 184, 0.28);
+        box-shadow: 0 28px 65px rgba(2, 6, 23, 0.45);
+      }
+
+      #kpi-grid > div {
+        animation: fadeUp 0.55s ease both;
+      }
+
+      #kpi-grid > div:nth-child(2) {
+        animation-delay: 0.04s;
+      }
+
+      #kpi-grid > div:nth-child(3) {
+        animation-delay: 0.08s;
+      }
+
+      #kpi-grid > div:nth-child(4) {
+        animation-delay: 0.12s;
+      }
+
+      #kpi-grid > div:nth-child(5) {
+        animation-delay: 0.16s;
+      }
+
+      .nav-link {
+        border: 1px solid transparent;
+      }
+
+      .nav-link:hover {
+        border-color: rgba(148, 163, 184, 0.22);
+      }
+
+      .nav-link.active-nav {
+        background: linear-gradient(135deg, rgba(20, 184, 166, 0.16), rgba(56, 189, 248, 0.12));
+        color: #0f766e;
+        border-color: rgba(15, 118, 110, 0.25);
       }
 
       .dark body {
-        background: #0b1220;
+        --bg-main: #020617;
+        --text-main: #e2e8f0;
+        --text-muted: #94a3b8;
+        --surface: rgba(15, 23, 42, 0.72);
+        --surface-strong: rgba(15, 23, 42, 0.88);
+        --border-soft: rgba(51, 65, 85, 0.75);
+        --shadow-soft: 0 14px 40px rgba(2, 6, 23, 0.5);
+        --shadow-strong: 0 24px 48px rgba(2, 6, 23, 0.6);
       }
 
       .dark .bg-white {
-        background-color: #111827 !important;
+        background-color: rgba(15, 23, 42, 0.72) !important;
       }
 
       .dark .bg-background-light,
       .dark main.bg-background-light {
-        background-color: #0b1220 !important;
+        background-color: #020617 !important;
       }
 
       .dark .text-slate-900,
@@ -61,12 +296,12 @@
 
       .dark .border-slate-200,
       .dark .divide-slate-200 > * + * {
-        border-color: #374151 !important;
+        border-color: #334155 !important;
       }
 
       .dark .bg-slate-50,
       .dark .bg-slate-100 {
-        background-color: #1f2937 !important;
+        background-color: rgba(30, 41, 59, 0.85) !important;
       }
 
       .dark .hover\:bg-slate-50:hover {
@@ -107,7 +342,7 @@
       }
 
       .theme-switch input:checked + .theme-switch-track {
-        background: #13a4ec;
+        background: #14b8a6;
       }
 
       .theme-switch input:checked + .theme-switch-track::after {
@@ -124,19 +359,74 @@
         background: #e2e8f0;
         border-radius: 10px;
       }
+
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #334155;
+      }
+
+      #kapibot-panel {
+        border: 1px solid var(--border-soft) !important;
+        background: var(--surface-strong) !important;
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow-strong);
+      }
+
+      #kapibot-panel > div:first-child,
+      #kapibot-toggle {
+        background: linear-gradient(135deg, #0f766e, #0ea5e9) !important;
+      }
+
+      #kapibot-toggle {
+        box-shadow: 0 14px 30px rgba(15, 118, 110, 0.35);
+      }
+
+      @keyframes drift {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        50% {
+          transform: translate3d(15px, -20px, 0) scale(1.05);
+        }
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes shimmer {
+        100% {
+          transform: translateX(100%);
+        }
+      }
     </style>
   </head>
-  <body class="bg-background-light text-slate-900 antialiased font-display">
-    <div class="flex h-screen overflow-hidden">
-      <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0">
+  <body class="bg-background-light text-slate-900 antialiased font-sans">
+    <div class="pointer-events-none fixed inset-0 overflow-hidden">
+      <div class="ambient-orb teal"></div>
+      <div class="ambient-orb orange"></div>
+      <div class="ambient-orb blue"></div>
+    </div>
+
+    <div id="sidebar-backdrop" class="fixed inset-0 z-20 hidden bg-slate-950/50 backdrop-blur-sm lg:hidden"></div>
+
+    <div class="relative z-30 flex h-screen overflow-hidden">
+      <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-72 -translate-x-full border-r border-slate-200 bg-white/90 backdrop-blur-md transition-transform duration-300 ease-out lg:static lg:w-64 lg:translate-x-0 lg:flex lg:flex-col lg:shrink-0">
         <div class="p-6 flex items-center gap-3">
-          <div class="bg-primary p-2 rounded-lg text-white">
+          <div class="bg-primary p-2 rounded-lg text-white shadow-lg shadow-teal-700/30">
             <span class="material-symbols-outlined align-middle">account_balance_wallet</span>
           </div>
-          <h1 class="text-xl font-bold tracking-tight text-slate-900">TABLERO_NOMINA</h1>
+          <h1 class="brand-title text-xl font-bold tracking-tight text-slate-900">TABLERO_NOMINA</h1>
         </div>
         <nav class="flex-1 px-4 py-4 space-y-1">
-          <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary font-medium" href="#" data-page="dashboard">
+          <a class="nav-link active-nav flex items-center gap-3 px-3 py-2 rounded-lg font-medium" href="#" data-page="dashboard">
             <span class="material-symbols-outlined">dashboard</span>
             <span>Dashboard</span>
           </a>
@@ -173,9 +463,26 @@
       </aside>
 
       <main class="flex-1 overflow-y-auto custom-scrollbar bg-background-light">
-        <header class="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-slate-200 px-8 py-4">
+        <header class="sticky top-0 z-10 border-b border-slate-200 bg-white/70 px-4 py-4 backdrop-blur-md sm:px-6 lg:px-8">
+          <div class="hero-glow rounded-2xl p-4 sm:p-5 mb-4">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex items-start gap-3">
+                <button id="sidebar-toggle" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white/80 text-slate-700 lg:hidden" aria-label="Abrir menú">
+                  <span class="material-symbols-outlined text-base">menu</span>
+                </button>
+                <div>
+                  <p class="text-[11px] uppercase tracking-[0.2em] text-slate-500">Payroll Intelligence</p>
+                  <h2 id="page-title" class="text-2xl font-bold text-slate-900">Dashboard Ejecutivo</h2>
+                  <p id="page-subtitle" class="text-sm text-slate-600">Visualiza el pulso de tu nómina en tiempo real y toma decisiones con confianza.</p>
+                </div>
+              </div>
+              <div class="hidden rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700 sm:block">
+                Estado del sistema: Operativo
+              </div>
+            </div>
+          </div>
           <!-- Filtros -->
-          <div class="flex flex-wrap items-center gap-3 mb-4">
+          <div class="glass-card flex flex-wrap items-center gap-3 rounded-2xl p-3 mb-4">
             <div class="flex items-center gap-2">
               <label class="text-xs font-medium text-slate-500">ÁREA</label>
               <select id="filter-area" class="text-sm border border-slate-200 rounded-lg px-3 py-1.5 bg-white focus:ring-2 focus:ring-primary focus:border-primary">
@@ -208,7 +515,7 @@
             </button>
           </div>
           <!-- Barra de búsqueda y acciones -->
-          <div class="flex items-center justify-between">
+          <div class="glass-card flex flex-col gap-3 rounded-2xl p-3 lg:flex-row lg:items-center lg:justify-between">
             <div class="flex items-center gap-4 flex-1 max-w-xl">
               <div class="relative w-full">
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
@@ -220,7 +527,7 @@
                 />
               </div>
             </div>
-            <div class="flex items-center gap-4">
+            <div class="flex flex-wrap items-center gap-3 lg:gap-4">
               <div class="flex items-center gap-2 bg-white border border-slate-200 px-3 py-1.5 rounded-lg">
                 <span class="material-symbols-outlined text-base text-slate-500">calendar_today</span>
                 <select id="filter-year" class="text-sm font-medium border-none bg-transparent focus:ring-0 cursor-pointer pr-6">
@@ -230,6 +537,10 @@
               <button id="export-csv" class="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
                 <span class="material-symbols-outlined text-base">download</span>
                 <span>Exportar CSV</span>
+              </button>
+              <button id="presentation-mode-btn" class="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+                <span class="material-symbols-outlined text-base">slideshow</span>
+                <span>Modo Presentación</span>
               </button>
               <label for="theme-toggle" class="theme-switch flex items-center gap-3 bg-white border border-slate-200 px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors cursor-pointer" title="Cambiar tema">
                 <span id="theme-toggle-icon" class="material-symbols-outlined text-base">dark_mode</span>
@@ -252,7 +563,22 @@
         <div id="data-status-banner" class="hidden mx-8 mt-4 rounded-lg border px-4 py-3 text-sm"></div>
 
         <!-- PÁGINA: DASHBOARD -->
-        <div class="p-8 page-content" id="page-dashboard">
+        <div class="p-4 sm:p-6 lg:p-8 page-content" id="page-dashboard">
+          <div id="insights-strip" class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+            <div class="insight-pill rounded-xl p-4">
+              <p class="text-[11px] uppercase tracking-[0.18em] text-slate-500 mb-2">Insight Principal</p>
+              <p id="insight-main" class="text-sm font-semibold text-slate-700">Cargando insights ejecutivos...</p>
+            </div>
+            <div class="insight-pill rounded-xl p-4">
+              <p class="text-[11px] uppercase tracking-[0.18em] text-slate-500 mb-2">Riesgo Relevante</p>
+              <p id="insight-risk" class="text-sm font-semibold text-slate-700">Analizando concentraciones y tendencia de costos...</p>
+            </div>
+            <div class="insight-pill rounded-xl p-4">
+              <p class="text-[11px] uppercase tracking-[0.18em] text-slate-500 mb-2">Siguiente Accion</p>
+              <p id="insight-action" class="text-sm font-semibold text-slate-700">Preparando recomendacion operativa del periodo...</p>
+            </div>
+          </div>
+
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8" id="kpi-grid">
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
               <div class="flex justify-between items-start mb-3">
@@ -265,7 +591,7 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-8">
             <!-- Gráfica de líneas: Comparativa mes a mes -->
             <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
               <div class="flex items-center justify-between mb-4">
@@ -304,7 +630,7 @@
           </div>
 
           <!-- Gráficas de pastel: Tipo de Contrato y Área -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8">
             <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
               <h3 class="text-lg font-bold mb-1">Distribución por Tipo de Contrato</h3>
               <p class="text-sm text-slate-500 mb-6">Empleados por modalidad contractual</p>
@@ -331,7 +657,7 @@
         <!-- FIN PÁGINA: DASHBOARD -->
 
         <!-- PÁGINA: PROVISIONES -->
-        <div class="p-8 page-content hidden" id="page-provisiones">
+        <div class="p-4 sm:p-6 lg:p-8 page-content hidden" id="page-provisiones">
           <div class="mb-6">
             <h2 class="text-2xl font-bold text-slate-900">Análisis de Provisiones</h2>
             <p class="text-slate-500">Desglose de provisiones: D13, D14, Vacaciones, Fondos Reserva, Aporte Patronal</p>
@@ -398,7 +724,7 @@
               <h3 class="text-lg font-bold">Detalle de Provisiones por Empleado</h3>
             </div>
             <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
+              <table class="data-table w-full text-left border-collapse">
                 <thead>
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
@@ -419,7 +745,7 @@
         <!-- FIN PÁGINA: PROVISIONES -->
 
         <!-- PÁGINA: ANÁLISIS IESS -->
-        <div class="p-8 page-content hidden" id="page-iess">
+        <div class="p-4 sm:p-6 lg:p-8 page-content hidden" id="page-iess">
           <div class="mb-6">
             <h2 class="text-2xl font-bold text-slate-900">Análisis IESS</h2>
             <p class="text-slate-500">Comparativa de aportes y descuentos del Instituto Ecuatoriano de Seguridad Social</p>
@@ -488,7 +814,7 @@
               <h3 class="text-lg font-bold">Detalle IESS por Empleado</h3>
             </div>
             <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
+              <table class="data-table w-full text-left border-collapse">
                 <thead>
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
@@ -509,14 +835,14 @@
         <!-- FIN PÁGINA: ANÁLISIS IESS -->
 
         <!-- PÁGINA: EMPLEADOS -->
-        <div class="p-8 page-content hidden" id="page-empleados">
+        <div class="p-4 sm:p-6 lg:p-8 page-content hidden" id="page-empleados">
           <div class="mb-6">
             <h2 class="text-2xl font-bold text-slate-900">Gestión de Empleados</h2>
             <p class="text-slate-500">Listado completo de empleados y sus datos</p>
           </div>
           <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
+              <table class="data-table w-full text-left border-collapse">
                 <thead>
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
@@ -537,7 +863,7 @@
         <!-- FIN PÁGINA: EMPLEADOS -->
 
         <!-- PÁGINA: ANÁLISIS HORAS EXTRA -->
-        <div class="p-8 page-content hidden" id="page-horas-extra">
+        <div class="p-4 sm:p-6 lg:p-8 page-content hidden" id="page-horas-extra">
           <div class="mb-6">
             <h2 class="text-2xl font-bold text-slate-900">Análisis de Horas Extra</h2>
             <p class="text-slate-500">Desglose y análisis de horas extraordinarias, nocturnas y recargos</p>
@@ -615,7 +941,7 @@
               <p class="text-sm text-slate-500">Empleados con horas extra registradas</p>
             </div>
             <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
+              <table class="data-table w-full text-left border-collapse">
                 <thead>
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
@@ -637,6 +963,43 @@
       </main>
     </div>
 
+    <div id="insight-tooltip" class="hidden"></div>
+
+    <div id="presentation-overlay" class="presentation-overlay hidden">
+      <div class="h-full w-full p-4 sm:p-8">
+        <div class="presentation-card mx-auto flex h-full w-full max-w-6xl flex-col rounded-2xl p-5 sm:p-8 text-white">
+          <div class="mb-6 flex items-center justify-between gap-4">
+            <div>
+              <p class="text-[11px] uppercase tracking-[0.24em] text-slate-300">Board Narrative</p>
+              <h2 class="text-3xl font-bold">Resumen Ejecutivo Mensual</h2>
+            </div>
+            <button id="presentation-close" class="rounded-lg border border-slate-500/40 px-3 py-2 text-sm hover:bg-slate-700/60">Cerrar</button>
+          </div>
+
+          <div class="grid flex-1 grid-cols-1 gap-6 lg:grid-cols-3">
+            <div class="rounded-xl border border-slate-500/30 bg-slate-900/40 p-5 lg:col-span-2">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-300">Periodo</p>
+              <h3 id="presentation-period" class="mt-1 text-4xl font-bold">-</h3>
+              <p id="presentation-cost" class="mt-3 text-2xl font-semibold text-teal-300">$0</p>
+              <p id="presentation-variation" class="mt-2 text-sm text-slate-200">Sin comparativa</p>
+              <p id="presentation-story" class="mt-6 text-lg leading-relaxed text-slate-100">Preparando narrativa...</p>
+            </div>
+
+            <div class="rounded-xl border border-slate-500/30 bg-slate-900/40 p-5">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-300">Control</p>
+              <p id="presentation-progress" class="mt-3 text-sm text-slate-200">Slide 0 de 0</p>
+              <div class="mt-5 grid grid-cols-2 gap-3">
+                <button id="presentation-prev" class="rounded-lg border border-slate-500/40 px-3 py-2 text-sm hover:bg-slate-700/60">Anterior</button>
+                <button id="presentation-next" class="rounded-lg border border-slate-500/40 px-3 py-2 text-sm hover:bg-slate-700/60">Siguiente</button>
+                <button id="presentation-autoplay" class="col-span-2 rounded-lg bg-teal-600 px-3 py-2 text-sm font-semibold hover:bg-teal-500">Auto Play</button>
+                <button id="presentation-fullscreen" class="col-span-2 rounded-lg border border-slate-500/40 px-3 py-2 text-sm hover:bg-slate-700/60">Pantalla Completa</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       const DEFAULT_RENDER_API_BASE = "https://unfrankly-nonevolutionary-verline.ngrok-free.dev";
@@ -650,6 +1013,12 @@
       let filters = { area: '', contrato: '', periodo: '', empleado: '', year: '' };
       let filterOptions = { areas: [], contratos: [], periodos: [], years: [] };
       let lastDashboardData = null;  // Guardar datos del dashboard para gráficas
+      let insightExplanations = { main: '', risk: '', action: '' };
+      let revealObserver = null;
+      let presentationSlides = [];
+      let presentationIndex = 0;
+      let presentationAutoplayTimer = null;
+      let presentationAutoplayOn = false;
 
       const getBanner = () => document.getElementById('data-status-banner');
 
@@ -721,12 +1090,301 @@
 
       const formatPercent = (value) => `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
 
+      const renderEmptyState = (containerId, title, message, icon = 'insights') => {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = `
+          <div class="empty-state rounded-xl p-6 text-center">
+            <div class="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-primary">
+              <span class="material-symbols-outlined">${icon}</span>
+            </div>
+            <p class="text-sm font-semibold text-slate-700">${title}</p>
+            <p class="mt-1 text-xs text-slate-500">${message}</p>
+          </div>
+        `;
+      };
+
+      const buildDashboardSkeleton = () => {
+        const kpi = document.getElementById('kpi-grid');
+        const insights = document.getElementById('insights-strip');
+        const monthly = document.getElementById('monthly-chart-container');
+        const donut = document.getElementById('donut-chart');
+        const breakdown = document.getElementById('breakdown-list');
+        const pieContrato = document.getElementById('pie-contrato');
+        const pieArea = document.getElementById('pie-area');
+        const legendContrato = document.getElementById('legend-contrato');
+        const legendArea = document.getElementById('legend-area');
+
+        if (insights) {
+          insights.innerHTML = Array.from({ length: 3 }).map(() => `
+            <div class="rounded-xl border border-slate-200 bg-white p-4">
+              <div class="skeleton h-3 w-28 mb-3"></div>
+              <div class="skeleton h-4 w-full mb-2"></div>
+              <div class="skeleton h-4 w-2/3"></div>
+            </div>
+          `).join('');
+        }
+
+        if (kpi) {
+          kpi.innerHTML = Array.from({ length: 5 }).map(() => `
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+              <div class="skeleton h-9 w-9 rounded-lg mb-4"></div>
+              <div class="skeleton h-3 w-24 mb-2"></div>
+              <div class="skeleton h-6 w-28"></div>
+            </div>
+          `).join('');
+        }
+
+        if (monthly) monthly.innerHTML = '<div class="skeleton h-full w-full rounded-xl"></div>';
+        if (donut) donut.innerHTML = '';
+        if (breakdown) {
+          breakdown.innerHTML = Array.from({ length: 3 }).map(() => '<div class="skeleton h-4 w-full"></div>').join('');
+        }
+        if (pieContrato) pieContrato.innerHTML = '';
+        if (pieArea) pieArea.innerHTML = '';
+        if (legendContrato) legendContrato.innerHTML = Array.from({ length: 3 }).map(() => '<div class="skeleton h-4 w-full"></div>').join('');
+        if (legendArea) legendArea.innerHTML = Array.from({ length: 3 }).map(() => '<div class="skeleton h-4 w-full"></div>').join('');
+      };
+
+      const deriveInsights = (employees, monthlyData = []) => {
+        if (!employees.length) {
+          return {
+            main: 'No hay datos en este corte. Ajusta filtros o cambia el periodo para recuperar contexto.',
+            risk: 'Sin registros no se puede detectar concentraciones de costo ni desbalances operativos.',
+            action: 'Siguiente paso: limpiar filtros y validar que la fuente cargue al menos un periodo activo.'
+          };
+        }
+
+        const totalCosto = employees.reduce((sum, e) => sum + (e.total_ingresos || 0) + (e.total_provisiones || 0), 0);
+        const areaCost = {};
+        employees.forEach((e) => {
+          const area = e.area || 'Sin area';
+          const cost = (e.total_ingresos || 0) + (e.total_provisiones || 0);
+          areaCost[area] = (areaCost[area] || 0) + cost;
+        });
+
+        const topArea = Object.entries(areaCost).sort((a, b) => b[1] - a[1])[0];
+        const topAreaName = topArea?.[0] || 'Sin area';
+        const topAreaPct = totalCosto > 0 && topArea ? (topArea[1] / totalCosto) * 100 : 0;
+
+        const monthly = [...monthlyData].map((m) => {
+          const costoTotal = m.costo_total ?? ((m.total_ingresos || 0) + (m.total_provisiones || 0));
+          return { periodo: m.periodo || m.month || '-', costo_total: costoTotal };
+        }).filter((m) => Number.isFinite(m.costo_total));
+
+        const monthlySorted = monthly.sort((a, b) => String(a.periodo).localeCompare(String(b.periodo)));
+        const current = monthlySorted[monthlySorted.length - 1];
+        const previous = monthlySorted[monthlySorted.length - 2];
+        const variation = previous && previous.costo_total > 0
+          ? ((current.costo_total - previous.costo_total) / previous.costo_total) * 100
+          : 0;
+
+        return {
+          main: `El area ${topAreaName} concentra ${topAreaPct.toFixed(1)}% del costo total de nomina del periodo visible.`,
+          risk: previous
+            ? `La variacion mensual del costo total es ${formatPercent(variation)} frente a ${previous.periodo}.`
+            : 'Solo hay un periodo visible, aun no existe comparativa mensual robusta.',
+          action: topAreaPct >= 35
+            ? `Recomendacion: revisar productividad y horas extra en ${topAreaName} para reducir concentracion de costo.`
+            : 'Recomendacion: mantener monitoreo semanal y activar alertas cuando una sola area supere 35% del costo total.',
+          explain: {
+            main: `Formula: costo_area / costo_total. Area lider: ${topAreaName}; participacion: ${topAreaPct.toFixed(1)}%.`,
+            risk: previous
+              ? `Formula: (costo_actual - costo_previo) / costo_previo. Actual: ${formatCurrency(current.costo_total || 0, 'USD')}; previo (${previous.periodo}): ${formatCurrency(previous.costo_total || 0, 'USD')}.`
+              : 'Se requiere al menos dos periodos para comparar variacion mensual.',
+            action: topAreaPct >= 35
+              ? `Regla aplicada: si una area supera 35%, priorizar eficiencia en esa area.`
+              : 'Regla aplicada: si ninguna area supera 35%, mantener control preventivo y alertas tempranas.'
+          },
+          meta: {
+            topAreaName,
+            topAreaPct,
+            variation,
+            currentPeriod: current?.periodo || '-'
+          }
+        };
+      };
+
+      const renderInsights = (employees, dashboardData = null) => {
+        const monthlyData = dashboardData?.monthly_costs || calcMonthlyCosts(employees);
+        const insights = deriveInsights(employees, monthlyData);
+        const strip = document.getElementById('insights-strip');
+        if (!strip) return;
+
+        insightExplanations = {
+          main: insights.explain?.main || '',
+          risk: insights.explain?.risk || '',
+          action: insights.explain?.action || ''
+        };
+
+        strip.innerHTML = `
+          <div class="insight-pill rounded-xl p-4 reveal-on-scroll">
+            <div class="mb-2 flex items-center justify-between">
+              <p class="text-[11px] uppercase tracking-[0.18em] text-slate-500">Insight Principal</p>
+              <button class="insight-help-btn" data-insight="main" aria-label="Explicacion insight principal">i</button>
+            </div>
+            <p class="text-sm font-semibold text-slate-700">${insights.main}</p>
+          </div>
+          <div class="insight-pill rounded-xl p-4 reveal-on-scroll">
+            <div class="mb-2 flex items-center justify-between">
+              <p class="text-[11px] uppercase tracking-[0.18em] text-slate-500">Riesgo Relevante</p>
+              <button class="insight-help-btn" data-insight="risk" aria-label="Explicacion riesgo relevante">i</button>
+            </div>
+            <p class="text-sm font-semibold text-slate-700">${insights.risk}</p>
+          </div>
+          <div class="insight-pill rounded-xl p-4 reveal-on-scroll">
+            <div class="mb-2 flex items-center justify-between">
+              <p class="text-[11px] uppercase tracking-[0.18em] text-slate-500">Siguiente Accion</p>
+              <button class="insight-help-btn" data-insight="action" aria-label="Explicacion siguiente accion">i</button>
+            </div>
+            <p class="text-sm font-semibold text-slate-700">${insights.action}</p>
+          </div>
+        `;
+
+        initInsightTooltips();
+      };
+
+      const initInsightTooltips = () => {
+        const tooltip = document.getElementById('insight-tooltip');
+        if (!tooltip) return;
+
+        document.querySelectorAll('.insight-help-btn').forEach((btn) => {
+          btn.addEventListener('mouseenter', (event) => {
+            const key = event.currentTarget.dataset.insight;
+            tooltip.textContent = insightExplanations[key] || 'Sin detalle disponible.';
+            tooltip.classList.remove('hidden');
+          });
+
+          btn.addEventListener('mousemove', (event) => {
+            tooltip.style.left = `${event.clientX + 14}px`;
+            tooltip.style.top = `${event.clientY + 14}px`;
+          });
+
+          btn.addEventListener('mouseleave', () => {
+            tooltip.classList.add('hidden');
+          });
+        });
+      };
+
+      const setupScrollReveal = () => {
+        if (revealObserver) {
+          revealObserver.disconnect();
+        }
+
+        revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+            }
+          });
+        }, { threshold: 0.12 });
+
+        const activePage = document.getElementById(`page-${currentPage}`);
+        if (!activePage) return;
+
+        activePage.querySelectorAll('.bg-white, .insight-pill').forEach((node) => {
+          node.classList.add('reveal-on-scroll');
+          revealObserver.observe(node);
+        });
+      };
+
+      const createPresentationSlides = (monthlyData) => {
+        const monthly = (monthlyData || []).map((m) => {
+          const costo = m.costo_total ?? ((m.total_ingresos || 0) + (m.total_provisiones || 0));
+          return { periodo: m.periodo || m.month || '-', costo_total: costo };
+        }).filter((m) => Number.isFinite(m.costo_total));
+
+        const sorted = monthly.sort((a, b) => String(a.periodo).localeCompare(String(b.periodo)));
+        return sorted.map((row, idx) => {
+          const prev = sorted[idx - 1];
+          const variation = prev && prev.costo_total > 0
+            ? ((row.costo_total - prev.costo_total) / prev.costo_total) * 100
+            : 0;
+          const trendWord = variation > 2 ? 'aceleracion' : variation < -2 ? 'desaceleracion' : 'estabilidad';
+          const story = prev
+            ? `En ${row.periodo}, el costo total llega a ${formatCurrency(row.costo_total, 'USD')} con ${formatPercent(variation)} vs ${prev.periodo}. El periodo muestra ${trendWord} y requiere seguimiento ejecutivo.`
+            : `En ${row.periodo} se establece la linea base con un costo de ${formatCurrency(row.costo_total, 'USD')}.`;
+          return {
+            periodo: row.periodo,
+            costo: row.costo_total,
+            variation,
+            story
+          };
+        });
+      };
+
+      const renderPresentationSlide = () => {
+        const periodEl = document.getElementById('presentation-period');
+        const costEl = document.getElementById('presentation-cost');
+        const variationEl = document.getElementById('presentation-variation');
+        const storyEl = document.getElementById('presentation-story');
+        const progressEl = document.getElementById('presentation-progress');
+
+        if (!presentationSlides.length) {
+          if (periodEl) periodEl.textContent = 'Sin datos';
+          if (costEl) costEl.textContent = '$0';
+          if (variationEl) variationEl.textContent = 'No hay periodos para narrativa';
+          if (storyEl) storyEl.textContent = 'Aplica filtros diferentes o valida la fuente de datos para habilitar el modo presentacion.';
+          if (progressEl) progressEl.textContent = 'Slide 0 de 0';
+          return;
+        }
+
+        const slide = presentationSlides[presentationIndex];
+        if (periodEl) periodEl.textContent = String(slide.periodo);
+        if (costEl) costEl.textContent = formatCurrency(slide.costo, 'USD');
+        if (variationEl) {
+          variationEl.textContent = presentationIndex === 0
+            ? 'Periodo base de referencia'
+            : `Variacion mensual: ${formatPercent(slide.variation)}`;
+        }
+        if (storyEl) storyEl.textContent = slide.story;
+        if (progressEl) progressEl.textContent = `Slide ${presentationIndex + 1} de ${presentationSlides.length}`;
+      };
+
+      const setPresentationAutoplay = (enabled) => {
+        presentationAutoplayOn = enabled;
+        const autoplayBtn = document.getElementById('presentation-autoplay');
+        if (autoplayBtn) {
+          autoplayBtn.textContent = enabled ? 'Pausar Auto Play' : 'Auto Play';
+        }
+
+        if (presentationAutoplayTimer) {
+          clearInterval(presentationAutoplayTimer);
+          presentationAutoplayTimer = null;
+        }
+
+        if (enabled && presentationSlides.length > 1) {
+          presentationAutoplayTimer = setInterval(() => {
+            presentationIndex = (presentationIndex + 1) % presentationSlides.length;
+            renderPresentationSlide();
+          }, 5000);
+        }
+      };
+
+      const openPresentationMode = () => {
+        const overlay = document.getElementById('presentation-overlay');
+        if (!overlay) return;
+        const filteredEmployees = applyFiltersToData(allEmployees);
+        const monthlyData = lastDashboardData?.monthly_costs || calcMonthlyCosts(filteredEmployees);
+        presentationSlides = createPresentationSlides(monthlyData);
+        presentationIndex = Math.max(0, presentationSlides.length - 1);
+        overlay.classList.remove('hidden');
+        renderPresentationSlide();
+      };
+
+      const closePresentationMode = () => {
+        const overlay = document.getElementById('presentation-overlay');
+        if (!overlay) return;
+        overlay.classList.add('hidden');
+        setPresentationAutoplay(false);
+      };
+
       // Navegación entre páginas
       const navigateTo = (page) => {
         currentPage = page;
         document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
         document.querySelectorAll('.nav-link').forEach(l => {
-          l.classList.remove('bg-primary/10', 'text-primary', 'font-medium');
+          l.classList.remove('active-nav', 'font-medium');
           l.classList.add('text-slate-600');
         });
         
@@ -735,10 +1393,77 @@
         
         if (targetPage) targetPage.classList.remove('hidden');
         if (targetLink) {
-          targetLink.classList.add('bg-primary/10', 'text-primary', 'font-medium');
+          targetLink.classList.add('active-nav', 'font-medium');
           targetLink.classList.remove('text-slate-600');
         }
+
+        const pageMeta = {
+          dashboard: {
+            title: 'Dashboard Ejecutivo',
+            subtitle: 'Visualiza el pulso de tu nómina en tiempo real y toma decisiones con confianza.'
+          },
+          empleados: {
+            title: 'Gestión de Empleados',
+            subtitle: 'Explora la data de colaboradores con contexto de costo, contrato y evolución.'
+          },
+          provisiones: {
+            title: 'Análisis de Provisiones',
+            subtitle: 'Entiende composición, tendencia y concentración de provisiones por período.'
+          },
+          iess: {
+            title: 'Análisis IESS',
+            subtitle: 'Contrasta aportes personales y patronales para optimizar planificación financiera.'
+          },
+          'horas-extra': {
+            title: 'Análisis de Horas Extra',
+            subtitle: 'Detecta focos de sobrecosto y oportunidades de eficiencia operativa.'
+          },
+          config: {
+            title: 'Configuración del Sistema',
+            subtitle: 'Ajusta parámetros de operación y personaliza reglas del tablero.'
+          }
+        };
+
+        const titleEl = document.getElementById('page-title');
+        const subtitleEl = document.getElementById('page-subtitle');
+        if (titleEl && subtitleEl && pageMeta[page]) {
+          titleEl.textContent = pageMeta[page].title;
+          subtitleEl.textContent = pageMeta[page].subtitle;
+        }
+
+        setupScrollReveal();
+        closeSidebarOnMobile();
       };
+
+      const sidebar = document.getElementById('sidebar');
+      const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+      const sidebarToggle = document.getElementById('sidebar-toggle');
+
+      const openSidebarOnMobile = () => {
+        if (!sidebar || !sidebarBackdrop) return;
+        sidebar.classList.remove('-translate-x-full');
+        sidebarBackdrop.classList.remove('hidden');
+      };
+
+      const closeSidebarOnMobile = () => {
+        if (!sidebar || !sidebarBackdrop) return;
+        if (window.innerWidth >= 1024) return;
+        sidebar.classList.add('-translate-x-full');
+        sidebarBackdrop.classList.add('hidden');
+      };
+
+      if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', openSidebarOnMobile);
+      }
+      if (sidebarBackdrop) {
+        sidebarBackdrop.addEventListener('click', closeSidebarOnMobile);
+      }
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024 && sidebarBackdrop) {
+          sidebarBackdrop.classList.add('hidden');
+          sidebar?.classList.remove('-translate-x-full');
+        }
+      });
 
       // Inicializar navegación
       document.querySelectorAll('.nav-link').forEach(link => {
@@ -982,6 +1707,8 @@
       // Actualizar todas las vistas con datos filtrados
       const updateAllViews = (employees, dashboardData = null) => {
         const currency = 'USD';
+
+        renderInsights(employees, dashboardData);
         
         // Calcular KPIs desde empleados filtrados
         const totalIngresos = employees.reduce((sum, e) => sum + (e.total_ingresos || 0), 0);
@@ -1015,6 +1742,7 @@
         buildMonthlyLineChart(monthlyCosts, currency);
         buildPieChart('contrato', distContrato);
         buildPieChart('area', distArea);
+        setupScrollReveal();
       };
       
       // Calcular distribución por campo
@@ -1121,6 +1849,7 @@
       const buildDonut = (employees, currency) => {
         const svg = document.getElementById("donut-chart");
         const list = document.getElementById("breakdown-list");
+        const donutTotal = document.getElementById('donut-total');
         svg.innerHTML = "";
         list.innerHTML = "";
 
@@ -1135,6 +1864,15 @@
           { label: "Descuentos", value: totalDescuentos, percent: total > 0 ? (totalDescuentos / total * 100) : 0 },
           { label: "Provisiones", value: totalProvisiones, percent: total > 0 ? (totalProvisiones / total * 100) : 0 }
         ];
+
+        if (donutTotal) {
+          donutTotal.textContent = employees.length ? formatCurrency(total, currency) : '$0';
+        }
+
+        if (!employees.length || total === 0) {
+          renderEmptyState('breakdown-list', 'Sin desglose disponible', 'No hay informacion suficiente para construir el donut.', 'donut_large');
+          return;
+        }
 
         const radius = 70;
         const circumference = 2 * Math.PI * radius;
@@ -1173,14 +1911,24 @@
       // Gráfico de líneas para comparativa mensual
       const buildMonthlyLineChart = (monthlyData, currency) => {
         const svg = document.getElementById("monthly-line-chart");
+        const container = document.getElementById('monthly-chart-container');
         if (!svg) return;
         
         svg.innerHTML = "";
         
         if (!monthlyData || monthlyData.length === 0) {
-          svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#94a3b8" font-size="14">Sin datos mensuales</text>';
+          if (container) {
+            renderEmptyState('monthly-chart-container', 'Sin tendencia mensual', 'Aun no hay periodos suficientes para graficar la evolucion.', 'timeline');
+          }
           return;
         }
+
+        if (container && !container.querySelector('#monthly-line-chart')) {
+          container.innerHTML = '<svg class="w-full h-full" id="monthly-line-chart" preserveAspectRatio="xMidYMid meet"></svg>';
+        }
+        const activeSvg = document.getElementById('monthly-line-chart');
+        if (!activeSvg) return;
+        activeSvg.innerHTML = "";
         
         const width = 600;
         const height = 240;
@@ -1188,7 +1936,7 @@
         const chartWidth = width - padding.left - padding.right;
         const chartHeight = height - padding.top - padding.bottom;
         
-        svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+        activeSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
         
         // Obtener máximo para escala
         const maxValue = Math.max(...monthlyData.map(d => Math.max(d.costo_total || 0, d.ingresos || 0)));
@@ -1210,7 +1958,7 @@
           gridLine.setAttribute("y2", y);
           gridLine.setAttribute("stroke", "#e2e8f0");
           gridLine.setAttribute("stroke-dasharray", "4,4");
-          svg.appendChild(gridLine);
+          activeSvg.appendChild(gridLine);
           
           const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
           label.setAttribute("x", padding.left - 10);
@@ -1219,7 +1967,7 @@
           label.setAttribute("fill", "#64748b");
           label.setAttribute("font-size", "10");
           label.textContent = formatCurrency(value, currency).replace('US$', '');
-          svg.appendChild(label);
+          activeSvg.appendChild(label);
         }
         
         // Dibujar línea de costo total
@@ -1238,7 +1986,7 @@
           path.setAttribute("stroke-width", "2");
           path.setAttribute("stroke-linecap", "round");
           path.setAttribute("stroke-linejoin", "round");
-          svg.appendChild(path);
+          activeSvg.appendChild(path);
           
           // Puntos
           data.forEach((d, i) => {
@@ -1252,7 +2000,7 @@
             circle.setAttribute("fill", color);
             circle.setAttribute("stroke", "white");
             circle.setAttribute("stroke-width", "2");
-            svg.appendChild(circle);
+            activeSvg.appendChild(circle);
           });
         };
         
@@ -1269,7 +2017,7 @@
           label.setAttribute("fill", "#64748b");
           label.setAttribute("font-size", "11");
           label.textContent = d.month || d.periodo?.split('-')[1] || '';
-          svg.appendChild(label);
+          activeSvg.appendChild(label);
         });
       };
       
@@ -1284,13 +2032,13 @@
         legend.innerHTML = "";
         
         if (!data || data.length === 0) {
-          svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#94a3b8" font-size="12">Sin datos</text>';
+          renderEmptyState(`legend-${type}`, 'Sin distribucion', 'No hay informacion suficiente para esta segmentacion.', 'pie_chart');
           return;
         }
         
         const total = data.reduce((sum, d) => sum + (d.count || 0), 0);
         if (total === 0) {
-          svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#94a3b8" font-size="12">Sin datos</text>';
+          renderEmptyState(`legend-${type}`, 'Sin distribucion', 'No hay registros validos en el periodo seleccionado.', 'pie_chart');
           return;
         }
         
@@ -1372,6 +2120,19 @@
       let scatterChart = null;
       
       const buildProvisionesPage = (employees, currency) => {
+        if (!employees.length) {
+          const provBars = document.getElementById('prov-bars');
+          const provTable = document.getElementById('prov-table');
+          document.getElementById('prov-total').textContent = '$0';
+          document.getElementById('prov-d13').textContent = '$0';
+          document.getElementById('prov-d14').textContent = '$0';
+          document.getElementById('prov-vac').textContent = '$0';
+          document.getElementById('prov-iess').textContent = '$0';
+          if (provBars) renderEmptyState('prov-bars', 'Sin datos de provisiones', 'No existen registros con los filtros actuales.', 'savings');
+          if (provTable) provTable.innerHTML = '<tr><td colspan="8" class="px-6 py-10"><div class="empty-state rounded-xl p-6 text-center text-sm text-slate-500">Sin registros para mostrar en provisiones.</div></td></tr>';
+          return;
+        }
+
         // KPIs
         const d13 = employees.reduce((sum, e) => sum + (e.decimo_13 || 0), 0);
         const d14 = employees.reduce((sum, e) => sum + (e.decimo_14 || 0), 0);
@@ -1559,6 +2320,18 @@
 
       // PÁGINA: ANÁLISIS IESS
       const buildIESSPage = (employees, currency) => {
+        if (!employees.length) {
+          const iessBars = document.getElementById('iess-bars');
+          const iessTable = document.getElementById('iess-table');
+          document.getElementById('iess-total').textContent = '$0';
+          document.getElementById('iess-personal').textContent = '$0';
+          document.getElementById('iess-patronal').textContent = '$0';
+          document.getElementById('iess-fondos').textContent = '$0';
+          if (iessBars) renderEmptyState('iess-bars', 'Sin datos IESS', 'No se detectaron aportes para el filtro aplicado.', 'account_balance');
+          if (iessTable) iessTable.innerHTML = '<tr><td colspan="8" class="px-6 py-10"><div class="empty-state rounded-xl p-6 text-center text-sm text-slate-500">Sin registros IESS para mostrar.</div></td></tr>';
+          return;
+        }
+
         const iessPersonal = employees.reduce((sum, e) => sum + (e.iess_personal || 0), 0);
         const iessPatronal = employees.reduce((sum, e) => sum + (e.iess_patronal || 0), 0);
         const fondosReserva = employees.reduce((sum, e) => sum + (e.fondos_reserva || 0), 0);
@@ -1670,6 +2443,11 @@
       const buildEmpleadosPage = (employees, currency) => {
         const table = document.getElementById('empleados-table');
         table.innerHTML = '';
+
+        if (!employees.length) {
+          table.innerHTML = '<tr><td colspan="8" class="px-6 py-10"><div class="empty-state rounded-xl p-6 text-center text-sm text-slate-500">No hay empleados con los filtros actuales.</div></td></tr>';
+          return;
+        }
         
         employees.forEach(e => {
           const initials = (e.nombre || "NN").split(" ").map((part) => part[0]).join("").slice(0, 2);
@@ -1811,6 +2589,15 @@
         // Tabla de empleados con horas extra
         const table = document.getElementById('he-table');
         table.innerHTML = '';
+
+        if (!employees.length) {
+          document.getElementById('he-total-100').textContent = '$0';
+          document.getElementById('he-total-50').textContent = '$0';
+          document.getElementById('he-recargo-nocturno').textContent = '$0';
+          document.getElementById('he-total-general').textContent = '$0';
+          table.innerHTML = '<tr><td colspan="7" class="px-6 py-10"><div class="empty-state rounded-xl p-6 text-center text-sm text-slate-500">No hay registros para analisis de horas extra.</div></td></tr>';
+          return;
+        }
         
         const empleadosConHE = employees
           .filter(e => (e.h_ext_100 || 0) > 0 || (e.h_ext_50 || 0) > 0 || (e.recnocturno || 0) > 0)
@@ -1874,6 +2661,8 @@
 
       const loadDashboard = async (periodo = null, year = null) => {
         try {
+          buildDashboardSkeleton();
+
           // Construir URL con parámetros de filtro
           let url = `${API_PREFIX}/overview`;
           const params = new URLSearchParams();
@@ -1923,6 +2712,7 @@
         } catch (error) {
           console.error("Error cargando dashboard:", error);
           showBanner('Error de conexion con la API del tablero. Verifica backend y proxy de Netlify.', 'error');
+          updateAllViews([], null);
         }
       };
 
@@ -1931,6 +2721,36 @@
         const selectedYear = e.target.value;
         filters.year = selectedYear;
         await loadDashboard(null, selectedYear);
+      });
+
+      document.getElementById('presentation-mode-btn')?.addEventListener('click', openPresentationMode);
+      document.getElementById('presentation-close')?.addEventListener('click', closePresentationMode);
+      document.getElementById('presentation-prev')?.addEventListener('click', () => {
+        if (!presentationSlides.length) return;
+        presentationIndex = (presentationIndex - 1 + presentationSlides.length) % presentationSlides.length;
+        renderPresentationSlide();
+      });
+      document.getElementById('presentation-next')?.addEventListener('click', () => {
+        if (!presentationSlides.length) return;
+        presentationIndex = (presentationIndex + 1) % presentationSlides.length;
+        renderPresentationSlide();
+      });
+      document.getElementById('presentation-autoplay')?.addEventListener('click', () => {
+        setPresentationAutoplay(!presentationAutoplayOn);
+      });
+      document.getElementById('presentation-fullscreen')?.addEventListener('click', async () => {
+        const overlay = document.getElementById('presentation-overlay');
+        if (!overlay) return;
+        if (!document.fullscreenElement) {
+          await overlay.requestFullscreen?.();
+        } else {
+          await document.exitFullscreen?.();
+        }
+      });
+      document.getElementById('presentation-overlay')?.addEventListener('click', (event) => {
+        if (event.target.id === 'presentation-overlay') {
+          closePresentationMode();
+        }
       });
 
       initTheme();
