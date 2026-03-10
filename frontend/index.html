@@ -229,6 +229,74 @@
         box-shadow: 0 28px 65px rgba(2, 6, 23, 0.45);
       }
 
+      .status-pill {
+        border: 1px solid var(--border-soft);
+        border-radius: 999px;
+        padding: 0.2rem 0.65rem;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .status-pill.ok {
+        color: #047857;
+        background: rgba(16, 185, 129, 0.16);
+      }
+
+      .status-pill.warn {
+        color: #b45309;
+        background: rgba(245, 158, 11, 0.18);
+      }
+
+      .status-pill.risk {
+        color: #b91c1c;
+        background: rgba(248, 113, 113, 0.2);
+      }
+
+      .command-palette,
+      .drilldown-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 85;
+        background: rgba(2, 6, 23, 0.55);
+        backdrop-filter: blur(5px);
+      }
+
+      .command-palette.hidden,
+      .drilldown-overlay.hidden,
+      .drilldown-drawer.hidden {
+        display: none;
+      }
+
+      .command-card {
+        width: min(720px, calc(100% - 2rem));
+        border: 1px solid var(--border-soft);
+        background: var(--surface-strong);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-strong);
+      }
+
+      .command-item {
+        transition: background-color 0.15s ease;
+      }
+
+      .command-item:hover,
+      .command-item.active {
+        background: rgba(15, 118, 110, 0.12);
+      }
+
+      .drilldown-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 86;
+        width: min(440px, 100%);
+        height: 100vh;
+        border-left: 1px solid var(--border-soft);
+        background: var(--surface-strong);
+        backdrop-filter: blur(10px);
+        box-shadow: -12px 0 35px rgba(2, 6, 23, 0.2);
+      }
+
       #kpi-grid > div {
         animation: fadeUp 0.55s ease both;
       }
@@ -261,6 +329,45 @@
         background: linear-gradient(135deg, rgba(20, 184, 166, 0.16), rgba(56, 189, 248, 0.12));
         color: #0f766e;
         border-color: rgba(15, 118, 110, 0.25);
+      }
+
+      .dark #sidebar {
+        background:
+          radial-gradient(120% 60% at 0% 0%, rgba(20, 184, 166, 0.14), transparent 45%),
+          linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.96));
+        border-right-color: rgba(71, 85, 105, 0.65) !important;
+        box-shadow: 12px 0 35px rgba(2, 6, 23, 0.35);
+      }
+
+      .dark #sidebar .brand-title {
+        color: #f8fafc !important;
+      }
+
+      .dark #sidebar .bg-primary {
+        background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+        box-shadow: 0 8px 24px rgba(14, 165, 233, 0.3);
+      }
+
+      .dark #sidebar .nav-link {
+        color: #cbd5e1 !important;
+        border-color: transparent;
+      }
+
+      .dark #sidebar .nav-link:hover {
+        color: #f1f5f9 !important;
+        background: rgba(30, 41, 59, 0.75) !important;
+        border-color: rgba(71, 85, 105, 0.6);
+      }
+
+      .dark #sidebar .nav-link.active-nav {
+        color: #5eead4 !important;
+        background: linear-gradient(135deg, rgba(20, 184, 166, 0.22), rgba(56, 189, 248, 0.18));
+        border-color: rgba(94, 234, 212, 0.4);
+        box-shadow: inset 0 0 0 1px rgba(94, 234, 212, 0.16);
+      }
+
+      .dark #sidebar .text-slate-400 {
+        color: #64748b !important;
       }
 
       .dark body {
@@ -534,9 +641,25 @@
                   <option value="">2025</option>
                 </select>
               </div>
+              <div class="flex items-center gap-2 bg-white border border-slate-200 px-3 py-1.5 rounded-lg">
+                <span class="material-symbols-outlined text-base text-slate-500">badge</span>
+                <select id="role-selector" class="text-sm font-medium border-none bg-transparent focus:ring-0 cursor-pointer pr-6">
+                  <option value="ceo">CEO</option>
+                  <option value="finanzas">Finanzas</option>
+                  <option value="rrhh">RRHH</option>
+                </select>
+              </div>
+              <button id="command-palette-btn" class="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors" title="Comandos (Ctrl/Cmd + K)">
+                <span class="material-symbols-outlined text-base">terminal</span>
+                <span>Comandos</span>
+              </button>
               <button id="export-csv" class="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
                 <span class="material-symbols-outlined text-base">download</span>
                 <span>Exportar CSV</span>
+              </button>
+              <button id="export-pdf" class="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+                <span class="material-symbols-outlined text-base">picture_as_pdf</span>
+                <span>Exportar PDF</span>
               </button>
               <button id="presentation-mode-btn" class="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
                 <span class="material-symbols-outlined text-base">slideshow</span>
@@ -578,6 +701,8 @@
               <p id="insight-action" class="text-sm font-semibold text-slate-700">Preparando recomendacion operativa del periodo...</p>
             </div>
           </div>
+
+          <div id="alerts-strip" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"></div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8" id="kpi-grid">
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
@@ -992,6 +1117,7 @@
                 <button id="presentation-prev" class="rounded-lg border border-slate-500/40 px-3 py-2 text-sm hover:bg-slate-700/60">Anterior</button>
                 <button id="presentation-next" class="rounded-lg border border-slate-500/40 px-3 py-2 text-sm hover:bg-slate-700/60">Siguiente</button>
                 <button id="presentation-autoplay" class="col-span-2 rounded-lg bg-teal-600 px-3 py-2 text-sm font-semibold hover:bg-teal-500">Auto Play</button>
+                <button id="presentation-tv" class="col-span-2 rounded-lg border border-slate-500/40 px-3 py-2 text-sm hover:bg-slate-700/60">Modo TV/Kiosco</button>
                 <button id="presentation-fullscreen" class="col-span-2 rounded-lg border border-slate-500/40 px-3 py-2 text-sm hover:bg-slate-700/60">Pantalla Completa</button>
               </div>
             </div>
@@ -1000,7 +1126,39 @@
       </div>
     </div>
 
+    <div id="command-palette" class="command-palette hidden">
+      <div class="flex h-full items-start justify-center pt-[12vh]">
+        <div class="command-card overflow-hidden">
+          <div class="border-b border-slate-200 p-3">
+            <input id="command-input" type="text" placeholder="Buscar acciones, páginas o atajos..." class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/30" />
+          </div>
+          <div id="command-list" class="max-h-[52vh] overflow-y-auto p-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="drilldown-overlay" class="drilldown-overlay hidden"></div>
+    <aside id="drilldown-drawer" class="drilldown-drawer hidden p-5 overflow-y-auto custom-scrollbar">
+      <div class="mb-5 flex items-center justify-between">
+        <div>
+          <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Drill-down</p>
+          <h3 id="drilldown-title" class="text-xl font-bold">Detalle KPI</h3>
+        </div>
+        <button id="drilldown-close" class="rounded-lg border border-slate-200 px-2.5 py-1.5 text-sm hover:bg-slate-50">Cerrar</button>
+      </div>
+      <div id="drilldown-summary" class="mb-5 rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600"></div>
+      <div>
+        <h4 class="mb-2 text-sm font-semibold text-slate-700">Top Áreas</h4>
+        <div id="drilldown-areas" class="space-y-2 mb-5"></div>
+      </div>
+      <div>
+        <h4 class="mb-2 text-sm font-semibold text-slate-700">Top Empleados</h4>
+        <div id="drilldown-employees" class="space-y-2"></div>
+      </div>
+    </aside>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script>
       const DEFAULT_RENDER_API_BASE = "https://unfrankly-nonevolutionary-verline.ngrok-free.dev";
       const API_BASE = (window.__TABLERO_NOMINA_API_BASE__ || window.__KAPIROLL_API_BASE__ || DEFAULT_RENDER_API_BASE).replace(/\/$/, "");
@@ -1019,6 +1177,15 @@
       let presentationIndex = 0;
       let presentationAutoplayTimer = null;
       let presentationAutoplayOn = false;
+      let selectedRole = 'ceo';
+      let lastFilteredEmployees = [];
+      let currentCommandItems = [];
+
+      const ROLE_PAGE_ACCESS = {
+        ceo: ['dashboard', 'provisiones', 'iess', 'horas-extra'],
+        finanzas: ['dashboard', 'provisiones', 'iess'],
+        rrhh: ['dashboard', 'empleados', 'horas-extra']
+      };
 
       const getBanner = () => document.getElementById('data-status-banner');
 
@@ -1090,6 +1257,21 @@
 
       const formatPercent = (value) => `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
 
+      const getRoleLabel = (role) => {
+        if (role === 'finanzas') return 'Finanzas';
+        if (role === 'rrhh') return 'RRHH';
+        return 'CEO';
+      };
+
+      const getMetricValueByKey = (employee, key) => {
+        if (key === 'costo_total') return (employee.total_ingresos || 0) + (employee.total_provisiones || 0);
+        if (key === 'total_ingresos') return employee.total_ingresos || 0;
+        if (key === 'total_provisiones') return employee.total_provisiones || 0;
+        if (key === 'total_descuentos') return employee.total_descuentos || 0;
+        if (key === 'costo_empleado') return (employee.total_ingresos || 0) + (employee.total_provisiones || 0);
+        return 0;
+      };
+
       const renderEmptyState = (containerId, title, message, icon = 'insights') => {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -1114,6 +1296,7 @@
         const pieArea = document.getElementById('pie-area');
         const legendContrato = document.getElementById('legend-contrato');
         const legendArea = document.getElementById('legend-area');
+        const alerts = document.getElementById('alerts-strip');
 
         if (insights) {
           insights.innerHTML = Array.from({ length: 3 }).map(() => `
@@ -1121,6 +1304,15 @@
               <div class="skeleton h-3 w-28 mb-3"></div>
               <div class="skeleton h-4 w-full mb-2"></div>
               <div class="skeleton h-4 w-2/3"></div>
+            </div>
+          `).join('');
+        }
+
+        if (alerts) {
+          alerts.innerHTML = Array.from({ length: 3 }).map(() => `
+            <div class="rounded-xl border border-slate-200 bg-white p-4">
+              <div class="skeleton h-3 w-24 mb-3"></div>
+              <div class="skeleton h-4 w-32"></div>
             </div>
           `).join('');
         }
@@ -1244,6 +1436,67 @@
         initInsightTooltips();
       };
 
+      const buildAlertsStrip = (employees) => {
+        const container = document.getElementById('alerts-strip');
+        if (!container) return;
+
+        if (!employees.length) {
+          container.innerHTML = `
+            <div class="bg-white rounded-xl border border-slate-200 p-4 text-sm text-slate-500 md:col-span-3">
+              No hay datos para evaluar alertas operativas.
+            </div>
+          `;
+          return;
+        }
+
+        const totalCosto = employees.reduce((s, e) => s + (e.total_ingresos || 0) + (e.total_provisiones || 0), 0);
+        const totalHE = employees.reduce((s, e) => s + (e.h_ext_100 || 0) + (e.h_ext_50 || 0) + (e.recnocturno || 0), 0);
+        const heRatio = totalCosto > 0 ? (totalHE / totalCosto) * 100 : 0;
+        const totalProvisiones = employees.reduce((s, e) => s + (e.total_provisiones || 0), 0);
+        const provRatio = totalCosto > 0 ? (totalProvisiones / totalCosto) * 100 : 0;
+
+        const byArea = {};
+        employees.forEach((e) => {
+          const area = e.area || 'Sin area';
+          byArea[area] = (byArea[area] || 0) + (e.total_ingresos || 0) + (e.total_provisiones || 0);
+        });
+        const topArea = Object.entries(byArea).sort((a, b) => b[1] - a[1])[0];
+        const areaConcentration = topArea && totalCosto > 0 ? (topArea[1] / totalCosto) * 100 : 0;
+
+        const getStatus = (value, warn, risk) => value >= risk ? 'risk' : value >= warn ? 'warn' : 'ok';
+        const blocks = [
+          {
+            title: 'Concentración por Área',
+            value: `${areaConcentration.toFixed(1)}%`,
+            detail: `${topArea?.[0] || 'Sin area'} lidera el costo`,
+            status: getStatus(areaConcentration, 30, 40)
+          },
+          {
+            title: 'Peso de Horas Extra',
+            value: `${heRatio.toFixed(1)}%`,
+            detail: 'Participación sobre costo total',
+            status: getStatus(heRatio, 6, 10)
+          },
+          {
+            title: 'Peso Provisiones',
+            value: `${provRatio.toFixed(1)}%`,
+            detail: 'Provisiones sobre costo total',
+            status: getStatus(provRatio, 18, 24)
+          }
+        ];
+
+        container.innerHTML = blocks.map((b) => `
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="mb-2 flex items-center justify-between">
+              <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">${b.title}</p>
+              <span class="status-pill ${b.status}">${b.status === 'risk' ? 'Alto' : b.status === 'warn' ? 'Medio' : 'Bajo'}</span>
+            </div>
+            <p class="text-lg font-bold text-slate-800">${b.value}</p>
+            <p class="text-xs text-slate-500">${b.detail}</p>
+          </div>
+        `).join('');
+      };
+
       const initInsightTooltips = () => {
         const tooltip = document.getElementById('insight-tooltip');
         if (!tooltip) return;
@@ -1286,6 +1539,197 @@
           node.classList.add('reveal-on-scroll');
           revealObserver.observe(node);
         });
+      };
+
+      const applyRolePreset = (role, shouldNavigate = true) => {
+        selectedRole = role;
+        const allowedPages = ROLE_PAGE_ACCESS[role] || ROLE_PAGE_ACCESS.ceo;
+
+        document.querySelectorAll('.nav-link').forEach((link) => {
+          const page = link.dataset.page;
+          const allowed = allowedPages.includes(page);
+          link.classList.toggle('hidden', !allowed);
+        });
+
+        if (!allowedPages.includes(currentPage) && shouldNavigate) {
+          navigateTo(allowedPages[0]);
+          return;
+        }
+
+        if (shouldNavigate) {
+          navigateTo(currentPage);
+        }
+      };
+
+      const initCommandPalette = () => {
+        const palette = document.getElementById('command-palette');
+        const input = document.getElementById('command-input');
+        const list = document.getElementById('command-list');
+        if (!palette || !input || !list) return;
+
+        const renderItems = (items) => {
+          currentCommandItems = items;
+          list.innerHTML = items.map((item, index) => `
+            <button class="command-item ${index === 0 ? 'active' : ''} w-full rounded-lg px-3 py-2 text-left" data-command-index="${index}">
+              <p class="text-sm font-semibold text-slate-800">${item.label}</p>
+              <p class="text-xs text-slate-500">${item.hint}</p>
+            </button>
+          `).join('');
+        };
+
+        const getItems = () => {
+          const allowed = ROLE_PAGE_ACCESS[selectedRole] || ROLE_PAGE_ACCESS.ceo;
+          const pages = [
+            { page: 'dashboard', label: 'Ir a Dashboard' },
+            { page: 'empleados', label: 'Ir a Empleados' },
+            { page: 'provisiones', label: 'Ir a Provisiones' },
+            { page: 'iess', label: 'Ir a Análisis IESS' },
+            { page: 'horas-extra', label: 'Ir a Horas Extra' }
+          ].filter((p) => allowed.includes(p.page)).map((p) => ({
+            label: p.label,
+            hint: 'Navegación rápida',
+            action: () => navigateTo(p.page)
+          }));
+
+          const actions = [
+            { label: 'Aplicar filtros', hint: 'Ejecuta filtros actuales', action: () => applyFilters() },
+            { label: 'Limpiar filtros', hint: 'Reinicia filtros activos', action: () => clearFilters() },
+            { label: 'Abrir modo presentación', hint: 'Narrativa mensual', action: () => openPresentationMode() },
+            { label: 'Exportar CSV', hint: 'Descarga datos tabulares', action: () => document.getElementById('export-csv')?.click() },
+            { label: 'Exportar PDF ejecutivo', hint: 'Resumen listo para comité', action: () => exportExecutivePdf() },
+          ];
+
+          return [...pages, ...actions];
+        };
+
+        const openPalette = () => {
+          palette.classList.remove('hidden');
+          const items = getItems();
+          renderItems(items);
+          input.value = '';
+          input.focus();
+        };
+
+        const closePalette = () => palette.classList.add('hidden');
+
+        const activateIndex = (index) => {
+          const item = currentCommandItems[index];
+          if (!item) return;
+          item.action();
+          closePalette();
+        };
+
+        document.getElementById('command-palette-btn')?.addEventListener('click', openPalette);
+        palette.addEventListener('click', (event) => {
+          if (event.target.id === 'command-palette') closePalette();
+        });
+
+        input.addEventListener('input', () => {
+          const value = input.value.trim().toLowerCase();
+          const items = getItems().filter((i) => (`${i.label} ${i.hint}`).toLowerCase().includes(value));
+          renderItems(items);
+        });
+
+        list.addEventListener('click', (event) => {
+          const button = event.target.closest('[data-command-index]');
+          if (!button) return;
+          activateIndex(Number(button.dataset.commandIndex));
+        });
+
+        document.addEventListener('keydown', (event) => {
+          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+            event.preventDefault();
+            openPalette();
+            return;
+          }
+          if (event.key === 'Escape' && !palette.classList.contains('hidden')) {
+            closePalette();
+          }
+        });
+      };
+
+      const openDrilldown = (metricKey, metricLabel) => {
+        const overlay = document.getElementById('drilldown-overlay');
+        const drawer = document.getElementById('drilldown-drawer');
+        const title = document.getElementById('drilldown-title');
+        const summary = document.getElementById('drilldown-summary');
+        const areas = document.getElementById('drilldown-areas');
+        const employees = document.getElementById('drilldown-employees');
+        if (!overlay || !drawer || !title || !summary || !areas || !employees) return;
+
+        const data = [...lastFilteredEmployees];
+        const total = data.reduce((sum, e) => sum + getMetricValueByKey(e, metricKey), 0);
+
+        const areaMap = {};
+        data.forEach((e) => {
+          const area = e.area || 'Sin area';
+          areaMap[area] = (areaMap[area] || 0) + getMetricValueByKey(e, metricKey);
+        });
+        const areaRows = Object.entries(areaMap)
+          .map(([area, value]) => ({ area, value }))
+          .sort((a, b) => b.value - a.value)
+          .slice(0, 5);
+
+        const employeeRows = data
+          .map((e) => ({ name: e.nombre || 'Sin nombre', value: getMetricValueByKey(e, metricKey) }))
+          .sort((a, b) => b.value - a.value)
+          .slice(0, 7);
+
+        title.textContent = metricLabel;
+        summary.textContent = `Total analizado: ${formatCurrency(total, 'USD')} en ${data.length} registros con rol ${getRoleLabel(selectedRole)}.`;
+
+        areas.innerHTML = areaRows.map((r) => `
+          <div class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm flex items-center justify-between">
+            <span class="text-slate-700">${r.area}</span>
+            <span class="font-semibold text-slate-800">${formatCurrency(r.value, 'USD')}</span>
+          </div>
+        `).join('') || '<p class="text-sm text-slate-500">Sin datos por área.</p>';
+
+        employees.innerHTML = employeeRows.map((r) => `
+          <div class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm flex items-center justify-between">
+            <span class="text-slate-700">${r.name}</span>
+            <span class="font-semibold text-slate-800">${formatCurrency(r.value, 'USD')}</span>
+          </div>
+        `).join('') || '<p class="text-sm text-slate-500">Sin datos por empleado.</p>';
+
+        overlay.classList.remove('hidden');
+        drawer.classList.remove('hidden');
+      };
+
+      const closeDrilldown = () => {
+        document.getElementById('drilldown-overlay')?.classList.add('hidden');
+        document.getElementById('drilldown-drawer')?.classList.add('hidden');
+      };
+
+      const exportExecutivePdf = () => {
+        const jspdfNS = window.jspdf;
+        if (!jspdfNS?.jsPDF) {
+          showBanner('No se pudo cargar el motor de PDF en este momento.', 'warning');
+          return;
+        }
+
+        const { jsPDF } = jspdfNS;
+        const doc = new jsPDF();
+        const monthly = lastDashboardData?.monthly_costs || calcMonthlyCosts(lastFilteredEmployees);
+        const insights = deriveInsights(lastFilteredEmployees, monthly);
+        const totalCost = lastFilteredEmployees.reduce((s, e) => s + (e.total_ingresos || 0) + (e.total_provisiones || 0), 0);
+
+        doc.setFontSize(18);
+        doc.text('Resumen Ejecutivo de Nomina', 14, 18);
+        doc.setFontSize(11);
+        doc.text(`Rol: ${getRoleLabel(selectedRole)}`, 14, 28);
+        doc.text(`Registros: ${lastFilteredEmployees.length}`, 14, 35);
+        doc.text(`Costo total: ${formatCurrency(totalCost, 'USD')}`, 14, 42);
+        doc.text(`Fecha: ${new Date().toLocaleDateString('es-EC')}`, 14, 49);
+
+        doc.setFontSize(12);
+        doc.text('Insights clave', 14, 63);
+        doc.setFontSize(10);
+        doc.text(`1) ${insights.main}`, 14, 71, { maxWidth: 180 });
+        doc.text(`2) ${insights.risk}`, 14, 82, { maxWidth: 180 });
+        doc.text(`3) ${insights.action}`, 14, 93, { maxWidth: 180 });
+
+        doc.save(`resumen_nomina_${Date.now()}.pdf`);
       };
 
       const createPresentationSlides = (monthlyData) => {
@@ -1370,6 +1814,15 @@
         presentationIndex = Math.max(0, presentationSlides.length - 1);
         overlay.classList.remove('hidden');
         renderPresentationSlide();
+      };
+
+      const openTvMode = async () => {
+        openPresentationMode();
+        setPresentationAutoplay(true);
+        const overlay = document.getElementById('presentation-overlay');
+        if (overlay && !document.fullscreenElement) {
+          await overlay.requestFullscreen?.();
+        }
       };
 
       const closePresentationMode = () => {
@@ -1707,8 +2160,10 @@
       // Actualizar todas las vistas con datos filtrados
       const updateAllViews = (employees, dashboardData = null) => {
         const currency = 'USD';
+        lastFilteredEmployees = [...employees];
 
         renderInsights(employees, dashboardData);
+        buildAlertsStrip(employees);
         
         // Calcular KPIs desde empleados filtrados
         const totalIngresos = employees.reduce((sum, e) => sum + (e.total_ingresos || 0), 0);
@@ -1718,11 +2173,11 @@
         const costoPromedio = employees.length > 0 ? (totalIngresos + totalProvisiones) / employees.length : 0;
         
         const kpis = [
-          { label: "Costo Total Nómina", value: totalIngresos + totalProvisiones, icon: "payments" },
-          { label: "Total Ingresos", value: totalIngresos, icon: "trending_up" },
-          { label: "Total Provisiones", value: totalProvisiones, icon: "savings" },
-          { label: "Total Descuentos", value: totalDescuentos, icon: "trending_down" },
-          { label: "Costo por Empleado", value: costoPromedio, icon: "person", subtitle: `${employees.length} empleados` }
+          { key: 'costo_total', label: "Costo Total Nómina", value: totalIngresos + totalProvisiones, icon: "payments" },
+          { key: 'total_ingresos', label: "Total Ingresos", value: totalIngresos, icon: "trending_up" },
+          { key: 'total_provisiones', label: "Total Provisiones", value: totalProvisiones, icon: "savings" },
+          { key: 'total_descuentos', label: "Total Descuentos", value: totalDescuentos, icon: "trending_down" },
+          { key: 'costo_empleado', label: "Costo por Empleado", value: costoPromedio, icon: "person", subtitle: `${employees.length} empleados` }
         ];
         
         buildKPIs(kpis, currency);
@@ -1785,7 +2240,9 @@
 
         kpis.forEach((kpi, index) => {
           const card = document.createElement("div");
-          card.className = "bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow";
+          card.className = "bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer";
+          card.dataset.kpiKey = kpi.key || '';
+          card.dataset.kpiLabel = kpi.label;
           card.innerHTML = `
             <div class="flex justify-between items-start mb-3">
               <div class="p-2 ${colors[index % colors.length]} rounded-lg">
@@ -1796,6 +2253,9 @@
             <h3 class="text-xl font-bold mt-1">${formatCurrency(kpi.value, currency)}</h3>
             ${kpi.subtitle ? `<p class="text-[10px] text-slate-400 mt-1">${kpi.subtitle}</p>` : ''}
           `;
+          card.addEventListener('click', () => {
+            openDrilldown(card.dataset.kpiKey, card.dataset.kpiLabel);
+          });
           grid.appendChild(card);
         });
       };
@@ -2723,6 +3183,16 @@
         await loadDashboard(null, selectedYear);
       });
 
+      document.getElementById('role-selector')?.addEventListener('change', async (e) => {
+        applyRolePreset(e.target.value);
+        await loadDashboard(filters.periodo || null, filters.year || null);
+      });
+
+      document.getElementById('export-pdf')?.addEventListener('click', exportExecutivePdf);
+
+      document.getElementById('drilldown-close')?.addEventListener('click', closeDrilldown);
+      document.getElementById('drilldown-overlay')?.addEventListener('click', closeDrilldown);
+
       document.getElementById('presentation-mode-btn')?.addEventListener('click', openPresentationMode);
       document.getElementById('presentation-close')?.addEventListener('click', closePresentationMode);
       document.getElementById('presentation-prev')?.addEventListener('click', () => {
@@ -2747,12 +3217,15 @@
           await document.exitFullscreen?.();
         }
       });
+      document.getElementById('presentation-tv')?.addEventListener('click', openTvMode);
       document.getElementById('presentation-overlay')?.addEventListener('click', (event) => {
         if (event.target.id === 'presentation-overlay') {
           closePresentationMode();
         }
       });
 
+      initCommandPalette();
+      applyRolePreset(selectedRole, false);
       initTheme();
       initKapiBotUI();
       verifyDataSource();
