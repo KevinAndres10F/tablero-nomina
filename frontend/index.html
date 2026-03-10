@@ -865,6 +865,10 @@
                 <input id="alert-note" class="rounded-lg border border-slate-200 px-3 py-2 text-sm sm:col-span-2" placeholder="Accion a ejecutar" />
                 <input id="alert-deadline" type="date" class="rounded-lg border border-slate-200 px-3 py-2 text-sm" />
               </div>
+              <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 mt-2">
+                <input id="alert-email-to" type="email" class="rounded-lg border border-slate-200 px-3 py-2 text-sm sm:col-span-3" placeholder="Correo destino para alerta" />
+                <button id="send-alert-email" class="rounded-lg bg-slate-900 text-white px-3 py-2 text-sm font-semibold hover:bg-slate-800">Enviar correo</button>
+              </div>
             </div>
             <div class="advanced-card">
               <p class="tiny-label mb-3">Escenarios What-if</p>
@@ -895,6 +899,19 @@
             <div class="advanced-card">
               <p class="tiny-label mb-3">Forecast 6M</p>
               <div id="forecast-summary" class="space-y-2 text-sm"></div>
+            </div>
+            <div class="advanced-card xl:col-span-2">
+              <p class="tiny-label mb-3">Copilot de Negocio</p>
+              <div class="flex flex-wrap gap-2 mb-3">
+                <button class="text-xs px-2 py-1 rounded border border-slate-200 hover:bg-slate-50" data-copilot-prompt="¿Cuál es el mayor riesgo de costo este mes?">Riesgo principal</button>
+                <button class="text-xs px-2 py-1 rounded border border-slate-200 hover:bg-slate-50" data-copilot-prompt="¿Qué área explica más el costo y por qué?">Driver por área</button>
+                <button class="text-xs px-2 py-1 rounded border border-slate-200 hover:bg-slate-50" data-copilot-prompt="¿Qué acciones priorizar para reducir la desviación?">Plan de acción</button>
+              </div>
+              <div class="flex gap-2 mb-2">
+                <input id="business-copilot-input" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="Pregunta de negocio (costos, riesgos, áreas, acciones)" />
+                <button id="business-copilot-send" class="rounded-lg bg-primary text-white px-3 py-2 text-sm font-semibold">Preguntar</button>
+              </div>
+              <div id="business-copilot-output" class="rounded-lg border border-slate-200 bg-white p-3 text-sm text-slate-700">Haz una pregunta para recibir recomendaciones ejecutivas.</div>
             </div>
             <div class="advanced-card">
               <p class="tiny-label mb-3">Detección de Anomalías</p>
@@ -1405,6 +1422,10 @@
       const API_BASE = (window.__KAPIROLL_API_BASE__ || window.__TABLERO_NOMINA_API_BASE__ || DEFAULT_RENDER_API_BASE).replace(/\/$/, "");
       const API_PREFIX = API_BASE ? `${API_BASE}/api` : "/api";
       const KAPIBOT_API_URL = `${API_PREFIX}/chat`;
+      const FORECAST_API_URL = `${API_PREFIX}/forecast`;
+      const ALERTS_EMAIL_API_URL = `${API_PREFIX}/alerts/email`;
+      const BUSINESS_COPILOT_API_URL = `${API_PREFIX}/copilot/business-chat`;
+      const TELEMETRY_EVENTS_API_URL = `${API_PREFIX}/telemetry/events`;
       
       // Estado global
       let allEmployees = [];
@@ -1422,6 +1443,7 @@
       let lastFilteredEmployees = [];
       let currentCommandItems = [];
       let timelineData = [];
+      let latestForecast = null;
       const FEATURE_FLAGS = {
         advancedSuite: true,
         anomalyDetection: true,
@@ -1443,6 +1465,12 @@
         const current = JSON.parse(localStorage.getItem(key) || '[]');
         current.push({ event, payload, ts: new Date().toISOString() });
         localStorage.setItem(key, JSON.stringify(current.slice(-120)));
+        fetch(TELEMETRY_EVENTS_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ event, payload: { ...payload, ts: new Date().toISOString() } }),
+          keepalive: true,
+        }).catch(() => {});
       };
 
       const logAudit = (action, detail = '') => {
@@ -1563,6 +1591,49 @@
         renderAlertsWorkflow();
       };
 
+      const sendAlertEmail = async () => {
+        const to = document.getElementById('alert-email-to')?.value?.trim();
+        if (!to) {
+          pushToast('Ingresa un correo destino', 'warn');
+          return;
+        }
+        const owner = document.getElementById('alert-owner')?.value?.trim() || 'Sin responsable';
+        const note = document.getElementById('alert-note')?.value?.trim() || 'Sin accion definida';
+        const deadline = document.getElementById('alert-deadline')?.value || 'Sin fecha';
+        const totalCost = lastFilteredEmployees.reduce((sum, e) => sum + (e.total_ingresos || 0) + (e.total_provisiones || 0), 0);
+        const message = [
+          'Alerta operativa generada desde KAPIROLL',
+          `Responsable: ${owner}`,
+          `Accion: ${note}`,
+          `Fecha objetivo: ${deadline}`,
+          `Periodo filtro: ${filters.periodo || 'Todos'}`,
+          `Anio filtro: ${filters.year || 'Todos'}`,
+          `Costo total visible: ${formatCurrency(totalCost, 'USD')}`,
+        ].join('\n');
+
+        try {
+          const response = await fetch(ALERTS_EMAIL_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              to,
+              subject: 'KAPIROLL - Alerta Operativa',
+              message,
+            }),
+          });
+          const data = await response.json();
+          if (!response.ok || !data?.ok) {
+            throw new Error(data?.error || 'No se pudo enviar la alerta por correo.');
+          }
+          pushToast('Alerta enviada por correo');
+          logAudit('alerta_enviada_email', `${to} · ${note}`);
+          logTelemetry('alert_email_sent', { toDomain: to.split('@')[1] || 'unknown' });
+        } catch (error) {
+          pushToast(`Error al enviar correo: ${error.message || 'desconocido'}`, 'risk');
+          logAudit('alerta_email_error', String(error?.message || error));
+        }
+      };
+
       const updateSimulator = () => {
         const s = Number(document.getElementById('sim-salary')?.value || 0);
         const he = Number(document.getElementById('sim-he')?.value || 0);
@@ -1612,17 +1683,75 @@
         }).join('') || '<p class="text-sm text-slate-500">Sin áreas disponibles.</p>';
       };
 
-      const renderForecast = () => {
+      const renderForecast = async () => {
         const node = document.getElementById('forecast-summary');
         if (!node) return;
-        const monthly = (lastDashboardData?.monthly_costs || calcMonthlyCosts(lastFilteredEmployees)).map((m) => m.costo_total ?? ((m.total_ingresos || 0) + (m.total_provisiones || 0)));
-        if (monthly.length < 2) {
-          node.innerHTML = '<p class="text-slate-500">Se requieren al menos 2 periodos para proyectar.</p>';
+        node.innerHTML = '<p class="text-slate-500">Calculando forecast robusto...</p>';
+
+        try {
+          const params = new URLSearchParams();
+          if (filters.year) params.append('year', filters.year);
+          params.append('horizon', '6');
+          const response = await fetch(`${FORECAST_API_URL}?${params.toString()}`);
+          const data = await response.json();
+          if (!response.ok || !data?.ok || !Array.isArray(data.forecast)) {
+            throw new Error(data?.error || 'Forecast no disponible.');
+          }
+
+          latestForecast = data;
+          node.innerHTML = `
+            <div class="text-xs text-slate-500 mb-1">Método: ${data.method || 'seasonal-trend'} · Historial: ${data.history_points || 0} periodos</div>
+            ${data.forecast.map((f) => `
+              <div class="rounded-lg border border-slate-200 px-2.5 py-2 bg-white">
+                <div class="flex justify-between"><span>M+${f.step}</span><strong>${formatCurrency(f.forecast, 'USD')}</strong></div>
+                <p class="text-[11px] text-slate-500">Banda 95%: ${formatCurrency(f.lower_95, 'USD')} - ${formatCurrency(f.upper_95, 'USD')}</p>
+              </div>
+            `).join('')}
+          `;
+        } catch (_error) {
+          const monthly = (lastDashboardData?.monthly_costs || calcMonthlyCosts(lastFilteredEmployees)).map((m) => m.costo_total ?? ((m.total_ingresos || 0) + (m.total_provisiones || 0)));
+          if (monthly.length < 2) {
+            node.innerHTML = '<p class="text-slate-500">Se requieren al menos 2 periodos para proyectar.</p>';
+            return;
+          }
+          const trend = monthly[monthly.length - 1] - monthly[monthly.length - 2];
+          const forecasts = Array.from({ length: 6 }, (_, i) => monthly[monthly.length - 1] + trend * (i + 1));
+          node.innerHTML = `
+            <p class="text-xs text-amber-600 mb-1">Forecast robusto no disponible, usando tendencia lineal local.</p>
+            ${forecasts.map((v, i) => `<div class="flex justify-between"><span>M+${i + 1}</span><strong>${formatCurrency(v, 'USD')}</strong></div>`).join('')}
+          `;
+        }
+      };
+
+      const askBusinessCopilot = async (question) => {
+        const output = document.getElementById('business-copilot-output');
+        if (!output) return;
+        const prompt = (question || '').trim();
+        if (!prompt) {
+          pushToast('Escribe una pregunta para el Copilot', 'warn');
           return;
         }
-        const trend = monthly[monthly.length - 1] - monthly[monthly.length - 2];
-        const forecasts = Array.from({ length: 6 }, (_, i) => monthly[monthly.length - 1] + trend * (i + 1));
-        node.innerHTML = forecasts.map((v, i) => `<div class="flex justify-between"><span>M+${i + 1}</span><strong>${formatCurrency(v, 'USD')}</strong></div>`).join('');
+        output.textContent = 'Analizando contexto de negocio...';
+        try {
+          const response = await fetch(BUSINESS_COPILOT_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              question: prompt,
+              year: filters.year ? Number(filters.year) : undefined,
+              periodo: filters.periodo || undefined,
+            }),
+          });
+          const data = await response.json();
+          if (!response.ok || !data?.ok) {
+            throw new Error(data?.error || 'No se pudo responder la consulta.');
+          }
+          output.textContent = data.answer || 'Sin contenido en la respuesta.';
+          logTelemetry('business_copilot_question', { chars: prompt.length });
+          logAudit('copilot_consulta', prompt.slice(0, 120));
+        } catch (error) {
+          output.textContent = `Error: ${error.message || 'sin detalle'}`;
+        }
       };
 
       const renderAnomalies = () => {
@@ -2672,15 +2801,29 @@
           setTyping(true);
 
           try {
-            const response = await fetch(KAPIBOT_API_URL, {
+            const response = await fetch(BUSINESS_COPILOT_API_URL, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ question })
+              body: JSON.stringify({
+                question,
+                year: filters.year ? Number(filters.year) : undefined,
+                periodo: filters.periodo || undefined,
+              })
             });
 
             const data = await response.json();
             if (!response.ok || !data?.ok) {
-              messages.push({ role: 'assistant', text: `Error: ${data?.error || 'No se pudo obtener respuesta del asistente.'}` });
+              const fallback = await fetch(KAPIBOT_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question })
+              });
+              const fallbackData = await fallback.json();
+              if (!fallback.ok || !fallbackData?.ok) {
+                messages.push({ role: 'assistant', text: `Error: ${data?.error || fallbackData?.error || 'No se pudo obtener respuesta del asistente.'}` });
+              } else {
+                messages.push({ role: 'assistant', text: fallbackData.answer || 'No recibí contenido en la respuesta.' });
+              }
             } else {
               messages.push({ role: 'assistant', text: data.answer || 'No recibí contenido en la respuesta.' });
             }
@@ -3805,6 +3948,7 @@
       });
 
       document.getElementById('add-alert-task')?.addEventListener('click', addAlertTask);
+      document.getElementById('send-alert-email')?.addEventListener('click', sendAlertEmail);
       document.getElementById('sim-salary')?.addEventListener('input', updateSimulator);
       document.getElementById('sim-he')?.addEventListener('input', updateSimulator);
       document.getElementById('sim-structure')?.addEventListener('input', updateSimulator);
@@ -3818,6 +3962,25 @@
       document.getElementById('save-view')?.addEventListener('click', saveCurrentView);
       document.getElementById('load-view')?.addEventListener('click', loadSavedView);
       document.getElementById('story-mode')?.addEventListener('click', startStoryMode);
+
+      document.getElementById('business-copilot-send')?.addEventListener('click', () => {
+        const input = document.getElementById('business-copilot-input');
+        askBusinessCopilot(input?.value || '');
+      });
+      document.getElementById('business-copilot-input')?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          askBusinessCopilot(event.target.value || '');
+        }
+      });
+      document.querySelectorAll('[data-copilot-prompt]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const prompt = btn.dataset.copilotPrompt || '';
+          const input = document.getElementById('business-copilot-input');
+          if (input) input.value = prompt;
+          askBusinessCopilot(prompt);
+        });
+      });
 
       document.getElementById('onboarding-close')?.addEventListener('click', () => {
         document.getElementById('onboarding-overlay')?.classList.add('hidden');
