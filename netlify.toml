@@ -1,12 +1,9 @@
 [build]
-  publish = "frontend"
-  command = "echo 'No build needed'"
-
-[functions]
-  directory = "netlify/functions"
+  base = "frontend-app"
+  publish = "frontend-app/dist"
+  command = "npm install && npm run build"
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api-proxy/:splat"
+  from = "/*"
+  to = "/index.html"
   status = 200
-  force = true

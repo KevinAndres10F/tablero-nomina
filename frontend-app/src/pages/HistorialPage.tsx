@@ -1,0 +1,96 @@
+import { useState, useEffect } from 'react';
+import { Clock } from 'lucide-react';
+import { getPayrollRecords, getEmployees } from '../lib/storage';
+import { formatCurrency, formatPeriod } from '../lib/format';
+import type { PayrollRecord, Employee } from '../types';
+
+export default function HistorialPage() {
+  const [records, setRecords] = useState<PayrollRecord[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [selectedPeriod, setSelectedPeriod] = useState('');
+
+  useEffect(() => {
+    setRecords(getPayrollRecords());
+    setEmployees(getEmployees());
+  }, []);
+
+  const periods = [...new Set(records.map(r => r.period))].sort().reverse();
+
+  useEffect(() => {
+    if (periods.length > 0 && !selectedPeriod) setSelectedPeriod(periods[0]);
+  }, [periods, selectedPeriod]);
+
+  const filtered = selectedPeriod ? records.filter(r => r.period === selectedPeriod) : records;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-3">
+        <div className="p-2 bg-indigo-100 rounded-lg">
+          <Clock className="w-6 h-6 text-indigo-600" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Historial</h1>
+          <p className="text-sm text-gray-500">Registros históricos de nómina</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+          <p className="text-sm text-gray-500">Períodos Procesados</p>
+          <p className="text-2xl font-bold text-indigo-600">{periods.length}</p>
+        </div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+          <p className="text-sm text-gray-500">Total Registros</p>
+          <p className="text-2xl font-bold text-gray-900">{records.length}</p>
+        </div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+          <p className="text-sm text-gray-500">Total Pagado (todos)</p>
+          <p className="text-2xl font-bold text-green-600">{formatCurrency(records.reduce((s, r) => s + r.netPay, 0))}</p>
+        </div>
+      </div>
+
+      {periods.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {periods.map(p => (
+            <button key={p} onClick={() => setSelectedPeriod(p)}
+              className={`px-3 py-1 rounded-lg text-sm ${selectedPeriod === p ? 'bg-indigo-100 text-indigo-700 font-medium' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+              {formatPeriod(p)}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-4 py-3 text-left font-medium text-gray-700">Período</th>
+                <th className="px-4 py-3 text-left font-medium text-gray-700">Empleado</th>
+                <th className="px-4 py-3 text-right font-medium text-gray-700">Ingresos</th>
+                <th className="px-4 py-3 text-right font-medium text-gray-700">Deducciones</th>
+                <th className="px-4 py-3 text-right font-medium text-gray-700">Neto</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {filtered.length === 0 ? (
+                <tr><td colSpan={5} className="text-center py-12"><Clock className="w-12 h-12 text-gray-300 mx-auto mb-3" /><p className="text-gray-500">No hay registros históricos</p></td></tr>
+              ) : filtered.map(r => {
+                const emp = employees.find(e => e.id === r.employeeId);
+                return (
+                  <tr key={r.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3"><span className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs">{formatPeriod(r.period)}</span></td>
+                    <td className="px-4 py-3 font-medium">{emp ? `${emp.firstName} ${emp.lastName}` : '—'}</td>
+                    <td className="px-4 py-3 text-right text-green-600">{formatCurrency(r.totalIncome)}</td>
+                    <td className="px-4 py-3 text-right text-red-600">{formatCurrency(r.totalDeductions)}</td>
+                    <td className="px-4 py-3 text-right font-bold">{formatCurrency(r.netPay)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
