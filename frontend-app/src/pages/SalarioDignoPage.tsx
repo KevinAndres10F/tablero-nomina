@@ -30,33 +30,60 @@ export default function SalarioDignoPage() {
   const totalGap = calculations.reduce((s, c) => s + c.gap, 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center gap-3">
-        <div className="p-2 bg-violet-100 rounded-lg">
+        <div className="p-2 bg-violet-100 rounded-lg shrink-0">
           <Scale className="w-6 h-6 text-violet-600" />
         </div>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Salario Digno</h1>
-          <p className="text-sm text-gray-500">Verificación de cumplimiento del salario digno (SBU: {formatCurrency(sbu)})</p>
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Salario Digno</h1>
+          <p className="text-sm text-gray-500 hidden sm:block">Verificación de cumplimiento del salario digno (SBU: {formatCurrency(sbu)})</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <p className="text-sm text-gray-500">Cumplen</p>
-          <p className="text-2xl font-bold text-green-600">{compliantCount}</p>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-4">
+          <p className="text-xs sm:text-sm text-gray-500">Cumplen</p>
+          <p className="text-lg sm:text-2xl font-bold text-green-600">{compliantCount}</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <p className="text-sm text-gray-500">No Cumplen</p>
-          <p className="text-2xl font-bold text-red-600">{employees.length - compliantCount}</p>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-4">
+          <p className="text-xs sm:text-sm text-gray-500">No Cumplen</p>
+          <p className="text-lg sm:text-2xl font-bold text-red-600">{employees.length - compliantCount}</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <p className="text-sm text-gray-500">Brecha Total</p>
-          <p className="text-2xl font-bold text-violet-600">{formatCurrency(totalGap)}</p>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-4 col-span-2 sm:col-span-1">
+          <p className="text-xs sm:text-sm text-gray-500">Brecha Total</p>
+          <p className="text-lg sm:text-2xl font-bold text-violet-600">{formatCurrency(totalGap)}</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      {/* Mobile card view */}
+      <div className="sm:hidden space-y-3">
+        {calculations.length === 0 ? (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 text-center py-12">
+            <Scale className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <p className="text-gray-500">No hay empleados registrados</p>
+          </div>
+        ) : calculations.map(c => (
+          <div key={c.employee.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="font-medium text-gray-900 truncate">{c.employee.firstName} {c.employee.lastName}</p>
+                <p className="text-sm text-gray-500">Sueldo: {formatCurrency(c.employee.baseSalary)}</p>
+              </div>
+              <span className={`px-2 py-1 rounded-full text-xs shrink-0 ${c.compliant ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                {c.compliant ? 'Cumple' : 'No cumple'}
+              </span>
+            </div>
+            <div className="mt-2 pt-2 border-t border-gray-100 grid grid-cols-2 gap-2 text-xs text-gray-500">
+              <div>Componentes: {formatCurrency(c.totalComponents)}</div>
+              <div>Brecha: {c.gap > 0 ? formatCurrency(c.gap) : '—'}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop table */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hidden sm:block">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 border-b border-gray-200">
