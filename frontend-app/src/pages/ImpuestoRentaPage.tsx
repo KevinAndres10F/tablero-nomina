@@ -26,33 +26,58 @@ export default function ImpuestoRentaPage() {
   const taxPayers = calculations.filter(c => c.annualTax > 0).length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center gap-3">
-        <div className="p-2 bg-rose-100 rounded-lg">
+        <div className="p-2 bg-rose-100 rounded-lg shrink-0">
           <Receipt className="w-6 h-6 text-rose-600" />
         </div>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Impuesto a la Renta</h1>
-          <p className="text-sm text-gray-500">Proyección anual de IR por empleado</p>
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Impuesto a la Renta</h1>
+          <p className="text-sm text-gray-500 hidden sm:block">Proyección anual de IR por empleado</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <p className="text-sm text-gray-500">Empleados Gravados</p>
-          <p className="text-2xl font-bold text-rose-600">{taxPayers}</p>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-4">
+          <p className="text-xs sm:text-sm text-gray-500">Empleados Gravados</p>
+          <p className="text-lg sm:text-2xl font-bold text-rose-600">{taxPayers}</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <p className="text-sm text-gray-500">IR Anual Total</p>
-          <p className="text-2xl font-bold text-gray-900">{formatCurrency(totalAnnualTax)}</p>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-4">
+          <p className="text-xs sm:text-sm text-gray-500">IR Anual Total</p>
+          <p className="text-lg sm:text-2xl font-bold text-gray-900">{formatCurrency(totalAnnualTax)}</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <p className="text-sm text-gray-500">Exentos</p>
-          <p className="text-2xl font-bold text-green-600">{employees.length - taxPayers}</p>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-4">
+          <p className="text-xs sm:text-sm text-gray-500">Exentos</p>
+          <p className="text-lg sm:text-2xl font-bold text-green-600">{employees.length - taxPayers}</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      {/* Mobile card view */}
+      <div className="sm:hidden space-y-3">
+        {calculations.length === 0 ? (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 text-center py-12">
+            <Receipt className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <p className="text-gray-500">No hay empleados registrados</p>
+          </div>
+        ) : calculations.map(c => (
+          <div key={c.employee.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="font-medium text-gray-900 truncate">{c.employee.firstName} {c.employee.lastName}</p>
+                <p className="text-sm text-gray-500">Ingreso: {formatCurrency(c.annualIncome)}/año</p>
+              </div>
+              <span className="font-medium text-rose-600 shrink-0">{formatCurrency(c.annualTax)}</span>
+            </div>
+            <div className="mt-2 pt-2 border-t border-gray-100 grid grid-cols-2 gap-2 text-xs text-gray-500">
+              <div>IESS Anual: {formatCurrency(c.annualIess)}</div>
+              <div>IR Mensual: {formatCurrency(c.monthlyTax)}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop table */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hidden sm:block">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 border-b border-gray-200">
@@ -82,7 +107,7 @@ export default function ImpuestoRentaPage() {
       </div>
 
       {config && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
           <h3 className="font-semibold text-gray-900 mb-4">Tabla de IR Vigente</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">

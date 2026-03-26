@@ -32,12 +32,10 @@ export default function NominaPage() {
     if (periodRecords.length > 0) {
       if (!confirm(`Ya existe nómina para ${formatPeriod(period)}. ¿Recalcular?`)) return;
     }
-
     const config = getConfig();
     const benefits = getBenefits();
     const existing = records.filter(r => r.period !== period);
     const newRecords = employees.map(emp => calculatePayroll(emp, benefits, config, period));
-
     const allRecords = [...existing, ...newRecords];
     savePayrollRecords(allRecords);
     setRecords(allRecords);
@@ -56,62 +54,99 @@ export default function NominaPage() {
   const periods = [...new Set(records.map(r => r.period))].sort().reverse();
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      {/* HEADER */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-green-100 rounded-lg">
+          <div className="p-2 bg-green-100 rounded-lg shrink-0">
             <Calculator className="w-6 h-6 text-green-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Nómina</h1>
-            <p className="text-sm text-gray-500">Cálculo y procesamiento de nómina mensual</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Nómina</h1>
+            <p className="text-sm text-gray-500 hidden sm:block">Cálculo y procesamiento de nómina mensual</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <input type="month" value={period} onChange={e => setPeriod(e.target.value)} className="px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-          <button onClick={runPayroll} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2 text-sm">
+          <input type="month" value={period} onChange={e => setPeriod(e.target.value)} className="flex-1 sm:flex-none px-3 py-2.5 border border-gray-300 rounded-lg text-base sm:text-sm" />
+          <button onClick={runPayroll} className="px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 active:bg-green-800 flex items-center gap-2 text-sm shrink-0">
             <Play className="w-4 h-4" /> Calcular
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <p className="text-sm text-gray-500">Empleados</p>
-          <p className="text-2xl font-bold text-gray-900">{periodRecords.length}</p>
+      {/* CARDS DE RESUMEN */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-4">
+          <p className="text-xs sm:text-sm text-gray-500">Empleados</p>
+          <p className="text-lg sm:text-2xl font-bold text-gray-900">{periodRecords.length}</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <p className="text-sm text-gray-500">Total Ingresos</p>
-          <p className="text-2xl font-bold text-green-600">{formatCurrency(summary.totalIncome)}</p>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-4">
+          <p className="text-xs sm:text-sm text-gray-500">Ingresos</p>
+          <p className="text-lg sm:text-2xl font-bold text-green-600">{formatCurrency(summary.totalIncome)}</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <p className="text-sm text-gray-500">Total Deducciones</p>
-          <p className="text-2xl font-bold text-red-600">{formatCurrency(summary.totalDeductions)}</p>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-4">
+          <p className="text-xs sm:text-sm text-gray-500">Deducciones</p>
+          <p className="text-lg sm:text-2xl font-bold text-red-600">{formatCurrency(summary.totalDeductions)}</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <p className="text-sm text-gray-500">Neto a Pagar</p>
-          <p className="text-2xl font-bold text-blue-600">{formatCurrency(summary.totalNet)}</p>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-4">
+          <p className="text-xs sm:text-sm text-gray-500">Neto</p>
+          <p className="text-lg sm:text-2xl font-bold text-blue-600">{formatCurrency(summary.totalNet)}</p>
         </div>
       </div>
 
+      {/* PERIOD SELECTOR */}
       {periods.length > 0 && (
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-500">Período:</span>
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-3 px-3 sm:mx-0 sm:px-0">
+          <span className="text-sm text-gray-500 shrink-0">Período:</span>
           {periods.map(p => (
             <button key={p} onClick={() => setSelectedPeriod(p)}
-              className={`px-3 py-1 rounded-lg text-sm ${selectedPeriod === p ? 'bg-green-100 text-green-700 font-medium' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+              className={`px-3 py-2 sm:py-1.5 rounded-lg text-sm shrink-0 ${selectedPeriod === p ? 'bg-green-100 text-green-700 font-medium' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 active:bg-gray-300'}`}>
               {formatPeriod(p)}
             </button>
           ))}
           {periodRecords.length > 0 && (
-            <button onClick={exportCSV} className="ml-auto px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm flex items-center gap-1">
-              <Download className="w-4 h-4" /> Exportar CSV
+            <button onClick={exportCSV} className="ml-auto px-3 py-2 sm:py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 active:bg-gray-100 text-sm flex items-center gap-1 shrink-0">
+              <Download className="w-4 h-4" /> CSV
             </button>
           )}
         </div>
       )}
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      {/* MOBILE CARDS */}
+      <div className="sm:hidden space-y-3">
+        {periodRecords.length === 0 ? (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 text-center py-12">
+            <Calculator className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <p className="text-gray-500">No hay registros para este período</p>
+            <p className="text-xs text-gray-400 mt-1">Seleccione un período y presione "Calcular"</p>
+          </div>
+        ) : periodRecords.map(record => {
+          const emp = employees.find(e => e.id === record.employeeId);
+          return (
+            <div key={record.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+              <p className="font-medium text-gray-900">{emp?.firstName} {emp?.lastName}</p>
+              <p className="text-sm text-gray-500 mt-0.5">Base: {formatCurrency(record.baseSalary)}</p>
+              <div className="grid grid-cols-3 gap-3 mt-3 pt-3 border-t border-gray-100">
+                <div>
+                  <p className="text-xs text-gray-400">Ingresos</p>
+                  <p className="text-sm font-medium text-green-600">{formatCurrency(record.totalIncome)}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">Deducciones</p>
+                  <p className="text-sm font-medium text-red-600">{formatCurrency(record.totalDeductions)}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">Neto</p>
+                  <p className="text-sm font-bold text-gray-900">{formatCurrency(record.netPay)}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* DESKTOP TABLE */}
+      <div className="hidden sm:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 border-b border-gray-200">
@@ -131,25 +166,22 @@ export default function NominaPage() {
                   <td colSpan={7} className="text-center py-12">
                     <Calculator className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                     <p className="text-gray-500">No hay registros para este período</p>
-                    <p className="text-xs text-gray-400 mt-1">Seleccione un período y presione "Calcular"</p>
                   </td>
                 </tr>
-              ) : (
-                periodRecords.map(record => {
-                  const emp = employees.find(e => e.id === record.employeeId);
-                  return (
-                    <tr key={record.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 font-medium">{emp?.firstName} {emp?.lastName}</td>
-                      <td className="px-4 py-3 text-right">{formatCurrency(record.baseSalary)}</td>
-                      <td className="px-4 py-3 text-right text-green-600">{formatCurrency(record.totalIncome)}</td>
-                      <td className="px-4 py-3 text-right">{formatCurrency(record.iessPersonal)}</td>
-                      <td className="px-4 py-3 text-right">{formatCurrency(record.incomeTax)}</td>
-                      <td className="px-4 py-3 text-right text-red-600">{formatCurrency(record.totalDeductions)}</td>
-                      <td className="px-4 py-3 text-right font-bold">{formatCurrency(record.netPay)}</td>
-                    </tr>
-                  );
-                })
-              )}
+              ) : periodRecords.map(record => {
+                const emp = employees.find(e => e.id === record.employeeId);
+                return (
+                  <tr key={record.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 font-medium">{emp?.firstName} {emp?.lastName}</td>
+                    <td className="px-4 py-3 text-right">{formatCurrency(record.baseSalary)}</td>
+                    <td className="px-4 py-3 text-right text-green-600">{formatCurrency(record.totalIncome)}</td>
+                    <td className="px-4 py-3 text-right">{formatCurrency(record.iessPersonal)}</td>
+                    <td className="px-4 py-3 text-right">{formatCurrency(record.incomeTax)}</td>
+                    <td className="px-4 py-3 text-right text-red-600">{formatCurrency(record.totalDeductions)}</td>
+                    <td className="px-4 py-3 text-right font-bold">{formatCurrency(record.netPay)}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
