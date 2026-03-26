@@ -20,6 +20,9 @@ ENV/
 Thumbs.db
 
 # Distribution / packaging
-dist/
 build/
 *.egg-info/
+
+# Node
+node_modules/
+frontend-app/dist/
