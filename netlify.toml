@@ -1,6 +1,6 @@
 [build]
   base = "frontend-app"
-  publish = "frontend-app/dist"
+  publish = "dist"
   command = "npm install && npm run build"
 
 [[redirects]]
