@@ -898,10 +898,16 @@
 
             <div class="advanced-card">
               <p class="tiny-label mb-3">Forecast 6M</p>
+              <div class="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 mb-3 text-xs text-amber-800">
+                <strong>¿Qué es esto?</strong> Proyección automática del costo de nómina para los próximos 6 meses basada en el historial. Usa modelos estacionales cuando hay suficientes datos, o tendencia lineal como respaldo. Las bandas de confianza (95%) indican el rango probable.
+              </div>
               <div id="forecast-summary" class="space-y-2 text-sm"></div>
             </div>
             <div class="advanced-card xl:col-span-2">
               <p class="tiny-label mb-3">Copilot de Negocio</p>
+              <div class="rounded-lg bg-teal-50 border border-teal-200 px-3 py-2 mb-3 text-xs text-teal-800">
+                <strong>¿Cómo funciona?</strong> Escribe una pregunta sobre costos, riesgos, áreas o acciones y el asistente de IA analizará los datos de nómina actuales para darte recomendaciones ejecutivas. Usa los botones rápidos o escribe tu propia pregunta.
+              </div>
               <div class="flex flex-wrap gap-2 mb-3">
                 <button class="text-xs px-2 py-1 rounded border border-slate-200 hover:bg-slate-50" data-copilot-prompt="¿Cuál es el mayor riesgo de costo este mes?">Riesgo principal</button>
                 <button class="text-xs px-2 py-1 rounded border border-slate-200 hover:bg-slate-50" data-copilot-prompt="¿Qué área explica más el costo y por qué?">Driver por área</button>
@@ -2913,10 +2919,12 @@
         employees.forEach(e => {
           const periodo = e.periodo || 'Sin período';
           if (!monthly[periodo]) {
-            monthly[periodo] = { periodo, total_ingresos: 0, total_provisiones: 0 };
+            monthly[periodo] = { periodo, month: periodo, costo_total: 0, ingresos: 0, total_ingresos: 0, total_provisiones: 0 };
           }
           monthly[periodo].total_ingresos += (e.total_ingresos || 0);
           monthly[periodo].total_provisiones += (e.total_provisiones || 0);
+          monthly[periodo].ingresos += (e.total_ingresos || 0);
+          monthly[periodo].costo_total += (e.total_ingresos || 0) + (e.total_provisiones || 0);
         });
         return Object.values(monthly).sort((a, b) => a.periodo.localeCompare(b.periodo));
       };
@@ -3035,6 +3043,7 @@
         let offset = 0;
 
         breakdown.forEach((item, index) => {
+          const segmentLength = (item.percent / 100) * circumference;
           const slice = document.createElementNS("http://www.w3.org/2000/svg", "circle");
           slice.setAttribute("cx", "80");
           slice.setAttribute("cy", "80");
@@ -3042,10 +3051,8 @@
           slice.setAttribute("fill", "transparent");
           slice.setAttribute("stroke", colors[index % colors.length]);
           slice.setAttribute("stroke-width", "20");
-          slice.setAttribute("stroke-linecap", "round");
-          slice.setAttribute("stroke-dasharray", circumference.toString());
-          const dashOffset = circumference - (item.percent / 100) * circumference - offset;
-          slice.setAttribute("stroke-dashoffset", dashOffset.toString());
+          slice.setAttribute("stroke-dasharray", `${segmentLength} ${circumference - segmentLength}`);
+          slice.setAttribute("stroke-dashoffset", (-offset).toString());
           svg.appendChild(slice);
 
           const row = document.createElement("div");
@@ -3059,7 +3066,7 @@
           `;
           list.appendChild(row);
 
-          offset += (item.percent / 100) * circumference;
+          offset += segmentLength;
         });
       };
 
@@ -3206,7 +3213,8 @@
         
         data.forEach((item, index) => {
           const percent = (item.count / total) * 100;
-          
+          const segmentLength = (percent / 100) * circumference;
+
           const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
           circle.setAttribute("cx", "72");
           circle.setAttribute("cy", "72");
@@ -3214,11 +3222,11 @@
           circle.setAttribute("fill", "transparent");
           circle.setAttribute("stroke", colors[index % colors.length]);
           circle.setAttribute("stroke-width", "24");
-          circle.setAttribute("stroke-dasharray", circumference);
-          circle.setAttribute("stroke-dashoffset", circumference - (percent / 100) * circumference - offset);
+          circle.setAttribute("stroke-dasharray", `${segmentLength} ${circumference - segmentLength}`);
+          circle.setAttribute("stroke-dashoffset", (-offset).toString());
           svg.appendChild(circle);
-          
-          offset += (percent / 100) * circumference;
+
+          offset += segmentLength;
           
           // Leyenda
           const row = document.createElement("div");
@@ -3511,11 +3519,12 @@
           { label: "Fondos Reserva", value: fondosReserva }
         ];
         
-        const maxValue = Math.max(...breakdown.map(b => b.value));
+        const maxValue = Math.max(...breakdown.map(b => Math.abs(b.value)));
         const colors = ["#ef4444", "#6366f1", "#f59e0b", "#10b981", "#13a4ec"];
-        
+
         breakdown.forEach((item, index) => {
-          const heightPercent = maxValue > 0 ? (item.value / maxValue) * 100 : 0;
+          const absValue = Math.abs(item.value);
+          const heightPercent = maxValue > 0 ? (absValue / maxValue) * 100 : 0;
           const wrapper = document.createElement("div");
           wrapper.className = "flex flex-col items-center flex-1 gap-2";
           wrapper.innerHTML = `
@@ -3523,7 +3532,7 @@
               <div class="absolute bottom-0 w-full rounded-t-lg transition-all" style="height: ${heightPercent}%; background: ${colors[index]};"></div>
             </div>
             <span class="text-xs font-medium text-slate-600 text-center">${item.label}</span>
-            <span class="text-xs font-bold" style="color: ${colors[index]}">${formatCurrency(item.value, currency)}</span>
+            <span class="text-xs font-bold" style="color: ${colors[index]}">${formatCurrency(absValue, currency)}</span>
           `;
           iessBars.appendChild(wrapper);
         });
@@ -3534,11 +3543,14 @@
         svg.innerHTML = "";
         list.innerHTML = "";
         
-        const total = iessPersonal + iessPatronal + fondosReserva;
+        const absPersonal = Math.abs(iessPersonal);
+        const absPatronal = Math.abs(iessPatronal);
+        const absFondos = Math.abs(fondosReserva);
+        const total = absPersonal + absPatronal + absFondos;
         const donutData = [
-          { label: "IESS Personal", value: iessPersonal, percent: total > 0 ? (iessPersonal / total * 100) : 0 },
-          { label: "IESS Patronal", value: iessPatronal, percent: total > 0 ? (iessPatronal / total * 100) : 0 },
-          { label: "Fondos Reserva", value: fondosReserva, percent: total > 0 ? (fondosReserva / total * 100) : 0 }
+          { label: "IESS Personal", value: absPersonal, percent: total > 0 ? (absPersonal / total * 100) : 0 },
+          { label: "IESS Patronal", value: absPatronal, percent: total > 0 ? (absPatronal / total * 100) : 0 },
+          { label: "Fondos Reserva", value: absFondos, percent: total > 0 ? (absFondos / total * 100) : 0 }
         ];
         
         const radius = 70;
@@ -3547,6 +3559,7 @@
         let offset = 0;
 
         donutData.forEach((item, index) => {
+          const segmentLength = (Math.abs(item.percent) / 100) * circumference;
           const slice = document.createElementNS("http://www.w3.org/2000/svg", "circle");
           slice.setAttribute("cx", "80");
           slice.setAttribute("cy", "80");
@@ -3554,9 +3567,8 @@
           slice.setAttribute("fill", "transparent");
           slice.setAttribute("stroke", donutColors[index]);
           slice.setAttribute("stroke-width", "20");
-          slice.setAttribute("stroke-dasharray", circumference.toString());
-          const dashOffset = circumference - (item.percent / 100) * circumference - offset;
-          slice.setAttribute("stroke-dashoffset", dashOffset.toString());
+          slice.setAttribute("stroke-dasharray", `${segmentLength} ${circumference - segmentLength}`);
+          slice.setAttribute("stroke-dashoffset", (-offset).toString());
           svg.appendChild(slice);
 
           const row = document.createElement("div");
@@ -3566,11 +3578,11 @@
               <div class="w-2.5 h-2.5 rounded-full" style="background:${donutColors[index]}"></div>
               <span class="text-sm text-slate-600">${item.label}</span>
             </div>
-            <span class="text-sm font-semibold">${item.percent.toFixed(0)}%</span>
+            <span class="text-sm font-semibold">${Math.abs(item.percent).toFixed(0)}%</span>
           `;
           list.appendChild(row);
 
-          offset += (item.percent / 100) * circumference;
+          offset += segmentLength;
         });
         
         // Tabla IESS
@@ -3716,6 +3728,7 @@
         let offset = 0;
         
         donutData.forEach((item, index) => {
+          const segmentLength = (item.percent / 100) * circumference;
           const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
           circle.setAttribute("cx", "80");
           circle.setAttribute("cy", "80");
@@ -3723,11 +3736,11 @@
           circle.setAttribute("fill", "transparent");
           circle.setAttribute("stroke", donutColors[index]);
           circle.setAttribute("stroke-width", "20");
-          circle.setAttribute("stroke-dasharray", circumference);
-          circle.setAttribute("stroke-dashoffset", circumference - (item.percent / 100) * circumference - offset);
+          circle.setAttribute("stroke-dasharray", `${segmentLength} ${circumference - segmentLength}`);
+          circle.setAttribute("stroke-dashoffset", (-offset).toString());
           svg.appendChild(circle);
-          
-          offset += (item.percent / 100) * circumference;
+
+          offset += segmentLength;
           
           const row = document.createElement('div');
           row.className = 'flex items-center justify-between';
