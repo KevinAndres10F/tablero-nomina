@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>KAPI | HR & Quality Assurance — Home Health & Hospice</title>
+    <meta name="description" content="KAPI by QAPIplus — Human Resources & Quality Assurance platform for Home Health and Hospice agencies" />
+    <meta name="theme-color" content="#0C9B8A" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)" />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         PILAR 0 — DESIGN SYSTEM: Color Palette, Typography, Tokens
+         Inspired by: Humaans, Rippling, HiBob, Personio, Moxo
+         WCAG AAA compliant dark mode (#121212 base)
+    ═══════════════════════════════════════════════════════════════ -->
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              /* ── Clinical Teal (Primary) ── */
+              kapi:       { 50:"#e6f7f5", 100:"#b3ebe4", 200:"#80dfd3", 300:"#4dd3c2", 400:"#26c9b5", 500:"#0C9B8A", 600:"#0a8577", 700:"#086e63", 800:"#065850", 900:"#04413c" },
+              /* ── Trust Navy (Secondary) ── */
+              navy:       { 50:"#eef0f6", 100:"#cdd2e3", 200:"#abb4d0", 300:"#8a96bd", 400:"#7280af", 500:"#4a5989", 600:"#3e4b74", 700:"#333d5f", 800:"#272f4a", 900:"#1c2235" },
+              /* ── Alert Coral ── */
+              coral:      { 50:"#fef2f0", 100:"#fcd9d3", 200:"#f9b3a7", 300:"#f68d7b", 400:"#f4715f", 500:"#E8533C", 600:"#c44533", 700:"#a0382a", 800:"#7c2a20", 900:"#581d17" },
+              /* ── Warm Amber (Warning) ── */
+              ambar:      { 50:"#fef9ec", 100:"#fcefc5", 200:"#f9df8b", 300:"#f6cf51", 400:"#f4c22d", 500:"#D4A017", 600:"#b38713", 700:"#926e0f", 800:"#71550c", 900:"#503c08" },
+              /* ── Success Mint ── */
+              mint:       { 50:"#eafaf4", 100:"#c0f0dd", 200:"#96e7c6", 300:"#6cddaf", 400:"#4ed6a0", 500:"#22B573", 600:"#1d9a62", 700:"#187f51", 800:"#136440", 900:"#0e4930" },
+              /* ── Clinical Dark Mode Surface (WCAG AAA) ── */
+              surface:    { 50:"#fafafa", 100:"#f5f5f5", 200:"#e8e8e8", 300:"#d4d4d4", 400:"#a3a3a3", 500:"#737373", 600:"#525252", 700:"#2c2c2c", 800:"#1e1e1e", 900:"#121212" },
+            },
+            fontFamily: {
+              display: ["Space Grotesk", "sans-serif"],
+              sans:    ["Inter", "system-ui", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.375rem",
+              lg:  "0.625rem",
+              xl:  "0.875rem",
+              "2xl": "1rem",
+              "3xl": "1.25rem",
+            },
+            boxShadow: {
+              "kapi-sm": "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)",
+              "kapi":    "0 4px 16px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04)",
+              "kapi-lg": "0 12px 40px rgba(0,0,0,0.09), 0 4px 12px rgba(0,0,0,0.04)",
+              "kapi-xl": "0 24px 64px rgba(0,0,0,0.12)",
+              "audit":   "0 0 0 2px #0C9B8A, 0 8px 32px rgba(12,155,138,0.18)",
+            },
+            animation: {
+              "fade-up":    "fadeUp 0.35s cubic-bezier(0.22,1,0.36,1)",
+              "fade-in":    "fadeIn 0.25s ease-out",
+              "slide-in-r": "slideInRight 0.3s cubic-bezier(0.22,1,0.36,1)",
+              "pulse-soft": "pulseSoft 2.5s ease-in-out infinite",
+              "micro-pop":  "microPop 0.2s cubic-bezier(0.34,1.56,0.64,1)",
+            },
+            keyframes: {
+              fadeUp:       { "0%": { opacity: 0, transform: "translateY(8px)" }, "100%": { opacity: 1, transform: "translateY(0)" } },
+              fadeIn:       { "0%": { opacity: 0 }, "100%": { opacity: 1 } },
+              slideInRight: { "0%": { opacity: 0, transform: "translateX(16px)" }, "100%": { opacity: 1, transform: "translateX(0)" } },
+              pulseSoft:    { "0%,100%": { opacity: 1 }, "50%": { opacity: 0.6 } },
+              microPop:     { "0%": { transform: "scale(0.95)" }, "100%": { transform: "scale(1)" } },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* ═══════════════════════════════════════════
+         DESIGN TOKENS — CSS Custom Properties
+         Light Mode (default) + Clinical Dark Mode
+      ═══════════════════════════════════════════ */
+      :root {
+        --bg-app:       #f8f9fb;
+        --bg-surface:   #ffffff;
+        --bg-surface-2: #f1f3f5;
+        --bg-elevated:  #ffffff;
+        --text-primary: #1a1a2e;
+        --text-secondary: #5a5f7a;
+        --text-tertiary:  #8b90a8;
+        --border-default: #e4e7ec;
+        --border-subtle:  #f0f1f4;
+        --kapi-primary:   #0C9B8A;
+        --kapi-primary-hover: #0a8577;
+        --shadow-card: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+        --radius-card: 0.875rem;
+        --transition-fast: 180ms cubic-bezier(0.22,1,0.36,1);
+        --transition-normal: 280ms cubic-bezier(0.22,1,0.36,1);
+      }
+
+      /* ── CLINICAL DARK MODE (WCAG AAA: #121212 base) ── */
+      .dark {
+        --bg-app:       #121212;
+        --bg-surface:   #1e1e1e;
+        --bg-surface-2: #2c2c2c;
+        --bg-elevated:  #2c2c2c;
+        --text-primary: #e8e8e8;
+        --text-secondary: #a3a3a3;
+        --text-tertiary:  #737373;
+        --border-default: #3a3a3a;
+        --border-subtle:  #2c2c2c;
+        --kapi-primary:   #3ecdb8;
+        --kapi-primary-hover: #5fd8c7;
+        --shadow-card: 0 2px 8px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.2);
+      }
+
+      /* ── BASE ── */
+      * { box-sizing: border-box; }
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: var(--bg-app);
+        color: var(--text-primary);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow: hidden;
+        height: 100dvh;
+      }
+      .brand-title, h1, h2, h3 { font-family: "Space Grotesk", sans-serif; }
+
+      /* ── MICRO-INTERACTIONS (<300ms) ── */
+      .kapi-btn {
+        transition: all var(--transition-fast);
+        will-change: transform;
+      }
+      .kapi-btn:active { transform: scale(0.97); }
+
+      .kapi-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-card);
+        box-shadow: var(--shadow-card);
+        transition: box-shadow var(--transition-normal), border-color var(--transition-normal);
+      }
+      .kapi-card:hover {
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        border-color: var(--kapi-primary);
+      }
+
+      /* ── SCROLLBAR ── */
+      .kapi-scroll::-webkit-scrollbar { width: 5px; }
+      .kapi-scroll::-webkit-scrollbar-track { background: transparent; }
+      .kapi-scroll::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 10px; }
+      .dark .kapi-scroll::-webkit-scrollbar-thumb { background: #3a3a3a; }
+
+      /* ── STATUS INDICATORS (credential/license) ── */
+      .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+      .status-dot.active  { background: #22B573; box-shadow: 0 0 0 3px rgba(34,181,115,0.2); }
+      .status-dot.warning { background: #D4A017; box-shadow: 0 0 0 3px rgba(212,160,23,0.2); animation: pulseSoft 2.5s ease-in-out infinite; }
+      .status-dot.expired { background: #E8533C; box-shadow: 0 0 0 3px rgba(232,83,60,0.2); animation: pulseSoft 1.5s ease-in-out infinite; }
+
+      .credential-badge {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 3px 10px 3px 6px; border-radius: 999px;
+        font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
+      }
+      .credential-badge.active  { background: rgba(34,181,115,0.12); color: #1d9a62; }
+      .credential-badge.warning { background: rgba(212,160,23,0.12); color: #b38713; }
+      .credential-badge.expired { background: rgba(232,83,60,0.12); color: #c44533; }
+      .dark .credential-badge.active  { background: rgba(34,181,115,0.18); color: #6cddaf; }
+      .dark .credential-badge.warning { background: rgba(212,160,23,0.18); color: #f6cf51; }
+      .dark .credential-badge.expired { background: rgba(232,83,60,0.18); color: #f68d7b; }
+
+      /* ── AUDIT MODE OVERLAY ── */
+      .audit-mode-active {
+        pointer-events: none;
+        user-select: text;
+      }
+      .audit-mode-active * { cursor: default !important; }
+      .audit-mode-active .audit-interactive { pointer-events: auto; }
+
+      .audit-banner {
+        background: linear-gradient(135deg, #1c2235, #272f4a);
+        border: 2px solid #0C9B8A;
+        color: #e8e8e8;
+      }
+
+      .audit-watermark {
+        position: fixed; inset: 0; z-index: 9999;
+        pointer-events: none;
+        background: repeating-linear-gradient(
+          -45deg,
+          transparent, transparent 80px,
+          rgba(12,155,138,0.03) 80px,
+          rgba(12,155,138,0.03) 82px
+        );
+      }
+      .audit-watermark::after {
+        content: "AUDIT MODE — READ ONLY";
+        position: fixed; top: 50%; left: 50%;
+        transform: translate(-50%,-50%) rotate(-35deg);
+        font-size: 4rem; font-weight: 800; letter-spacing: 0.15em;
+        color: rgba(12,155,138,0.04);
+        white-space: nowrap; pointer-events: none;
+      }
+
+      /* ── KUDOS CARD ── */
+      .kudos-card {
+        background: linear-gradient(135deg, rgba(12,155,138,0.06), rgba(74,89,137,0.06));
+        border: 1px solid var(--border-subtle);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        transition: all var(--transition-fast);
+      }
+      .kudos-card:hover {
+        border-color: var(--kapi-primary);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(12,155,138,0.1);
+      }
+
+      /* ── COPILOT PANEL ── */
+      .copilot-bubble {
+        max-width: 80%;
+        padding: 0.75rem 1rem;
+        border-radius: 1rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        animation: fadeUp 0.25s cubic-bezier(0.22,1,0.36,1);
+      }
+      .copilot-bubble.user {
+        background: var(--kapi-primary);
+        color: #fff;
+        border-bottom-right-radius: 0.25rem;
+        margin-left: auto;
+      }
+      .copilot-bubble.assistant {
+        background: var(--bg-surface-2);
+        color: var(--text-primary);
+        border-bottom-left-radius: 0.25rem;
+      }
+
+      /* ── MOBILE-FIRST BOTTOM NAV ── */
+      @media (max-width: 1023px) {
+        .mobile-bottom-nav {
+          position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+          background: var(--bg-surface);
+          border-top: 1px solid var(--border-default);
+          padding: 0.5rem 0 calc(0.5rem + env(safe-area-inset-bottom));
+          display: flex; justify-content: space-around; align-items: center;
+          backdrop-filter: blur(12px);
+        }
+        .mobile-bottom-nav a {
+          display: flex; flex-direction: column; align-items: center; gap: 2px;
+          font-size: 10px; font-weight: 600; color: var(--text-tertiary);
+          padding: 0.35rem 0.75rem; border-radius: 0.5rem;
+          transition: all var(--transition-fast);
+        }
+        .mobile-bottom-nav a.active-mobile { color: var(--kapi-primary); }
+        .mobile-bottom-nav a .material-symbols-outlined { font-size: 22px; }
+      }
+      @media (min-width: 1024px) {
+        .mobile-bottom-nav { display: none; }
+      }
+
+      /* ── PROGRESSIVE DISCLOSURE ACCORDION ── */
+      .disclosure-content {
+        max-height: 0; overflow: hidden;
+        transition: max-height 0.35s cubic-bezier(0.22,1,0.36,1);
+      }
+      .disclosure-open .disclosure-content { max-height: 600px; }
+      .disclosure-chevron {
+        transition: transform var(--transition-fast);
+      }
+      .disclosure-open .disclosure-chevron { transform: rotate(180deg); }
+
+      /* ── THEME SWITCH ── */
+      .theme-toggle-track {
+        width: 44px; height: 24px; border-radius: 999px;
+        background: #d4d4d4; position: relative;
+        transition: background-color 0.2s ease; cursor: pointer;
+      }
+      .theme-toggle-track::after {
+        content: ""; position: absolute; top: 2px; left: 2px;
+        width: 20px; height: 20px; border-radius: 50%;
+        background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        transition: transform 0.2s ease;
+      }
+      .dark .theme-toggle-track { background: #0C9B8A; }
+      .dark .theme-toggle-track::after { transform: translateX(20px); }
+
+      @keyframes pulseSoft {
+        0%,100% { opacity: 1; }
+        50%     { opacity: 0.5; }
+      }
+    </style>
+  </head>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       BODY — KAPI Platform Shell
+  ═══════════════════════════════════════════════════════════════ -->
+  <body class="antialiased">
+    <!-- Audit Mode Watermark (hidden by default) -->
+    <div id="audit-watermark" class="audit-watermark hidden"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         PILAR 1 + NAVIGATION ARCHITECTURE
+         Clean sidebar with progressive disclosure
+         Inspired by Humaans & Rippling minimal nav
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="flex h-full overflow-hidden">
+
+      <!-- ── SIDEBAR (Desktop) ── -->
+      <aside id="sidebar" class="hidden lg:flex lg:flex-col lg:w-[260px] lg:shrink-0 border-r bg-[var(--bg-surface)] border-[var(--border-default)] transition-all duration-300">
+        <!-- Brand -->
+        <div class="px-5 pt-6 pb-4 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-kapi-500 flex items-center justify-center text-white shadow-md">
+            <span class="material-symbols-outlined text-[20px]">health_and_safety</span>
+          </div>
+          <div>
+            <h1 class="brand-title text-lg font-bold tracking-tight" style="color:var(--text-primary)">KAPI</h1>
+            <p class="text-[10px] font-medium tracking-widest uppercase" style="color:var(--text-tertiary)">by QAPIplus</p>
+          </div>
+        </div>
+
+        <!-- Search -->
+        <div class="px-4 mb-3">
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[16px]" style="color:var(--text-tertiary)">search</span>
+            <input id="global-search" type="text" placeholder="Search… ⌘K"
+              class="w-full pl-9 pr-3 py-2 text-sm rounded-lg border transition-colors"
+              style="background:var(--bg-surface-2); border-color:var(--border-subtle); color:var(--text-primary)"
+            />
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-3 py-2 space-y-0.5 overflow-y-auto kapi-scroll">
+          <p class="px-3 pt-2 pb-1.5 text-[10px] font-bold uppercase tracking-[0.16em]" style="color:var(--text-tertiary)">Overview</p>
+          <a href="#" class="nav-item active-nav flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all" data-page="dashboard">
+            <span class="material-symbols-outlined text-[20px]">dashboard</span>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all" data-page="staff" style="color:var(--text-secondary)">
+            <span class="material-symbols-outlined text-[20px]">group</span>
+            <span>Clinical Staff</span>
+            <span class="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-coral-100 text-coral-600 dark:bg-coral-900/40 dark:text-coral-300">3</span>
+          </a>
+          <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all" data-page="credentials" style="color:var(--text-secondary)">
+            <span class="material-symbols-outlined text-[20px]">verified_user</span>
+            <span>Credentials</span>
+          </a>
+          <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all" data-page="compliance" style="color:var(--text-secondary)">
+            <span class="material-symbols-outlined text-[20px]">shield</span>
+            <span>Compliance</span>
+          </a>
+
+          <p class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-[0.16em]" style="color:var(--text-tertiary)">Operations</p>
+          <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all" data-page="scheduling" style="color:var(--text-secondary)">
+            <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+            <span>Scheduling</span>
+          </a>
+          <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all" data-page="payroll" style="color:var(--text-secondary)">
+            <span class="material-symbols-outlined text-[20px]">payments</span>
+            <span>Payroll</span>
+          </a>
+          <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all" data-page="visits" style="color:var(--text-secondary)">
+            <span class="material-symbols-outlined text-[20px]">home_health</span>
+            <span>Patient Visits</span>
+          </a>
+
+          <p class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-[0.16em]" style="color:var(--text-tertiary)">Culture</p>
+          <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all" data-page="kudos" style="color:var(--text-secondary)">
+            <span class="material-symbols-outlined text-[20px]">volunteer_activism</span>
+            <span>Kudos Wall</span>
+          </a>
+
+          <p class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-[0.16em]" style="color:var(--text-tertiary)">System</p>
+          <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all" data-page="settings" style="color:var(--text-secondary)">
+            <span class="material-symbols-outlined text-[20px]">settings</span>
+            <span>Settings</span>
+          </a>
+        </nav>
+
+        <!-- Sidebar Footer: Audit Mode Button -->
+        <div class="p-4 border-t" style="border-color:var(--border-default)">
+          <button id="audit-mode-btn" class="kapi-btn w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-navy-700 hover:bg-navy-600 dark:bg-navy-500 dark:hover:bg-navy-400 shadow-kapi transition-all">
+            <span class="material-symbols-outlined text-[18px]">gavel</span>
+            <span>Audit Mode</span>
+          </button>
+        </div>
+
+        <!-- User Profile -->
+        <div class="px-4 pb-4 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-kapi-400 to-navy-400 flex items-center justify-center text-white text-xs font-bold shadow-sm">DR</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-semibold truncate" style="color:var(--text-primary)">Dr. Rivera</p>
+            <p class="text-[11px] truncate" style="color:var(--text-tertiary)">Clinical Director</p>
+          </div>
+          <div class="theme-toggle-track" id="theme-toggle" title="Toggle dark mode"></div>
+        </div>
+      </aside>
+
+      <!-- ══════════════════════════════════════════════════
+           MAIN CONTENT AREA
+      ══════════════════════════════════════════════════ -->
+      <main class="flex-1 overflow-y-auto kapi-scroll pb-20 lg:pb-0" style="background:var(--bg-app)">
+
+        <!-- ── STICKY HEADER ── -->
+        <header class="sticky top-0 z-20 backdrop-blur-md border-b px-4 py-3 sm:px-6 lg:px-8" style="background:rgba(248,249,251,0.85); border-color:var(--border-default)">
+          <div class="dark:hidden" style="display:contents"></div>
+          <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <!-- Mobile menu toggle -->
+              <button id="mobile-menu-btn" class="lg:hidden kapi-btn p-2 rounded-lg border" style="border-color:var(--border-default); background:var(--bg-surface)">
+                <span class="material-symbols-outlined text-[20px]" style="color:var(--text-secondary)">menu</span>
+              </button>
+              <div>
+                <p class="text-[10px] font-bold uppercase tracking-[0.2em]" style="color:var(--text-tertiary)">Home Health & Hospice</p>
+                <h2 id="page-title" class="text-xl font-bold brand-title" style="color:var(--text-primary)">Admin Dashboard</h2>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 sm:gap-3">
+              <!-- Audit Mode Indicator (hidden by default) -->
+              <div id="audit-indicator" class="hidden items-center gap-2 audit-banner rounded-xl px-3 py-1.5 text-xs font-bold">
+                <span class="material-symbols-outlined text-[16px] text-kapi-400">lock</span>
+                <span>AUDIT MODE</span>
+                <button id="exit-audit-btn" class="audit-interactive ml-1 px-2 py-0.5 rounded bg-kapi-500 text-white text-[10px] font-bold hover:bg-kapi-400">EXIT</button>
+              </div>
+
+              <!-- Notifications -->
+              <button class="kapi-btn relative p-2 rounded-lg border transition-colors" style="border-color:var(--border-default); background:var(--bg-surface)">
+                <span class="material-symbols-outlined text-[20px]" style="color:var(--text-secondary)">notifications</span>
+                <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-coral-500 text-white text-[9px] font-bold flex items-center justify-center">5</span>
+              </button>
+
+              <!-- AI Copilot Toggle -->
+              <button id="copilot-toggle-btn" class="kapi-btn flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-kapi-500 to-kapi-600 hover:from-kapi-400 hover:to-kapi-500 shadow-kapi transition-all">
+                <span class="material-symbols-outlined text-[18px]">smart_toy</span>
+                <span class="hidden sm:inline">KAPI Copilot</span>
+              </button>
+
+              <!-- User avatar (mobile) -->
+              <div class="lg:hidden w-9 h-9 rounded-full bg-gradient-to-br from-kapi-400 to-navy-400 flex items-center justify-center text-white text-xs font-bold">DR</div>
+            </div>
+          </div>
+        </header>
+
+        <!-- ═══════════════════════════════════════════════
+             PAGE: ADMIN DASHBOARD
+        ═══════════════════════════════════════════════ -->
+        <div id="page-dashboard" class="page-section p-4 sm:p-6 lg:p-8 animate-fade-up">
+
+          <!-- ─── COMPLIANCE ALERT STRIP ─── -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+            <div class="flex items-center gap-3 px-4 py-3 rounded-xl border bg-coral-50 border-coral-200 dark:bg-coral-900/20 dark:border-coral-800/40">
+              <span class="material-symbols-outlined text-coral-500">warning</span>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs font-bold text-coral-700 dark:text-coral-300">3 Licenses Expiring</p>
+                <p class="text-[11px] text-coral-600/70 dark:text-coral-400/70 truncate">RN licenses within 30 days</p>
+              </div>
+              <span class="material-symbols-outlined text-[16px] text-coral-400">chevron_right</span>
+            </div>
+            <div class="flex items-center gap-3 px-4 py-3 rounded-xl border bg-ambar-50 border-ambar-200 dark:bg-ambar-900/20 dark:border-ambar-800/40">
+              <span class="material-symbols-outlined text-ambar-500">schedule</span>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs font-bold text-ambar-700 dark:text-ambar-300">5 Pending Renewals</p>
+                <p class="text-[11px] text-ambar-600/70 dark:text-ambar-400/70 truncate">CPR, TB Test certifications</p>
+              </div>
+              <span class="material-symbols-outlined text-[16px] text-ambar-400">chevron_right</span>
+            </div>
+            <div class="flex items-center gap-3 px-4 py-3 rounded-xl border bg-mint-50 border-mint-200 dark:bg-mint-900/20 dark:border-mint-800/40">
+              <span class="material-symbols-outlined text-mint-500">check_circle</span>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs font-bold text-mint-700 dark:text-mint-300">92% Compliant</p>
+                <p class="text-[11px] text-mint-600/70 dark:text-mint-400/70 truncate">Agency-wide compliance rate</p>
+              </div>
+              <span class="material-symbols-outlined text-[16px] text-mint-400">trending_up</span>
+            </div>
+          </div>
+
+          <!-- ─── KPI GRID ─── -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+            <!-- KPI: Active Clinicians -->
+            <div class="kapi-card p-4 sm:p-5">
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 rounded-xl bg-kapi-50 dark:bg-kapi-900/30 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-kapi-500 text-[22px]">stethoscope</span>
+                </div>
+                <span class="credential-badge active"><span class="status-dot active"></span>Active</span>
+              </div>
+              <p class="text-2xl sm:text-3xl font-bold brand-title" style="color:var(--text-primary)">48</p>
+              <p class="text-xs font-medium mt-1" style="color:var(--text-tertiary)">Active Clinicians</p>
+              <div class="flex items-center gap-1 mt-2">
+                <span class="material-symbols-outlined text-mint-500 text-[14px]">trending_up</span>
+                <span class="text-[11px] font-semibold text-mint-600 dark:text-mint-400">+4 this month</span>
+              </div>
+            </div>
+
+            <!-- KPI: Compliance Score -->
+            <div class="kapi-card p-4 sm:p-5">
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 rounded-xl bg-navy-50 dark:bg-navy-900/30 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-navy-500 text-[22px]">shield</span>
+                </div>
+                <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-mint-100 text-mint-700 dark:bg-mint-900/40 dark:text-mint-300">WCAG AA</span>
+              </div>
+              <p class="text-2xl sm:text-3xl font-bold brand-title" style="color:var(--text-primary)">92%</p>
+              <p class="text-xs font-medium mt-1" style="color:var(--text-tertiary)">Compliance Score</p>
+              <div class="w-full h-1.5 bg-surface-200 dark:bg-surface-700 rounded-full mt-2.5 overflow-hidden">
+                <div class="h-full rounded-full bg-gradient-to-r from-kapi-500 to-mint-500" style="width:92%"></div>
+              </div>
+            </div>
+
+            <!-- KPI: Visits Today -->
+            <div class="kapi-card p-4 sm:p-5">
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 rounded-xl bg-ambar-50 dark:bg-ambar-900/30 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-ambar-500 text-[22px]">home_health</span>
+                </div>
+              </div>
+              <p class="text-2xl sm:text-3xl font-bold brand-title" style="color:var(--text-primary)">124</p>
+              <p class="text-xs font-medium mt-1" style="color:var(--text-tertiary)">Patient Visits Today</p>
+              <div class="flex items-center gap-1 mt-2">
+                <span class="material-symbols-outlined text-kapi-500 text-[14px]">trending_up</span>
+                <span class="text-[11px] font-semibold text-kapi-600 dark:text-kapi-400">+12% vs last week</span>
+              </div>
+            </div>
+
+            <!-- KPI: Payroll Cost -->
+            <div class="kapi-card p-4 sm:p-5">
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 rounded-xl bg-coral-50 dark:bg-coral-900/30 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-coral-500 text-[22px]">payments</span>
+                </div>
+              </div>
+              <p class="text-2xl sm:text-3xl font-bold brand-title" style="color:var(--text-primary)">$186K</p>
+              <p class="text-xs font-medium mt-1" style="color:var(--text-tertiary)">Monthly Payroll</p>
+              <div class="flex items-center gap-1 mt-2">
+                <span class="material-symbols-outlined text-coral-500 text-[14px]">trending_up</span>
+                <span class="text-[11px] font-semibold text-coral-600 dark:text-coral-400">+2.3% vs budget</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ─── MAIN CONTENT: 2-Column Layout ─── -->
+          <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6 mb-6">
+
+            <!-- ═══ LEFT: Credential Profiles (Pilar 1: Zero Friction) ═══ -->
+            <div class="xl:col-span-2">
+              <div class="kapi-card overflow-hidden">
+                <div class="px-5 py-4 flex items-center justify-between border-b" style="border-color:var(--border-subtle)">
+                  <div>
+                    <h3 class="text-sm font-bold brand-title" style="color:var(--text-primary)">Clinical Staff — Credential Monitor</h3>
+                    <p class="text-[11px] mt-0.5" style="color:var(--text-tertiary)">Dynamic profiles with license expiration tracking</p>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button class="kapi-btn text-[11px] font-semibold px-3 py-1.5 rounded-lg border" style="border-color:var(--border-default); color:var(--text-secondary)">Filter</button>
+                    <button class="kapi-btn text-[11px] font-semibold px-3 py-1.5 rounded-lg bg-kapi-500 text-white hover:bg-kapi-600">View All</button>
+                  </div>
+                </div>
+
+                <!-- Staff Card List (Progressive Disclosure) -->
+                <div class="divide-y" style="border-color:var(--border-subtle)">
+
+                  <!-- Staff Member 1: Warning -->
+                  <div class="staff-profile disclosure-trigger px-5 py-4 cursor-pointer hover:bg-[var(--bg-surface-2)] transition-colors" data-staff="1">
+                    <div class="flex items-center gap-4">
+                      <div class="relative">
+                        <div class="w-11 h-11 rounded-full bg-gradient-to-br from-ambar-300 to-ambar-500 flex items-center justify-center text-white text-sm font-bold">MJ</div>
+                        <span class="status-dot warning absolute -bottom-0.5 -right-0.5 border-2 border-white dark:border-surface-800"></span>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                          <p class="text-sm font-semibold truncate" style="color:var(--text-primary)">Maria Johnson, RN</p>
+                          <span class="credential-badge warning"><span class="status-dot warning"></span>Exp. 15d</span>
+                        </div>
+                        <p class="text-[11px] mt-0.5 truncate" style="color:var(--text-tertiary)">Registered Nurse • Home Health • ID: NH-2847</p>
+                      </div>
+                      <div class="hidden sm:flex items-center gap-3">
+                        <div class="text-right">
+                          <p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-tertiary)">RN License</p>
+                          <p class="text-xs font-semibold text-ambar-600 dark:text-ambar-400">Apr 12, 2026</p>
+                        </div>
+                        <span class="material-symbols-outlined disclosure-chevron text-[18px]" style="color:var(--text-tertiary)">expand_more</span>
+                      </div>
+                    </div>
+
+                    <!-- Progressive Disclosure: Details -->
+                    <div class="disclosure-content mt-0">
+                      <div class="pt-3 pl-15 grid grid-cols-2 sm:grid-cols-4 gap-3" style="padding-left:3.75rem">
+                        <div class="p-2.5 rounded-lg" style="background:var(--bg-surface-2)">
+                          <p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-tertiary)">CPR Cert</p>
+                          <p class="text-xs font-semibold mt-0.5 text-mint-600 dark:text-mint-400">Valid — Dec 2026</p>
+                        </div>
+                        <div class="p-2.5 rounded-lg" style="background:var(--bg-surface-2)">
+                          <p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-tertiary)">TB Test</p>
+                          <p class="text-xs font-semibold mt-0.5 text-mint-600 dark:text-mint-400">Valid — Aug 2026</p>
+                        </div>
+                        <div class="p-2.5 rounded-lg" style="background:var(--bg-surface-2)">
+                          <p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-tertiary)">Background</p>
+                          <p class="text-xs font-semibold mt-0.5 text-mint-600 dark:text-mint-400">Cleared</p>
+                        </div>
+                        <div class="p-2.5 rounded-lg bg-ambar-50 dark:bg-ambar-900/20">
+                          <p class="text-[10px] font-bold uppercase tracking-wider text-ambar-700 dark:text-ambar-300">Action Needed</p>
+                          <p class="text-xs font-semibold mt-0.5 text-ambar-600 dark:text-ambar-400">Renew RN License</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Staff Member 2: Expired -->
+                  <div class="staff-profile disclosure-trigger px-5 py-4 cursor-pointer hover:bg-[var(--bg-surface-2)] transition-colors" data-staff="2">
+                    <div class="flex items-center gap-4">
+                      <div class="relative">
+                        <div class="w-11 h-11 rounded-full bg-gradient-to-br from-coral-300 to-coral-500 flex items-center justify-center text-white text-sm font-bold">JT</div>
+                        <span class="status-dot expired absolute -bottom-0.5 -right-0.5 border-2 border-white dark:border-surface-800"></span>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                          <p class="text-sm font-semibold truncate" style="color:var(--text-primary)">James Torres, LPN</p>
+                          <span class="credential-badge expired"><span class="status-dot expired"></span>Expired</span>
+                        </div>
+                        <p class="text-[11px] mt-0.5 truncate" style="color:var(--text-tertiary)">Licensed Practical Nurse • Hospice • ID: NH-3102</p>
+                      </div>
+                      <div class="hidden sm:flex items-center gap-3">
+                        <div class="text-right">
+                          <p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-tertiary)">LPN License</p>
+                          <p class="text-xs font-semibold text-coral-600 dark:text-coral-400">Mar 01, 2026</p>
+                        </div>
+                        <span class="material-symbols-outlined disclosure-chevron text-[18px]" style="color:var(--text-tertiary)">expand_more</span>
+                      </div>
+                    </div>
+                    <div class="disclosure-content mt-0">
+                      <div class="pt-3 grid grid-cols-2 sm:grid-cols-4 gap-3" style="padding-left:3.75rem">
+                        <div class="p-2.5 rounded-lg bg-coral-50 dark:bg-coral-900/20">
+                          <p class="text-[10px] font-bold uppercase tracking-wider text-coral-700 dark:text-coral-300">LPN License</p>
+                          <p class="text-xs font-semibold mt-0.5 text-coral-600 dark:text-coral-400">EXPIRED Mar 1</p>
+                        </div>
+                        <div class="p-2.5 rounded-lg" style="background:var(--bg-surface-2)">
+                          <p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-tertiary)">CPR Cert</p>
+                          <p class="text-xs font-semibold mt-0.5 text-mint-600 dark:text-mint-400">Valid — Nov 2026</p>
+                        </div>
+                        <div class="p-2.5 rounded-lg" style="background:var(--bg-surface-2)">
+                          <p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-tertiary)">TB Test</p>
+                          <p class="text-xs font-semibold mt-0.5 text-ambar-600 dark:text-ambar-400">Due Jun 2026</p>
+                        </div>
+                        <div class="p-2.5 rounded-lg bg-coral-50 dark:bg-coral-900/20">
+                          <p class="text-[10px] font-bold uppercase tracking-wider text-coral-700 dark:text-coral-300">URGENT</p>
+                          <p class="text-xs font-semibold mt-0.5 text-coral-600 dark:text-coral-400">Cannot practice</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Staff Member 3: All Good -->
+                  <div class="staff-profile disclosure-trigger px-5 py-4 cursor-pointer hover:bg-[var(--bg-surface-2)] transition-colors" data-staff="3">
+                    <div class="flex items-center gap-4">
+                      <div class="relative">
+                        <div class="w-11 h-11 rounded-full bg-gradient-to-br from-kapi-300 to-kapi-500 flex items-center justify-center text-white text-sm font-bold">SL</div>
+                        <span class="status-dot active absolute -bottom-0.5 -right-0.5 border-2 border-white dark:border-surface-800"></span>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                          <p class="text-sm font-semibold truncate" style="color:var(--text-primary)">Sarah Lee, PT</p>
+                          <span class="credential-badge active"><span class="status-dot active"></span>Compliant</span>
+                        </div>
+                        <p class="text-[11px] mt-0.5 truncate" style="color:var(--text-tertiary)">Physical Therapist • Home Health • ID: NH-1956</p>
+                      </div>
+                      <div class="hidden sm:flex items-center gap-3">
+                        <div class="text-right">
+                          <p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-tertiary)">PT License</p>
+                          <p class="text-xs font-semibold text-mint-600 dark:text-mint-400">Jan 20, 2027</p>
+                        </div>
+                        <span class="material-symbols-outlined disclosure-chevron text-[18px]" style="color:var(--text-tertiary)">expand_more</span>
+                      </div>
+                    </div>
+                    <div class="disclosure-content mt-0">
+                      <div class="pt-3 grid grid-cols-2 sm:grid-cols-4 gap-3" style="padding-left:3.75rem">
+                        <div class="p-2.5 rounded-lg" style="background:var(--bg-surface-2)">
+                          <p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-tertiary)">CPR Cert</p>
+                          <p class="text-xs font-semibold mt-0.5 text-mint-600 dark:text-mint-400">Valid — Feb 2027</p>
+                        </div>
+                        <div class="p-2.5 rounded-lg" style="background:var(--bg-surface-2)">
+                          <p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-tertiary)">TB Test</p>
+                          <p class="text-xs font-semibold mt-0.5 text-mint-600 dark:text-mint-400">Valid — Oct 2026</p>
+                        </div>
+                        <div class="p-2.5 rounded-lg" style="background:var(--bg-surface-2)">
+                          <p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-tertiary)">Background</p>
+                          <p class="text-xs font-semibold mt-0.5 text-mint-600 dark:text-mint-400">Cleared</p>
+                        </div>
+                        <div class="p-2.5 rounded-lg" style="background:var(--bg-surface-2)">
+                          <p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-tertiary)">OSHA</p>
+                          <p class="text-xs font-semibold mt-0.5 text-mint-600 dark:text-mint-400">Valid — Sep 2026</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Staff Member 4 -->
+                  <div class="staff-profile disclosure-trigger px-5 py-4 cursor-pointer hover:bg-[var(--bg-surface-2)] transition-colors" data-staff="4">
+                    <div class="flex items-center gap-4">
+                      <div class="relative">
+                        <div class="w-11 h-11 rounded-full bg-gradient-to-br from-navy-300 to-navy-500 flex items-center justify-center text-white text-sm font-bold">RK</div>
+                        <span class="status-dot active absolute -bottom-0.5 -right-0.5 border-2 border-white dark:border-surface-800"></span>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                          <p class="text-sm font-semibold truncate" style="color:var(--text-primary)">Robert Kim, OT</p>
+                          <span class="credential-badge active"><span class="status-dot active"></span>Compliant</span>
+                        </div>
+                        <p class="text-[11px] mt-0.5 truncate" style="color:var(--text-tertiary)">Occupational Therapist • Hospice • ID: NH-2341</p>
+                      </div>
+                      <div class="hidden sm:flex items-center gap-3">
+                        <div class="text-right">
+                          <p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-tertiary)">OT License</p>
+                          <p class="text-xs font-semibold text-mint-600 dark:text-mint-400">Sep 15, 2027</p>
+                        </div>
+                        <span class="material-symbols-outlined disclosure-chevron text-[18px]" style="color:var(--text-tertiary)">expand_more</span>
+                      </div>
+                    </div>
+                    <div class="disclosure-content mt-0"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ RIGHT: Quick Insights Panel ═══ -->
+            <div class="space-y-4">
+              <!-- Compliance Donut -->
+              <div class="kapi-card p-5">
+                <h4 class="text-xs font-bold uppercase tracking-wider mb-4" style="color:var(--text-tertiary)">Credential Status Overview</h4>
+                <div class="flex items-center justify-center mb-4">
+                  <div class="relative w-32 h-32">
+                    <svg viewBox="0 0 36 36" class="w-32 h-32 -rotate-90">
+                      <circle cx="18" cy="18" r="15.9" fill="none" stroke-width="2.5" stroke="var(--border-subtle)" />
+                      <circle cx="18" cy="18" r="15.9" fill="none" stroke-width="2.5" stroke="#22B573" stroke-dasharray="84.8 100" stroke-linecap="round" />
+                      <circle cx="18" cy="18" r="15.9" fill="none" stroke-width="2.5" stroke="#D4A017" stroke-dasharray="10.4 100" stroke-dashoffset="-84.8" stroke-linecap="round" />
+                      <circle cx="18" cy="18" r="15.9" fill="none" stroke-width="2.5" stroke="#E8533C" stroke-dasharray="4.8 100" stroke-dashoffset="-95.2" stroke-linecap="round" />
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                      <span class="text-2xl font-bold brand-title" style="color:var(--text-primary)">92%</span>
+                      <span class="text-[9px] font-bold uppercase tracking-wider" style="color:var(--text-tertiary)">Compliant</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-mint-500"></span><span class="text-xs font-medium" style="color:var(--text-secondary)">Active & Valid</span></div>
+                    <span class="text-xs font-bold" style="color:var(--text-primary)">44</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-ambar-500"></span><span class="text-xs font-medium" style="color:var(--text-secondary)">Expiring Soon</span></div>
+                    <span class="text-xs font-bold" style="color:var(--text-primary)">5</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-coral-500"></span><span class="text-xs font-medium" style="color:var(--text-secondary)">Expired</span></div>
+                    <span class="text-xs font-bold" style="color:var(--text-primary)">2</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Upcoming Deadlines -->
+              <div class="kapi-card p-5">
+                <h4 class="text-xs font-bold uppercase tracking-wider mb-3" style="color:var(--text-tertiary)">Upcoming Deadlines</h4>
+                <div class="space-y-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-coral-50 dark:bg-coral-900/20 flex items-center justify-center">
+                      <span class="material-symbols-outlined text-coral-500 text-[16px]">emergency</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs font-semibold truncate" style="color:var(--text-primary)">J. Torres — LPN Renewal</p>
+                      <p class="text-[10px]" style="color:var(--text-tertiary)">Overdue since Mar 1</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-ambar-50 dark:bg-ambar-900/20 flex items-center justify-center">
+                      <span class="material-symbols-outlined text-ambar-500 text-[16px]">schedule</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs font-semibold truncate" style="color:var(--text-primary)">M. Johnson — RN License</p>
+                      <p class="text-[10px]" style="color:var(--text-tertiary)">Expires Apr 12</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-ambar-50 dark:bg-ambar-900/20 flex items-center justify-center">
+                      <span class="material-symbols-outlined text-ambar-500 text-[16px]">schedule</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs font-semibold truncate" style="color:var(--text-primary)">A. Patel — TB Test</p>
+                      <p class="text-[10px]" style="color:var(--text-tertiary)">Expires Apr 28</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- END DASHBOARD -->
+
+        <!-- ═══════════════════════════════════════════════
+             PILAR 4: KUDOS WALL — Culture as Interface
+             Burnout Mitigation via Social Recognition
+             Inspired by HiBob's corporate social network
+        ═══════════════════════════════════════════════ -->
+        <div id="page-kudos" class="page-section hidden p-4 sm:p-6 lg:p-8 animate-fade-up">
+          <div class="mb-6">
+            <h2 class="text-xl font-bold brand-title" style="color:var(--text-primary)">Kudos Wall</h2>
+            <p class="text-sm mt-1" style="color:var(--text-tertiary)">Recognize your team's outstanding clinical care and dedication</p>
+          </div>
+
+          <!-- Post Kudos Form -->
+          <div class="kapi-card p-5 mb-6">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kapi-400 to-navy-400 flex items-center justify-center text-white text-sm font-bold shrink-0">DR</div>
+              <div class="flex-1">
+                <textarea id="kudos-input" rows="2" placeholder="Give a shoutout to a team member..."
+                  class="w-full resize-none rounded-xl border px-4 py-3 text-sm transition-colors"
+                  style="background:var(--bg-surface-2); border-color:var(--border-subtle); color:var(--text-primary)"
+                ></textarea>
+                <div class="flex flex-wrap items-center justify-between gap-3 mt-3">
+                  <!-- Value Tags -->
+                  <div class="flex flex-wrap gap-2">
+                    <button class="kudos-tag kapi-btn text-[11px] font-semibold px-3 py-1 rounded-full border transition-all" style="border-color:var(--border-default); color:var(--text-secondary)" data-value="compassion">
+                      <span class="mr-1">&#10084;</span> Compassion
+                    </button>
+                    <button class="kudos-tag kapi-btn text-[11px] font-semibold px-3 py-1 rounded-full border transition-all" style="border-color:var(--border-default); color:var(--text-secondary)" data-value="excellence">
+                      <span class="mr-1">&#11088;</span> Excellence
+                    </button>
+                    <button class="kudos-tag kapi-btn text-[11px] font-semibold px-3 py-1 rounded-full border transition-all" style="border-color:var(--border-default); color:var(--text-secondary)" data-value="teamwork">
+                      <span class="mr-1">&#129309;</span> Teamwork
+                    </button>
+                    <button class="kudos-tag kapi-btn text-[11px] font-semibold px-3 py-1 rounded-full border transition-all" style="border-color:var(--border-default); color:var(--text-secondary)" data-value="safety">
+                      <span class="mr-1">&#128737;</span> Patient Safety
+                    </button>
+                    <button class="kudos-tag kapi-btn text-[11px] font-semibold px-3 py-1 rounded-full border transition-all" style="border-color:var(--border-default); color:var(--text-secondary)" data-value="innovation">
+                      <span class="mr-1">&#128161;</span> Innovation
+                    </button>
+                  </div>
+                  <button id="post-kudos-btn" class="kapi-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-kapi-500 hover:bg-kapi-600 transition-all shadow-kapi-sm">
+                    <span class="material-symbols-outlined text-[16px]">send</span>
+                    Post Kudos
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kudos Feed -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="kudos-feed">
+            <!-- Kudos Card 1 -->
+            <div class="kudos-card">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-kapi-400 to-navy-400 flex items-center justify-center text-white text-xs font-bold">DR</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold" style="color:var(--text-primary)">Dr. Rivera</p>
+                  <p class="text-[10px]" style="color:var(--text-tertiary)">Clinical Director • 2h ago</p>
+                </div>
+                <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-kapi-50 text-kapi-700 dark:bg-kapi-900/30 dark:text-kapi-300">&#10084; Compassion</span>
+              </div>
+              <p class="text-sm leading-relaxed" style="color:var(--text-secondary)">
+                Shoutout to <strong style="color:var(--text-primary)">Sarah Lee</strong> for going above and beyond with the Henderson family this week. Your patience and care made a real difference during a difficult transition to hospice.
+              </p>
+              <div class="flex items-center gap-4 mt-3 pt-3 border-t" style="border-color:var(--border-subtle)">
+                <button class="kapi-btn flex items-center gap-1.5 text-xs font-medium" style="color:var(--text-tertiary)">
+                  <span class="material-symbols-outlined text-[16px]">favorite</span> 12
+                </button>
+                <button class="kapi-btn flex items-center gap-1.5 text-xs font-medium" style="color:var(--text-tertiary)">
+                  <span class="material-symbols-outlined text-[16px]">chat_bubble</span> 3
+                </button>
+              </div>
+            </div>
+
+            <!-- Kudos Card 2 -->
+            <div class="kudos-card">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-ambar-300 to-ambar-500 flex items-center justify-center text-white text-xs font-bold">MJ</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold" style="color:var(--text-primary)">Maria Johnson</p>
+                  <p class="text-[10px]" style="color:var(--text-tertiary)">Registered Nurse • 5h ago</p>
+                </div>
+                <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-navy-50 text-navy-700 dark:bg-navy-900/30 dark:text-navy-300">&#129309; Teamwork</span>
+              </div>
+              <p class="text-sm leading-relaxed" style="color:var(--text-secondary)">
+                <strong style="color:var(--text-primary)">Robert Kim</strong> — Thank you for covering three extra visits on Saturday when we were short-staffed. Your dedication to our patients is inspiring!
+              </p>
+              <div class="flex items-center gap-4 mt-3 pt-3 border-t" style="border-color:var(--border-subtle)">
+                <button class="kapi-btn flex items-center gap-1.5 text-xs font-medium" style="color:var(--text-tertiary)">
+                  <span class="material-symbols-outlined text-[16px]">favorite</span> 8
+                </button>
+                <button class="kapi-btn flex items-center gap-1.5 text-xs font-medium" style="color:var(--text-tertiary)">
+                  <span class="material-symbols-outlined text-[16px]">chat_bubble</span> 1
+                </button>
+              </div>
+            </div>
+
+            <!-- Kudos Card 3 -->
+            <div class="kudos-card">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-mint-300 to-mint-500 flex items-center justify-center text-white text-xs font-bold">AP</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold" style="color:var(--text-primary)">Admin Team</p>
+                  <p class="text-[10px]" style="color:var(--text-tertiary)">Agency Leadership • 1d ago</p>
+                </div>
+                <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-ambar-50 text-ambar-700 dark:bg-ambar-900/30 dark:text-ambar-300">&#11088; Excellence</span>
+              </div>
+              <p class="text-sm leading-relaxed" style="color:var(--text-secondary)">
+                Our team achieved <strong style="color:var(--text-primary)">100% OASIS accuracy</strong> for Q1! This is a testament to everyone's commitment to quality documentation. Special recognition to the QA team.
+              </p>
+              <div class="flex items-center gap-4 mt-3 pt-3 border-t" style="border-color:var(--border-subtle)">
+                <button class="kapi-btn flex items-center gap-1.5 text-xs font-medium" style="color:var(--text-tertiary)">
+                  <span class="material-symbols-outlined text-[16px]">favorite</span> 24
+                </button>
+                <button class="kapi-btn flex items-center gap-1.5 text-xs font-medium" style="color:var(--text-tertiary)">
+                  <span class="material-symbols-outlined text-[16px]">chat_bubble</span> 7
+                </button>
+              </div>
+            </div>
+
+            <!-- Kudos Card 4 -->
+            <div class="kudos-card">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-coral-300 to-coral-500 flex items-center justify-center text-white text-xs font-bold">LN</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold" style="color:var(--text-primary)">Lisa Nguyen</p>
+                  <p class="text-[10px]" style="color:var(--text-tertiary)">Home Health Aide • 2d ago</p>
+                </div>
+                <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-coral-50 text-coral-700 dark:bg-coral-900/30 dark:text-coral-300">&#128737; Patient Safety</span>
+              </div>
+              <p class="text-sm leading-relaxed" style="color:var(--text-secondary)">
+                Thank you <strong style="color:var(--text-primary)">Maria Johnson</strong> for catching the medication interaction during your visit. Your clinical vigilance may have prevented a serious adverse event.
+              </p>
+              <div class="flex items-center gap-4 mt-3 pt-3 border-t" style="border-color:var(--border-subtle)">
+                <button class="kapi-btn flex items-center gap-1.5 text-xs font-medium" style="color:var(--text-tertiary)">
+                  <span class="material-symbols-outlined text-[16px]">favorite</span> 16
+                </button>
+                <button class="kapi-btn flex items-center gap-1.5 text-xs font-medium" style="color:var(--text-tertiary)">
+                  <span class="material-symbols-outlined text-[16px]">chat_bubble</span> 5
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════
+             PILAR 2: AUDIT MODE — Banking-Grade Read-Only View
+             Inspired by Moxo's secure external interaction spaces
+             Digital signatures, audit trails, watermarked view
+        ═══════════════════════════════════════════════ -->
+        <div id="audit-mode-overlay" class="fixed inset-0 z-50 hidden" style="background:rgba(18,18,18,0.92); backdrop-filter:blur(6px)">
+          <div class="h-full flex flex-col">
+            <!-- Audit Mode Header -->
+            <div class="shrink-0 px-6 py-4 flex items-center justify-between border-b border-surface-700">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-kapi-500 flex items-center justify-center text-white">
+                  <span class="material-symbols-outlined text-[22px]">gavel</span>
+                </div>
+                <div>
+                  <h2 class="text-lg font-bold brand-title text-white">KAPI Audit Mode</h2>
+                  <p class="text-xs text-surface-400">Read-Only Compliance View — State Inspection Ready</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-kapi-500/40 bg-kapi-500/10">
+                  <span class="material-symbols-outlined text-kapi-400 text-[16px]">lock</span>
+                  <span class="text-xs font-bold text-kapi-300">SECURE SESSION</span>
+                </div>
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-surface-600">
+                  <span class="material-symbols-outlined text-surface-400 text-[16px]">fingerprint</span>
+                  <span class="text-xs font-medium text-surface-300">Dr. Rivera • <span id="audit-timestamp"></span></span>
+                </div>
+                <button id="close-audit-overlay" class="audit-interactive kapi-btn px-4 py-2 rounded-xl text-sm font-bold text-white bg-coral-600 hover:bg-coral-500 transition-all">
+                  <span class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[16px]">close</span>
+                    Exit Audit Mode
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Audit Content -->
+            <div class="flex-1 overflow-y-auto p-6 kapi-scroll">
+              <div class="max-w-6xl mx-auto space-y-6">
+
+                <!-- Audit Summary Card -->
+                <div class="rounded-2xl border border-surface-700 bg-surface-800 p-6">
+                  <div class="flex items-start justify-between mb-4">
+                    <div>
+                      <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-surface-400">Agency Compliance Report</p>
+                      <h3 class="text-2xl font-bold brand-title text-white mt-1">QAPIplus Home Health Services</h3>
+                      <p class="text-sm text-surface-400 mt-1">Generated March 28, 2026 • Audit Period: Q1 2026</p>
+                    </div>
+                    <div class="text-right">
+                      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-mint-500/15 border border-mint-500/30">
+                        <span class="material-symbols-outlined text-mint-400 text-[20px]">verified</span>
+                        <span class="text-sm font-bold text-mint-300">92% Compliant</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Audit KPIs -->
+                  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="rounded-xl border border-surface-600 bg-surface-900 p-4">
+                      <p class="text-[10px] font-bold uppercase tracking-wider text-surface-400">Total Clinicians</p>
+                      <p class="text-2xl font-bold text-white mt-1">48</p>
+                    </div>
+                    <div class="rounded-xl border border-surface-600 bg-surface-900 p-4">
+                      <p class="text-[10px] font-bold uppercase tracking-wider text-surface-400">Licenses Active</p>
+                      <p class="text-2xl font-bold text-mint-400 mt-1">44</p>
+                    </div>
+                    <div class="rounded-xl border border-surface-600 bg-surface-900 p-4">
+                      <p class="text-[10px] font-bold uppercase tracking-wider text-surface-400">Expiring (&lt;30d)</p>
+                      <p class="text-2xl font-bold text-ambar-400 mt-1">2</p>
+                    </div>
+                    <div class="rounded-xl border border-surface-600 bg-surface-900 p-4">
+                      <p class="text-[10px] font-bold uppercase tracking-wider text-surface-400">Expired</p>
+                      <p class="text-2xl font-bold text-coral-400 mt-1">2</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Audit Trail Table -->
+                <div class="rounded-2xl border border-surface-700 bg-surface-800 overflow-hidden">
+                  <div class="px-6 py-4 border-b border-surface-700 flex items-center justify-between">
+                    <div>
+                      <h4 class="text-sm font-bold text-white">Compliance Audit Trail</h4>
+                      <p class="text-[11px] text-surface-400 mt-0.5">Chronological record of credential changes and verifications</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-kapi-400 text-[16px]">verified</span>
+                      <span class="text-[11px] font-bold text-kapi-300">Digitally Signed</span>
+                    </div>
+                  </div>
+                  <table class="w-full text-left">
+                    <thead>
+                      <tr class="border-b border-surface-700 bg-surface-900/50">
+                        <th class="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-surface-400">Timestamp</th>
+                        <th class="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-surface-400">Clinician</th>
+                        <th class="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-surface-400">Action</th>
+                        <th class="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-surface-400">Credential</th>
+                        <th class="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-surface-400">Status</th>
+                        <th class="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-surface-400">Verified By</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-surface-700/50">
+                      <tr class="hover:bg-surface-700/30 transition-colors">
+                        <td class="px-6 py-3 text-xs text-surface-300 font-mono">2026-03-28 09:14</td>
+                        <td class="px-6 py-3 text-xs text-white font-medium">Sarah Lee, PT</td>
+                        <td class="px-6 py-3 text-xs text-surface-300">License Verified</td>
+                        <td class="px-6 py-3 text-xs text-surface-300">PT License #PT-48291</td>
+                        <td class="px-6 py-3"><span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-mint-500/15 text-mint-400">ACTIVE</span></td>
+                        <td class="px-6 py-3 text-xs text-surface-400">System Auto-Check</td>
+                      </tr>
+                      <tr class="hover:bg-surface-700/30 transition-colors">
+                        <td class="px-6 py-3 text-xs text-surface-300 font-mono">2026-03-27 14:32</td>
+                        <td class="px-6 py-3 text-xs text-white font-medium">Robert Kim, OT</td>
+                        <td class="px-6 py-3 text-xs text-surface-300">CPR Cert Renewed</td>
+                        <td class="px-6 py-3 text-xs text-surface-300">AHA BLS #BLS-77104</td>
+                        <td class="px-6 py-3"><span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-mint-500/15 text-mint-400">RENEWED</span></td>
+                        <td class="px-6 py-3 text-xs text-surface-400">Dr. Rivera</td>
+                      </tr>
+                      <tr class="hover:bg-surface-700/30 transition-colors">
+                        <td class="px-6 py-3 text-xs text-surface-300 font-mono">2026-03-15 11:00</td>
+                        <td class="px-6 py-3 text-xs text-white font-medium">Maria Johnson, RN</td>
+                        <td class="px-6 py-3 text-xs text-surface-300">Expiration Alert Sent</td>
+                        <td class="px-6 py-3 text-xs text-surface-300">RN License #RN-33847</td>
+                        <td class="px-6 py-3"><span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-ambar-500/15 text-ambar-400">EXPIRING</span></td>
+                        <td class="px-6 py-3 text-xs text-surface-400">System Alert</td>
+                      </tr>
+                      <tr class="hover:bg-surface-700/30 transition-colors">
+                        <td class="px-6 py-3 text-xs text-surface-300 font-mono">2026-03-01 00:01</td>
+                        <td class="px-6 py-3 text-xs text-white font-medium">James Torres, LPN</td>
+                        <td class="px-6 py-3 text-xs text-surface-300">License Expired</td>
+                        <td class="px-6 py-3 text-xs text-surface-300">LPN License #LPN-21930</td>
+                        <td class="px-6 py-3"><span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-coral-500/15 text-coral-400">EXPIRED</span></td>
+                        <td class="px-6 py-3 text-xs text-surface-400">System Auto-Flag</td>
+                      </tr>
+                      <tr class="hover:bg-surface-700/30 transition-colors">
+                        <td class="px-6 py-3 text-xs text-surface-300 font-mono">2026-02-20 16:45</td>
+                        <td class="px-6 py-3 text-xs text-white font-medium">Full Staff</td>
+                        <td class="px-6 py-3 text-xs text-surface-300">Quarterly Audit Completed</td>
+                        <td class="px-6 py-3 text-xs text-surface-300">All Credentials</td>
+                        <td class="px-6 py-3"><span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-kapi-500/15 text-kapi-400">REVIEWED</span></td>
+                        <td class="px-6 py-3 text-xs text-surface-400">Dr. Rivera (sig: 0xA3F...)</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Digital Signature Footer -->
+                <div class="rounded-2xl border border-surface-700 bg-surface-800 p-5 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-kapi-400 text-[24px]">fingerprint</span>
+                    <div>
+                      <p class="text-xs font-bold text-white">Digital Signature Verification</p>
+                      <p class="text-[11px] text-surface-400 font-mono">SHA-256: a3f8c2d1...e9b74f02 • Signed by Dr. Rivera • March 28, 2026 09:30 UTC</p>
+                    </div>
+                  </div>
+                  <button class="audit-interactive kapi-btn px-4 py-2 rounded-xl text-xs font-bold border border-surface-600 text-surface-300 hover:bg-surface-700 transition-all">
+                    <span class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-[14px]">download</span>
+                      Export PDF
+                    </span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         PILAR 5: AI COPILOT — Agentic AI & Conversational UI
+         Inspired by Personio Assistant & Ask Humaans
+         Natural language compliance Q&A with sources
+    ═══════════════════════════════════════════════════════════ -->
+    <div id="copilot-panel" class="fixed top-0 right-0 z-40 h-full w-full sm:w-[420px] hidden translate-x-full transition-transform duration-300 ease-out" style="background:var(--bg-surface); border-left:1px solid var(--border-default); box-shadow:-8px 0 40px rgba(0,0,0,0.1)">
+      <div class="flex flex-col h-full">
+        <!-- Copilot Header -->
+        <div class="shrink-0 px-5 py-4 border-b flex items-center justify-between" style="border-color:var(--border-default)">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-kapi-500 to-kapi-600 flex items-center justify-center text-white shadow-md">
+              <span class="material-symbols-outlined text-[20px]">smart_toy</span>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold brand-title" style="color:var(--text-primary)">KAPI Copilot</h3>
+              <p class="text-[10px]" style="color:var(--text-tertiary)">AI-Powered Compliance Assistant</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <!-- Privacy indicator -->
+            <div class="flex items-center gap-1 px-2 py-1 rounded-lg" style="background:var(--bg-surface-2)">
+              <span class="material-symbols-outlined text-mint-500 text-[14px]">lock</span>
+              <span class="text-[10px] font-bold" style="color:var(--text-tertiary)">HIPAA</span>
+            </div>
+            <button id="copilot-close-btn" class="kapi-btn p-1.5 rounded-lg border transition-colors" style="border-color:var(--border-default)">
+              <span class="material-symbols-outlined text-[18px]" style="color:var(--text-tertiary)">close</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Prompts -->
+        <div class="shrink-0 px-5 py-3 flex flex-wrap gap-2 border-b" style="border-color:var(--border-subtle)">
+          <button class="copilot-prompt kapi-btn text-[11px] font-medium px-3 py-1.5 rounded-lg border transition-colors" style="border-color:var(--border-default); color:var(--text-secondary)" data-prompt="Which licenses expire this month?">
+            Expiring licenses
+          </button>
+          <button class="copilot-prompt kapi-btn text-[11px] font-medium px-3 py-1.5 rounded-lg border transition-colors" style="border-color:var(--border-default); color:var(--text-secondary)" data-prompt="Show me our compliance rate by department">
+            Compliance by dept
+          </button>
+          <button class="copilot-prompt kapi-btn text-[11px] font-medium px-3 py-1.5 rounded-lg border transition-colors" style="border-color:var(--border-default); color:var(--text-secondary)" data-prompt="What are the top payroll risks this period?">
+            Payroll risks
+          </button>
+        </div>
+
+        <!-- Chat Messages -->
+        <div id="copilot-messages" class="flex-1 overflow-y-auto kapi-scroll px-5 py-4 space-y-4">
+          <!-- Welcome Message -->
+          <div class="copilot-bubble assistant">
+            <p class="font-semibold mb-1">Hello, Dr. Rivera!</p>
+            <p>I'm your KAPI Copilot. Ask me anything about your team's compliance, credentials, payroll, or patient visit metrics.</p>
+            <p class="mt-2 text-xs opacity-70">All queries are HIPAA-compliant and auditable.</p>
+          </div>
+
+          <!-- Example: User question -->
+          <div class="copilot-bubble user">
+            Which nurses have licenses expiring in the next 30 days?
+          </div>
+
+          <!-- Example: AI response with sources -->
+          <div class="copilot-bubble assistant">
+            <p class="mb-2">I found <strong>2 clinicians</strong> with licenses expiring within 30 days:</p>
+            <div class="space-y-2 mb-3">
+              <div class="flex items-center gap-2 p-2 rounded-lg" style="background:rgba(212,160,23,0.1)">
+                <span class="status-dot warning"></span>
+                <div>
+                  <p class="text-xs font-semibold">Maria Johnson, RN</p>
+                  <p class="text-[10px] opacity-70">RN License #RN-33847 — Expires Apr 12, 2026 (15 days)</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 p-2 rounded-lg" style="background:rgba(212,160,23,0.1)">
+                <span class="status-dot warning"></span>
+                <div>
+                  <p class="text-xs font-semibold">Ana Patel, HHA</p>
+                  <p class="text-[10px] opacity-70">CNA Cert #CNA-19274 — Expires Apr 28, 2026</p>
+                </div>
+              </div>
+            </div>
+            <!-- Show Sources button -->
+            <button class="copilot-sources-btn kapi-btn flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1.5 rounded-lg border transition-colors" style="border-color:var(--border-default); color:var(--kapi-primary)">
+              <span class="material-symbols-outlined text-[14px]">source</span>
+              Show Sources (2)
+            </button>
+            <!-- Sources (toggleable) -->
+            <div class="copilot-sources hidden mt-2 p-2.5 rounded-lg text-[11px] space-y-1" style="background:var(--bg-surface-2); color:var(--text-tertiary)">
+              <p><strong>Source 1:</strong> Credential Database — staff_credentials table, queried Mar 28 09:30</p>
+              <p><strong>Source 2:</strong> State License Registry API — FL DOH verification endpoint</p>
+            </div>
+          </div>
+
+          <!-- Example: Chart response -->
+          <div class="copilot-bubble user">
+            Show me compliance rate by department
+          </div>
+
+          <div class="copilot-bubble assistant">
+            <p class="mb-3">Here's the compliance breakdown by department:</p>
+            <!-- Inline mini-chart -->
+            <div class="space-y-2.5">
+              <div>
+                <div class="flex justify-between mb-1"><span class="text-xs font-medium">Home Health RN</span><span class="text-xs font-bold text-mint-600">96%</span></div>
+                <div class="h-2 rounded-full overflow-hidden" style="background:var(--bg-surface-2)"><div class="h-full rounded-full bg-mint-500" style="width:96%"></div></div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1"><span class="text-xs font-medium">Therapy (PT/OT)</span><span class="text-xs font-bold text-mint-600">100%</span></div>
+                <div class="h-2 rounded-full overflow-hidden" style="background:var(--bg-surface-2)"><div class="h-full rounded-full bg-mint-500" style="width:100%"></div></div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1"><span class="text-xs font-medium">Hospice LPN</span><span class="text-xs font-bold text-coral-600">75%</span></div>
+                <div class="h-2 rounded-full overflow-hidden" style="background:var(--bg-surface-2)"><div class="h-full rounded-full bg-coral-500" style="width:75%"></div></div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1"><span class="text-xs font-medium">HHA/CNA</span><span class="text-xs font-bold text-ambar-600">88%</span></div>
+                <div class="h-2 rounded-full overflow-hidden" style="background:var(--bg-surface-2)"><div class="h-full rounded-full bg-ambar-500" style="width:88%"></div></div>
+              </div>
+            </div>
+            <p class="mt-3 text-xs opacity-70">The Hospice LPN department needs attention due to James Torres' expired license.</p>
+            <button class="copilot-sources-btn kapi-btn flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1.5 rounded-lg border mt-2 transition-colors" style="border-color:var(--border-default); color:var(--kapi-primary)">
+              <span class="material-symbols-outlined text-[14px]">source</span>
+              Show Sources (3)
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="shrink-0 px-5 py-4 border-t" style="border-color:var(--border-default)">
+          <div class="flex items-center gap-2">
+            <div class="flex-1 relative">
+              <input id="copilot-input" type="text" placeholder="Ask about compliance, credentials, payroll..."
+                class="w-full pl-4 pr-10 py-3 rounded-xl border text-sm transition-colors"
+                style="background:var(--bg-surface-2); border-color:var(--border-subtle); color:var(--text-primary)"
+              />
+            </div>
+            <button id="copilot-send-btn" class="kapi-btn w-11 h-11 rounded-xl bg-kapi-500 hover:bg-kapi-600 text-white flex items-center justify-center shadow-kapi-sm transition-all">
+              <span class="material-symbols-outlined text-[20px]">send</span>
+            </button>
+          </div>
+          <p class="text-[10px] text-center mt-2" style="color:var(--text-tertiary)">KAPI Copilot uses encrypted, HIPAA-compliant AI. All queries are logged in the audit trail.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MOBILE BOTTOM NAV (Pilar 3: Mobile-First) ── -->
+    <nav class="mobile-bottom-nav">
+      <a href="#" class="active-mobile" data-page="dashboard">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" data-page="staff">
+        <span class="material-symbols-outlined">group</span>
+        <span>Staff</span>
+      </a>
+      <a href="#" data-page="credentials">
+        <span class="material-symbols-outlined">verified_user</span>
+        <span>Credentials</span>
+      </a>
+      <a href="#" data-page="kudos">
+        <span class="material-symbols-outlined">volunteer_activism</span>
+        <span>Kudos</span>
+      </a>
+      <a href="#" data-page="more" id="mobile-more-btn">
+        <span class="material-symbols-outlined">more_horiz</span>
+        <span>More</span>
+      </a>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         JAVASCRIPT — Interactive Logic for All 5 Pillars
+    ═══════════════════════════════════════════════════════════ -->
+    <script>
+    (function() {
+      'use strict';
+
+      /* ── THEME (Dark Mode with system preference) ── */
+      const html = document.documentElement;
+      const themeToggle = document.getElementById('theme-toggle');
+
+      function applyTheme(dark) {
+        html.classList.toggle('dark', dark);
+        localStorage.setItem('kapi-theme', dark ? 'dark' : 'light');
+        // Update header backdrop for dark mode
+        const header = document.querySelector('header');
+        if (header) {
+          header.style.background = dark
+            ? 'rgba(18,18,18,0.85)'
+            : 'rgba(248,249,251,0.85)';
+        }
+      }
+
+      // Init theme from localStorage or system preference
+      const savedTheme = localStorage.getItem('kapi-theme');
+      if (savedTheme) {
+        applyTheme(savedTheme === 'dark');
+      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        applyTheme(true);
+      }
+
+      themeToggle?.addEventListener('click', () => {
+        applyTheme(!html.classList.contains('dark'));
+      });
+
+      /* ── NAVIGATION (Page Switching) ── */
+      const allNavItems = document.querySelectorAll('[data-page]');
+      const allPages = document.querySelectorAll('.page-section');
+      const pageTitle = document.getElementById('page-title');
+
+      const PAGE_TITLES = {
+        dashboard: 'Admin Dashboard',
+        staff: 'Clinical Staff',
+        credentials: 'Credentials Monitor',
+        compliance: 'Compliance Center',
+        scheduling: 'Scheduling',
+        payroll: 'Payroll Intelligence',
+        visits: 'Patient Visits',
+        kudos: 'Kudos Wall',
+        settings: 'Settings',
+      };
+
+      function switchPage(page) {
+        allPages.forEach(p => p.classList.add('hidden'));
+        const target = document.getElementById('page-' + page);
+        if (target) {
+          target.classList.remove('hidden');
+          target.classList.remove('animate-fade-up');
+          void target.offsetWidth; // trigger reflow
+          target.classList.add('animate-fade-up');
+        }
+
+        // Update nav active states
+        document.querySelectorAll('.nav-item').forEach(n => {
+          n.classList.remove('active-nav');
+          n.style.color = 'var(--text-secondary)';
+          n.style.background = '';
+        });
+        document.querySelectorAll('.mobile-bottom-nav a').forEach(n => {
+          n.classList.remove('active-mobile');
+        });
+
+        document.querySelectorAll(`[data-page="${page}"]`).forEach(n => {
+          if (n.classList.contains('nav-item')) {
+            n.classList.add('active-nav');
+            n.style.color = 'var(--kapi-primary)';
+            n.style.background = 'rgba(12,155,138,0.08)';
+          }
+          if (n.closest('.mobile-bottom-nav')) {
+            n.classList.add('active-mobile');
+          }
+        });
+
+        if (pageTitle) pageTitle.textContent = PAGE_TITLES[page] || 'KAPI';
+      }
+
+      allNavItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          const page = item.dataset.page;
+          if (page && page !== 'more') switchPage(page);
+        });
+      });
+
+      /* ── PROGRESSIVE DISCLOSURE (Staff Profiles) ── */
+      document.querySelectorAll('.disclosure-trigger').forEach(trigger => {
+        trigger.addEventListener('click', () => {
+          // Close others
+          document.querySelectorAll('.disclosure-trigger').forEach(t => {
+            if (t !== trigger) t.classList.remove('disclosure-open');
+          });
+          trigger.classList.toggle('disclosure-open');
+        });
+      });
+
+      /* ── AUDIT MODE (Pilar 2) ── */
+      const auditModeBtn = document.getElementById('audit-mode-btn');
+      const auditOverlay = document.getElementById('audit-mode-overlay');
+      const closeAuditBtn = document.getElementById('close-audit-overlay');
+      const exitAuditBtn = document.getElementById('exit-audit-btn');
+      const auditIndicator = document.getElementById('audit-indicator');
+      const auditWatermark = document.getElementById('audit-watermark');
+      const auditTimestamp = document.getElementById('audit-timestamp');
+
+      function enterAuditMode() {
+        auditOverlay?.classList.remove('hidden');
+        auditIndicator?.classList.remove('hidden');
+        auditIndicator?.classList.add('flex');
+        auditWatermark?.classList.remove('hidden');
+        if (auditTimestamp) {
+          auditTimestamp.textContent = new Date().toLocaleString('en-US', {
+            dateStyle: 'medium', timeStyle: 'short'
+          });
+        }
+        document.body.style.overflow = 'hidden';
+      }
+
+      function exitAuditMode() {
+        auditOverlay?.classList.add('hidden');
+        auditIndicator?.classList.add('hidden');
+        auditIndicator?.classList.remove('flex');
+        auditWatermark?.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+
+      auditModeBtn?.addEventListener('click', enterAuditMode);
+      closeAuditBtn?.addEventListener('click', exitAuditMode);
+      exitAuditBtn?.addEventListener('click', exitAuditMode);
+
+      /* ── AI COPILOT (Pilar 5) ── */
+      const copilotPanel = document.getElementById('copilot-panel');
+      const copilotToggle = document.getElementById('copilot-toggle-btn');
+      const copilotClose = document.getElementById('copilot-close-btn');
+      const copilotInput = document.getElementById('copilot-input');
+      const copilotSendBtn = document.getElementById('copilot-send-btn');
+      const copilotMessages = document.getElementById('copilot-messages');
+
+      function openCopilot() {
+        copilotPanel?.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          copilotPanel?.classList.remove('translate-x-full');
+          copilotPanel?.classList.add('translate-x-0');
+        });
+        copilotInput?.focus();
+      }
+
+      function closeCopilot() {
+        copilotPanel?.classList.remove('translate-x-0');
+        copilotPanel?.classList.add('translate-x-full');
+        setTimeout(() => copilotPanel?.classList.add('hidden'), 300);
+      }
+
+      copilotToggle?.addEventListener('click', openCopilot);
+      copilotClose?.addEventListener('click', closeCopilot);
+
+      // Send message
+      function sendCopilotMessage() {
+        const text = copilotInput?.value?.trim();
+        if (!text) return;
+
+        // Add user bubble
+        const userBubble = document.createElement('div');
+        userBubble.className = 'copilot-bubble user';
+        userBubble.textContent = text;
+        copilotMessages?.appendChild(userBubble);
+
+        copilotInput.value = '';
+
+        // Simulate AI response
+        setTimeout(() => {
+          const aiBubble = document.createElement('div');
+          aiBubble.className = 'copilot-bubble assistant';
+          aiBubble.innerHTML = `
+            <p>I'm analyzing your query: "<em>${text}</em>"</p>
+            <p class="mt-2">This is a demo response. In production, KAPI Copilot connects to your agency's compliance database and provides real-time answers with source verification.</p>
+            <button class="copilot-sources-btn kapi-btn flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1.5 rounded-lg border mt-2 transition-colors" style="border-color:var(--border-default); color:var(--kapi-primary)">
+              <span class="material-symbols-outlined text-[14px]">source</span>
+              Show Sources
+            </button>
+          `;
+          copilotMessages?.appendChild(aiBubble);
+          copilotMessages?.scrollTo({ top: copilotMessages.scrollHeight, behavior: 'smooth' });
+          bindSourceButtons();
+        }, 800);
+
+        copilotMessages?.scrollTo({ top: copilotMessages.scrollHeight, behavior: 'smooth' });
+      }
+
+      copilotSendBtn?.addEventListener('click', sendCopilotMessage);
+      copilotInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendCopilotMessage();
+        }
+      });
+
+      // Quick prompts
+      document.querySelectorAll('.copilot-prompt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (copilotInput) copilotInput.value = btn.dataset.prompt || '';
+          sendCopilotMessage();
+        });
+      });
+
+      // Show Sources toggle
+      function bindSourceButtons() {
+        document.querySelectorAll('.copilot-sources-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const sources = btn.nextElementSibling;
+            if (sources?.classList.contains('copilot-sources')) {
+              sources.classList.toggle('hidden');
+              btn.querySelector('span:last-child') && (
+                btn.innerHTML = sources.classList.contains('hidden')
+                  ? `<span class="material-symbols-outlined text-[14px]">source</span> Show Sources`
+                  : `<span class="material-symbols-outlined text-[14px]">source</span> Hide Sources`
+              );
+            }
+          });
+        });
+      }
+      bindSourceButtons();
+
+      /* ── KUDOS (Pilar 4) ── */
+      const kudosTags = document.querySelectorAll('.kudos-tag');
+      let selectedKudosTag = null;
+
+      kudosTags.forEach(tag => {
+        tag.addEventListener('click', () => {
+          kudosTags.forEach(t => {
+            t.style.borderColor = 'var(--border-default)';
+            t.style.background = '';
+            t.style.color = 'var(--text-secondary)';
+          });
+          if (selectedKudosTag === tag.dataset.value) {
+            selectedKudosTag = null;
+            return;
+          }
+          selectedKudosTag = tag.dataset.value;
+          tag.style.borderColor = 'var(--kapi-primary)';
+          tag.style.background = 'rgba(12,155,138,0.08)';
+          tag.style.color = 'var(--kapi-primary)';
+        });
+      });
+
+      document.getElementById('post-kudos-btn')?.addEventListener('click', () => {
+        const input = document.getElementById('kudos-input');
+        const text = input?.value?.trim();
+        if (!text) return;
+
+        const feed = document.getElementById('kudos-feed');
+        const card = document.createElement('div');
+        card.className = 'kudos-card animate-micro-pop';
+        const tagLabel = selectedKudosTag
+          ? selectedKudosTag.charAt(0).toUpperCase() + selectedKudosTag.slice(1)
+          : 'Shoutout';
+        card.innerHTML = `
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-kapi-400 to-navy-400 flex items-center justify-center text-white text-xs font-bold">DR</div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold" style="color:var(--text-primary)">Dr. Rivera</p>
+              <p class="text-[10px]" style="color:var(--text-tertiary)">Clinical Director • Just now</p>
+            </div>
+            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-kapi-50 text-kapi-700 dark:bg-kapi-900/30 dark:text-kapi-300">${tagLabel}</span>
+          </div>
+          <p class="text-sm leading-relaxed" style="color:var(--text-secondary)">${text}</p>
+          <div class="flex items-center gap-4 mt-3 pt-3 border-t" style="border-color:var(--border-subtle)">
+            <button class="kapi-btn flex items-center gap-1.5 text-xs font-medium" style="color:var(--text-tertiary)">
+              <span class="material-symbols-outlined text-[16px]">favorite</span> 0
+            </button>
+            <button class="kapi-btn flex items-center gap-1.5 text-xs font-medium" style="color:var(--text-tertiary)">
+              <span class="material-symbols-outlined text-[16px]">chat_bubble</span> 0
+            </button>
+          </div>
+        `;
+        feed?.prepend(card);
+        input.value = '';
+        selectedKudosTag = null;
+        kudosTags.forEach(t => {
+          t.style.borderColor = 'var(--border-default)';
+          t.style.background = '';
+          t.style.color = 'var(--text-secondary)';
+        });
+      });
+
+      /* ── MOBILE SIDEBAR ── */
+      const sidebar = document.getElementById('sidebar');
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+
+      mobileMenuBtn?.addEventListener('click', () => {
+        sidebar?.classList.toggle('hidden');
+        sidebar?.classList.toggle('fixed');
+        sidebar?.classList.toggle('inset-y-0');
+        sidebar?.classList.toggle('left-0');
+        sidebar?.classList.toggle('z-50');
+        sidebar?.classList.toggle('w-[280px]');
+        sidebar?.classList.toggle('shadow-kapi-xl');
+      });
+
+      /* ── KEYBOARD SHORTCUTS ── */
+      document.addEventListener('keydown', (e) => {
+        // Cmd/Ctrl + K → open copilot
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          openCopilot();
+        }
+        // Escape → close panels
+        if (e.key === 'Escape') {
+          closeCopilot();
+          exitAuditMode();
+        }
+      });
+
+      /* ── Init: Set default nav active style ── */
+      document.querySelectorAll('.nav-item.active-nav').forEach(n => {
+        n.style.color = 'var(--kapi-primary)';
+        n.style.background = 'rgba(12,155,138,0.08)';
+      });
+
+    })();
+    </script>
+
+</body>
+</html>
