@@ -501,6 +501,63 @@
         border-color: rgba(71, 85, 105, 0.65) !important;
       }
 
+      /* Dark mode: botones header */
+      .dark .bg-primary\/10,
+      .dark .bg-indigo-500\/10,
+      .dark .bg-emerald-500\/10,
+      .dark .bg-amber-500\/10,
+      .dark .bg-rose-500\/10,
+      .dark .bg-indigo-50,
+      .dark .bg-amber-50,
+      .dark .bg-cyan-50,
+      .dark .bg-slate-50 {
+        background-color: rgba(30, 41, 59, 0.7) !important;
+      }
+
+      /* Dark mode: KPI text visible */
+      .dark .text-emerald-600 { color: #6ee7b7 !important; }
+      .dark .text-rose-500 { color: #fca5a5 !important; }
+      .dark .text-rose-600 { color: #fca5a5 !important; }
+      .dark .text-indigo-500 { color: #a5b4fc !important; }
+      .dark .text-indigo-600 { color: #a5b4fc !important; }
+      .dark .text-indigo-800 { color: #c7d2fe !important; }
+      .dark .text-amber-500 { color: #fcd34d !important; }
+      .dark .text-amber-600 { color: #fcd34d !important; }
+      .dark .text-amber-800 { color: #fde68a !important; }
+      .dark .text-violet-600 { color: #c4b5fd !important; }
+      .dark .text-cyan-800 { color: #67e8f9 !important; }
+      .dark .text-primary { color: #a5b4fc !important; }
+
+      /* Dark mode: info boxes */
+      .dark .bg-amber-50,
+      .dark .border-amber-200 { border-color: rgba(245, 158, 11, 0.3) !important; }
+      .dark .bg-indigo-50,
+      .dark .border-indigo-200 { border-color: rgba(99, 102, 241, 0.3) !important; }
+      .dark .bg-cyan-50,
+      .dark .border-cyan-200 { border-color: rgba(6, 182, 212, 0.3) !important; }
+
+      /* Dark mode: data table headers */
+      .dark .data-table thead tr,
+      .dark .bg-slate-50 {
+        background: rgba(30, 41, 59, 0.85) !important;
+      }
+
+      /* Dark mode: bar chart labels */
+      .dark .text-slate-600 { color: #cbd5e1 !important; }
+
+      /* Dark mode: border-gray-100 */
+      .dark .border-gray-100 {
+        border-color: rgba(71, 85, 105, 0.6) !important;
+      }
+
+      /* Dark mode: KapiBot panel */
+      .dark #kapibot-messages {
+        background: rgba(2, 6, 23, 0.6) !important;
+      }
+      .dark #kapibot-messages .border-slate-200 {
+        background: rgba(15, 23, 42, 0.85) !important;
+      }
+
       .theme-switch input {
         position: absolute;
         opacity: 0;
@@ -644,10 +701,6 @@
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <button id="command-palette-btn" class="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors" title="Comandos (Ctrl/Cmd + K)">
-                <span class="material-symbols-outlined text-sm">terminal</span>
-                <span class="hidden sm:inline">Comandos</span>
-              </button>
               <button id="export-csv" class="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors">
                 <span class="material-symbols-outlined text-sm">download</span>
                 <span class="hidden md:inline">CSV</span>
@@ -774,6 +827,9 @@
             </div>
             <div class="advanced-card">
               <p class="tiny-label mb-3">Escenarios What-if</p>
+              <div class="rounded-lg bg-cyan-50 border border-cyan-200 px-3 py-2 mb-3 text-xs text-cyan-800">
+                <strong>¿Qué es esto?</strong> Simula el impacto en el costo de nómina ajustando salarios, horas extra o estructura organizacional. Mueve los controles deslizantes y observa cómo cambia el presupuesto proyectado respecto al costo actual.
+              </div>
               <div class="space-y-2">
                 <label class="text-xs text-slate-500">Ajuste salarial %</label>
                 <input id="sim-salary" type="range" min="-15" max="30" value="0" class="w-full" />
@@ -795,6 +851,9 @@
             </div>
             <div class="advanced-card xl:col-span-2">
               <p class="tiny-label mb-3">Objetivos por Área</p>
+              <div class="rounded-lg bg-slate-50 border border-slate-200 px-3 py-2 mb-3 text-xs text-slate-600">
+                <strong>Origen de metas:</strong> Los objetivos se calculan automáticamente como el 96% del costo real del área. Puedes personalizar las metas por área haciendo clic en el valor y editándolo; se guardan en tu navegador (localStorage).
+              </div>
               <div id="goals-area" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
             </div>
 
@@ -808,7 +867,7 @@
             <div class="advanced-card xl:col-span-2">
               <p class="tiny-label mb-3">Copilot de Negocio</p>
               <div class="rounded-lg bg-indigo-50 border border-indigo-200 px-3 py-2 mb-3 text-xs text-indigo-800">
-                <strong>¿Cómo funciona?</strong> Escribe una pregunta sobre costos, riesgos, áreas o acciones y el asistente de IA analizará los datos de nómina actuales para darte recomendaciones ejecutivas. Usa los botones rápidos o escribe tu propia pregunta.
+                <strong>¿Cómo funciona?</strong> El Copilot analiza los datos de nómina del período y año seleccionados en los filtros. Detecta patrones de concentración de costo por área, variaciones mensuales y riesgos operativos. Prueba preguntas como: "¿Cuál es el mayor riesgo?", "¿Qué área explica más el costo?" o "¿Qué acciones tomar para reducir la desviación?". Las respuestas se basan en los datos reales de tu nómina.
               </div>
               <div class="flex flex-wrap gap-2 mb-3">
                 <button class="text-xs px-2 py-1 rounded border border-slate-200 hover:bg-slate-50" data-copilot-prompt="¿Cuál es el mayor riesgo de costo este mes?">Riesgo principal</button>
@@ -826,27 +885,11 @@
               <div id="anomaly-summary" class="space-y-2 text-sm"></div>
             </div>
             <div class="advanced-card">
-              <p class="tiny-label mb-3">Cohortes de Talento</p>
+              <p class="tiny-label mb-3">Antigüedad de Empleados</p>
               <div id="cohort-summary" class="space-y-2 text-sm"></div>
             </div>
 
-            <div class="advanced-card xl:col-span-3">
-              <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
-                <p class="tiny-label">Timeline + Driver Tree + Tabla Smart</p>
-                <div class="flex items-center gap-2">
-                  <button id="save-view" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">Guardar vista</button>
-                  <button id="load-view" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">Cargar vista</button>
-                  <button id="story-mode" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">Story 2 min</button>
-                </div>
-              </div>
-              <input id="timeline-range" type="range" min="0" max="0" value="0" class="w-full mb-3" />
-              <div id="timeline-label" class="text-sm text-slate-600 mb-3"></div>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div id="driver-tree" class="rounded-lg border border-slate-200 bg-white p-3 text-sm"></div>
-                <div id="telemetry-panel" class="rounded-lg border border-slate-200 bg-white p-3 text-sm"></div>
-                <div id="audit-panel" class="rounded-lg border border-slate-200 bg-white p-3 text-sm"></div>
-              </div>
-            </div>
+
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8" id="kpi-grid">
@@ -948,6 +991,7 @@
               </div>
               <p class="text-slate-500 text-xs font-medium uppercase">Décimo Tercero</p>
               <h3 class="text-xl font-bold mt-1" id="prov-d13">$0</h3>
+              <p class="text-[10px] text-slate-400 mt-1">Cálculo: Dic 1 – Nov 30 · Pago: hasta 24 Dic</p>
             </div>
             <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="p-2 bg-indigo-500/10 rounded-lg text-indigo-500 w-fit mb-3">
@@ -955,6 +999,7 @@
               </div>
               <p class="text-slate-500 text-xs font-medium uppercase">Décimo Cuarto</p>
               <h3 class="text-xl font-bold mt-1" id="prov-d14">$0</h3>
+              <p class="text-[10px] text-slate-400 mt-1">Cálculo: Ago 1 – Jul 31 (Sierra) / Mar 1 – Feb 28 (Costa) · Pago: hasta 15 Mar / 15 Ago</p>
             </div>
             <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="p-2 bg-emerald-500/10 rounded-lg text-emerald-500 w-fit mb-3">
@@ -969,6 +1014,36 @@
               </div>
               <p class="text-slate-500 text-xs font-medium uppercase">IESS Patronal</p>
               <h3 class="text-xl font-bold mt-1" id="prov-iess">$0</h3>
+            </div>
+          </div>
+
+          <!-- Proyección Décimo Tercero en Diciembre -->
+          <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm mb-8">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="p-2 bg-amber-500/10 rounded-lg text-amber-500">
+                <span class="material-symbols-outlined">calendar_month</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Proyección del 13er Sueldo — Pago Diciembre</h3>
+                <p class="text-sm text-slate-500">Estimación del monto total a desembolsar en diciembre por concepto de Décimo Tercero</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="rounded-lg border border-slate-200 p-3">
+                <p class="text-xs text-slate-500 uppercase mb-1">Provisión mensual acumulada</p>
+                <h4 class="text-xl font-bold" id="prov-d13-monthly">$0</h4>
+                <p class="text-[10px] text-slate-400">Promedio mensual D13 del período visible</p>
+              </div>
+              <div class="rounded-lg border border-slate-200 p-3">
+                <p class="text-xs text-slate-500 uppercase mb-1">Proyección anual (×12)</p>
+                <h4 class="text-xl font-bold text-amber-600" id="prov-d13-projected">$0</h4>
+                <p class="text-[10px] text-slate-400">Total proyectado a pagar en diciembre</p>
+              </div>
+              <div class="rounded-lg border border-slate-200 p-3">
+                <p class="text-xs text-slate-500 uppercase mb-1">Meses restantes para pago</p>
+                <h4 class="text-xl font-bold" id="prov-d13-months-left">0</h4>
+                <p class="text-[10px] text-slate-400">Hasta 24 de diciembre</p>
+              </div>
             </div>
           </div>
 
@@ -1271,17 +1346,6 @@
       </div>
     </div>
 
-    <div id="command-palette" class="command-palette hidden">
-      <div class="flex h-full items-start justify-center pt-[12vh]">
-        <div class="command-card overflow-hidden">
-          <div class="border-b border-slate-200 p-3">
-            <input id="command-input" type="text" placeholder="Buscar acciones, páginas o atajos..." class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/30" />
-          </div>
-          <div id="command-list" class="max-h-[52vh] overflow-y-auto p-2"></div>
-        </div>
-      </div>
-    </div>
-
     <div id="drilldown-overlay" class="drilldown-overlay hidden"></div>
     <aside id="drilldown-drawer" class="drilldown-drawer hidden p-5 overflow-y-auto custom-scrollbar">
       <div class="mb-5 flex items-center justify-between">
@@ -1326,7 +1390,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script>
-      const DEFAULT_RENDER_API_BASE = "https://kapisg.com/apps/tablero-nomina-backend/";
+      const DEFAULT_RENDER_API_BASE = "http://localhost:8000";
       const API_BASE = (window.__KAPIROLL_API_BASE__ || window.__TABLERO_NOMINA_API_BASE__ || DEFAULT_RENDER_API_BASE).replace(/\/$/, "");
       const API_PREFIX = API_BASE ? `${API_BASE}/api` : "/api";
       const KAPIBOT_API_URL = `${API_PREFIX}/chat`;
@@ -1684,62 +1748,28 @@
         const node = document.getElementById('cohort-summary');
         if (!node) return;
         const now = new Date();
-        const buckets = { '0-1y': 0, '1-3y': 0, '3y+': 0 };
+        const buckets = { 'Menos de 1 año': 0, '1 a 3 años': 0, '3 a 5 años': 0, '5 a 10 años': 0, 'Más de 10 años': 0 };
         lastFilteredEmployees.forEach((e) => {
           const d = e.fecha_ingreso ? new Date(e.fecha_ingreso) : null;
           const y = d && !Number.isNaN(d.getTime()) ? (now - d) / (1000 * 60 * 60 * 24 * 365) : 0;
-          if (y < 1) buckets['0-1y'] += 1;
-          else if (y < 3) buckets['1-3y'] += 1;
-          else buckets['3y+'] += 1;
+          if (y < 1) buckets['Menos de 1 año'] += 1;
+          else if (y < 3) buckets['1 a 3 años'] += 1;
+          else if (y < 5) buckets['3 a 5 años'] += 1;
+          else if (y < 10) buckets['5 a 10 años'] += 1;
+          else buckets['Más de 10 años'] += 1;
         });
-        node.innerHTML = Object.entries(buckets).map(([k, v]) => `<div class="flex justify-between"><span>${k}</span><strong>${v}</strong></div>`).join('');
+        const total = lastFilteredEmployees.length || 1;
+        node.innerHTML = Object.entries(buckets).map(([k, v]) => {
+          const pct = ((v / total) * 100).toFixed(0);
+          return `<div class="flex justify-between items-center"><span class="text-slate-600">${k}</span><div class="flex items-center gap-2"><span class="text-xs text-slate-400">${pct}%</span><strong>${v}</strong></div></div>`;
+        }).join('');
       };
 
-      const renderDriverTree = () => {
-        const node = document.getElementById('driver-tree');
-        if (!node) return;
-        const ingresos = lastFilteredEmployees.reduce((s, e) => s + (e.total_ingresos || 0), 0);
-        const provisiones = lastFilteredEmployees.reduce((s, e) => s + (e.total_provisiones || 0), 0);
-        const descuentos = lastFilteredEmployees.reduce((s, e) => s + (e.total_descuentos || 0), 0);
-        const he = lastFilteredEmployees.reduce((s, e) => s + (e.h_ext_100 || 0) + (e.h_ext_50 || 0) + (e.recnocturno || 0), 0);
-        node.innerHTML = `
-          <p class="tiny-label mb-2">Driver Tree variación</p>
-          <div class="space-y-1">
-            <div class="flex justify-between"><span>Ingresos</span><strong>${formatCurrency(ingresos, 'USD')}</strong></div>
-            <div class="flex justify-between"><span>Provisiones</span><strong>${formatCurrency(provisiones, 'USD')}</strong></div>
-            <div class="flex justify-between"><span>Descuentos</span><strong>${formatCurrency(descuentos, 'USD')}</strong></div>
-            <div class="flex justify-between"><span>Horas extra</span><strong>${formatCurrency(he, 'USD')}</strong></div>
-          </div>
-        `;
-      };
+      const renderDriverTree = () => {};
 
-      const setupTimeline = () => {
-        const range = document.getElementById('timeline-range');
-        const label = document.getElementById('timeline-label');
-        if (!range || !label) return;
-        timelineData = (lastDashboardData?.monthly_costs || calcMonthlyCosts(lastFilteredEmployees)).map((m) => ({
-          periodo: m.periodo || m.month || '-',
-          costo_total: m.costo_total ?? ((m.total_ingresos || 0) + (m.total_provisiones || 0)),
-        })).sort((a, b) => String(a.periodo).localeCompare(String(b.periodo)));
-        const max = Math.max(0, timelineData.length - 1);
-        range.max = String(max);
-        range.value = String(max);
-        const current = timelineData[max];
-        label.textContent = current ? `Periodo activo: ${current.periodo} · ${formatCurrency(current.costo_total, 'USD')}` : 'Sin timeline disponible';
-      };
+      const setupTimeline = () => {};
 
-      const applyTimelineSelection = () => {
-        const range = document.getElementById('timeline-range');
-        const label = document.getElementById('timeline-label');
-        if (!range || !label || !timelineData.length) return;
-        const idx = Number(range.value);
-        const current = timelineData[idx];
-        if (!current) return;
-        label.textContent = `Periodo activo: ${current.periodo} · ${formatCurrency(current.costo_total, 'USD')}`;
-        document.getElementById('filter-periodo').value = current.periodo;
-        filters.periodo = current.periodo;
-        applyFilters();
-      };
+      const applyTimelineSelection = () => {};
 
       const saveCurrentView = () => {
         const view = { ...filters, role: selectedRole };
@@ -2148,93 +2178,7 @@
         }
       };
 
-      const initCommandPalette = () => {
-        const palette = document.getElementById('command-palette');
-        const input = document.getElementById('command-input');
-        const list = document.getElementById('command-list');
-        if (!palette || !input || !list) return;
-
-        const renderItems = (items) => {
-          currentCommandItems = items;
-          list.innerHTML = items.map((item, index) => `
-            <button class="command-item ${index === 0 ? 'active' : ''} w-full rounded-lg px-3 py-2 text-left" data-command-index="${index}">
-              <p class="text-sm font-semibold text-slate-800">${item.label}</p>
-              <p class="text-xs text-slate-500">${item.hint}</p>
-            </button>
-          `).join('');
-        };
-
-        const getItems = () => {
-          const allowed = ROLE_PAGE_ACCESS[selectedRole] || ROLE_PAGE_ACCESS.ceo;
-          const pages = [
-            { page: 'dashboard', label: 'Ir a Dashboard' },
-            { page: 'empleados', label: 'Ir a Empleados' },
-            { page: 'provisiones', label: 'Ir a Provisiones' },
-            { page: 'iess', label: 'Ir a Análisis IESS' },
-            { page: 'horas-extra', label: 'Ir a Horas Extra' }
-          ].filter((p) => allowed.includes(p.page)).map((p) => ({
-            label: p.label,
-            hint: 'Navegación rápida',
-            action: () => navigateTo(p.page)
-          }));
-
-          const actions = [
-            { label: 'Aplicar filtros', hint: 'Ejecuta filtros actuales', action: () => applyFilters() },
-            { label: 'Limpiar filtros', hint: 'Reinicia filtros activos', action: () => clearFilters() },
-            { label: 'Abrir modo presentación', hint: 'Narrativa mensual', action: () => openPresentationMode() },
-            { label: 'Exportar CSV', hint: 'Descarga datos tabulares', action: () => document.getElementById('export-csv')?.click() },
-            { label: 'Exportar PDF ejecutivo', hint: 'Resumen listo para comité', action: () => exportExecutivePdf() },
-            { label: 'Ejecutar smoke test UX', hint: 'Valida flujo critico in-app', action: () => runSmokeChecks() },
-          ];
-
-          return [...pages, ...actions];
-        };
-
-        const openPalette = () => {
-          palette.classList.remove('hidden');
-          const items = getItems();
-          renderItems(items);
-          input.value = '';
-          input.focus();
-        };
-
-        const closePalette = () => palette.classList.add('hidden');
-
-        const activateIndex = (index) => {
-          const item = currentCommandItems[index];
-          if (!item) return;
-          item.action();
-          closePalette();
-        };
-
-        document.getElementById('command-palette-btn')?.addEventListener('click', openPalette);
-        palette.addEventListener('click', (event) => {
-          if (event.target.id === 'command-palette') closePalette();
-        });
-
-        input.addEventListener('input', () => {
-          const value = input.value.trim().toLowerCase();
-          const items = getItems().filter((i) => (`${i.label} ${i.hint}`).toLowerCase().includes(value));
-          renderItems(items);
-        });
-
-        list.addEventListener('click', (event) => {
-          const button = event.target.closest('[data-command-index]');
-          if (!button) return;
-          activateIndex(Number(button.dataset.commandIndex));
-        });
-
-        document.addEventListener('keydown', (event) => {
-          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
-            event.preventDefault();
-            openPalette();
-            return;
-          }
-          if (event.key === 'Escape' && !palette.classList.contains('hidden')) {
-            closePalette();
-          }
-        });
-      };
+      const initCommandPalette = () => {};
 
       const openDrilldown = (metricKey, metricLabel) => {
         const overlay = document.getElementById('drilldown-overlay');
@@ -2290,34 +2234,83 @@
       };
 
       const exportExecutivePdf = () => {
-        const jspdfNS = window.jspdf;
-        if (!jspdfNS?.jsPDF) {
-          showBanner('No se pudo cargar el motor de PDF en este momento.', 'warning');
-          return;
-        }
-
-        const { jsPDF } = jspdfNS;
-        const doc = new jsPDF();
-        const monthly = lastDashboardData?.monthly_costs || calcMonthlyCosts(lastFilteredEmployees);
-        const insights = deriveInsights(lastFilteredEmployees, monthly);
-        const totalCost = lastFilteredEmployees.reduce((s, e) => s + (e.total_ingresos || 0) + (e.total_provisiones || 0), 0);
-
-        doc.setFontSize(18);
-        doc.text('Resumen Ejecutivo de Nomina', 14, 18);
-        doc.setFontSize(11);
-        doc.text(`Rol: ${getRoleLabel(selectedRole)}`, 14, 28);
-        doc.text(`Registros: ${lastFilteredEmployees.length}`, 14, 35);
-        doc.text(`Costo total: ${formatCurrency(totalCost, 'USD')}`, 14, 42);
-        doc.text(`Fecha: ${new Date().toLocaleDateString('es-EC')}`, 14, 49);
-
-        doc.setFontSize(12);
-        doc.text('Insights clave', 14, 63);
-        doc.setFontSize(10);
-        doc.text(`1) ${insights.main}`, 14, 71, { maxWidth: 180 });
-        doc.text(`2) ${insights.risk}`, 14, 82, { maxWidth: 180 });
-        doc.text(`3) ${insights.action}`, 14, 93, { maxWidth: 180 });
-
-        doc.save(`resumen_nomina_${Date.now()}.pdf`);
+        const activePage = document.getElementById(`page-${currentPage}`);
+        if (!activePage) return;
+        
+        const pageTitles = {
+          dashboard: 'Dashboard Ejecutivo',
+          empleados: 'Gestión de Empleados',
+          provisiones: 'Análisis de Provisiones',
+          iess: 'Análisis IESS',
+          'horas-extra': 'Análisis de Horas Extra'
+        };
+        
+        const filteredEmployees = applyFiltersToData(allEmployees);
+        const totalCost = filteredEmployees.reduce((s, e) => s + (e.total_ingresos || 0) + (e.total_provisiones || 0), 0);
+        const insights = deriveInsights(filteredEmployees, lastDashboardData?.monthly_costs || calcMonthlyCosts(filteredEmployees));
+        const filterDesc = [
+          filters.area ? `Área: ${filters.area}` : '',
+          filters.contrato ? `Contrato: ${filters.contrato}` : '',
+          filters.periodo ? `Período: ${filters.periodo}` : '',
+          filters.year ? `Año: ${filters.year}` : ''
+        ].filter(Boolean).join(' · ') || 'Todos los datos';
+        
+        const isDark = document.documentElement.classList.contains('dark');
+        
+        const htmlContent = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>KAPIROLL - ${pageTitles[currentPage] || 'Reporte'}</title>
+<style>
+  body { font-family: 'Segoe UI', 'Inter', Arial, sans-serif; margin: 0; padding: 40px; color: #1e293b; background: #fff; }
+  .header { border-bottom: 3px solid #4f46e5; padding-bottom: 16px; margin-bottom: 24px; }
+  .header h1 { font-size: 24px; color: #4f46e5; margin: 0 0 4px 0; }
+  .header p { font-size: 12px; color: #64748b; margin: 2px 0; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  .kpi-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
+  .kpi-card .label { font-size: 10px; text-transform: uppercase; color: #64748b; margin-bottom: 4px; }
+  .kpi-card .value { font-size: 20px; font-weight: 700; }
+  .insight-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+  .insight-box .title { font-size: 10px; text-transform: uppercase; color: #64748b; margin-bottom: 4px; }
+  .insight-box .text { font-size: 13px; }
+  .section-title { font-size: 16px; font-weight: 700; margin: 20px 0 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: #f1f5f9; padding: 8px 12px; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 10px; color: #64748b; }
+  td { padding: 6px 12px; border-bottom: 1px solid #f1f5f9; }
+  .footer { margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 12px; font-size: 10px; color: #94a3b8; text-align: center; }
+  @media print { body { padding: 20px; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>KAPIROLL — ${pageTitles[currentPage] || 'Reporte'}</h1>
+  <p>Rol: ${getRoleLabel(selectedRole)} · Filtros: ${filterDesc}</p>
+  <p>Generado: ${new Date().toLocaleString('es-EC')} · Registros: ${filteredEmployees.length}</p>
+</div>
+<div class="kpi-grid">
+  <div class="kpi-card"><div class="label">Costo Total</div><div class="value">${formatCurrency(totalCost, 'USD')}</div></div>
+  <div class="kpi-card"><div class="label">Total Ingresos</div><div class="value">${formatCurrency(filteredEmployees.reduce((s,e)=>s+(e.total_ingresos||0),0), 'USD')}</div></div>
+  <div class="kpi-card"><div class="label">Total Provisiones</div><div class="value">${formatCurrency(filteredEmployees.reduce((s,e)=>s+(e.total_provisiones||0),0), 'USD')}</div></div>
+</div>
+<div class="insight-box"><div class="title">Insight Principal</div><div class="text">${insights.main}</div></div>
+<div class="insight-box"><div class="title">Riesgo</div><div class="text">${insights.risk}</div></div>
+<div class="insight-box"><div class="title">Acción Recomendada</div><div class="text">${insights.action}</div></div>
+<h3 class="section-title">Detalle de Empleados</h3>
+<table>
+<thead><tr><th>Nombre</th><th>Área</th><th>Contrato</th><th style="text-align:right">Ingresos</th><th style="text-align:right">Descuentos</th><th style="text-align:right">Provisiones</th><th style="text-align:right">Neto</th></tr></thead>
+<tbody>${filteredEmployees.slice(0, 100).map(e => `<tr><td>${e.nombre||'-'}</td><td>${e.area||'-'}</td><td>${e.tipo_contrato||'-'}</td><td style="text-align:right">${formatCurrency(e.total_ingresos,'USD')}</td><td style="text-align:right">${formatCurrency(e.total_descuentos,'USD')}</td><td style="text-align:right">${formatCurrency(e.total_provisiones,'USD')}</td><td style="text-align:right">${formatCurrency(e.a_recibir,'USD')}</td></tr>`).join('')}</tbody>
+</table>
+<div class="footer">KAPIROLL — Inteligencia de Nómina · Reporte generado automáticamente</div>
+</body></html>`;
+        
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reporte_${currentPage}_${Date.now()}.html`;
+        a.click();
+        URL.revokeObjectURL(url);
       };
 
       const createPresentationSlides = (monthlyData) => {
@@ -2396,10 +2389,45 @@
       const openPresentationMode = () => {
         const overlay = document.getElementById('presentation-overlay');
         if (!overlay) return;
+        // Capturar contenido de la pestaña activa con filtros aplicados
+        const activePage = document.getElementById(`page-${currentPage}`);
+        if (!activePage) return;
+        
         const filteredEmployees = applyFiltersToData(allEmployees);
         const monthlyData = lastDashboardData?.monthly_costs || calcMonthlyCosts(filteredEmployees);
-        presentationSlides = createPresentationSlides(monthlyData);
-        presentationIndex = Math.max(0, presentationSlides.length - 1);
+        
+        // Crear slides basados únicamente en la pestaña activa
+        const pageTitles = {
+          dashboard: 'Dashboard Ejecutivo',
+          empleados: 'Gestión de Empleados',
+          provisiones: 'Análisis de Provisiones',
+          iess: 'Análisis IESS',
+          'horas-extra': 'Análisis de Horas Extra'
+        };
+        
+        const pageTitle = pageTitles[currentPage] || 'Resumen';
+        const totalCost = filteredEmployees.reduce((s, e) => s + (e.total_ingresos || 0) + (e.total_provisiones || 0), 0);
+        const filterDesc = [
+          filters.area ? `Área: ${filters.area}` : '',
+          filters.contrato ? `Contrato: ${filters.contrato}` : '',
+          filters.periodo ? `Período: ${filters.periodo}` : '',
+          filters.year ? `Año: ${filters.year}` : ''
+        ].filter(Boolean).join(' · ') || 'Sin filtros aplicados';
+        
+        presentationSlides = [{
+          periodo: pageTitle,
+          costo: totalCost,
+          variation: 0,
+          story: `Pestaña: ${pageTitle}\nFiltros: ${filterDesc}\nRegistros: ${filteredEmployees.length} empleados\nCosto total: ${formatCurrency(totalCost, 'USD')}`
+        }];
+        
+        // Add monthly slides if on dashboard
+        if (currentPage === 'dashboard') {
+          const monthlySlides = createPresentationSlides(monthlyData);
+          presentationSlides = [...presentationSlides, ...monthlySlides];
+        }
+        
+        presentationIndex = 0;
         overlay.classList.remove('hidden');
         renderPresentationSlide();
       };
@@ -2554,10 +2582,12 @@
           `<option value="${n.cedula}" ${n.cedula === currentEmpleado ? 'selected' : ''}>${n.nombre}</option>`
         ).join('');
         
-        // Poblar períodos desde la base de datos
+        // Poblar períodos desde la base de datos (solo año en curso)
         if (filterOptions?.periodos?.length > 0) {
+          const activeYear = filters.year || filterOptions.years?.[0] || new Date().getFullYear().toString();
+          const periodosDelAnio = filterOptions.periodos.filter(p => String(p.value).startsWith(String(activeYear)));
           periodoSelect.innerHTML = '<option value="">Todos los períodos</option>' + 
-            filterOptions.periodos.map(p => 
+            periodosDelAnio.map(p => 
               `<option value="${p.value}" ${p.value === currentPeriodo ? 'selected' : ''}>${p.label}</option>`
             ).join('');
           periodoSelect.disabled = false;
@@ -3113,6 +3143,8 @@
         
         svg.setAttribute("viewBox", "0 0 144 144");
         
+        const labelFontSize = data.length > 5 ? '11px' : '13px';
+        
         data.forEach((item, index) => {
           const percent = (item.count / total) * 100;
           const segmentLength = (percent / 100) * circumference;
@@ -3130,15 +3162,16 @@
 
           offset += segmentLength;
           
-          // Leyenda
+          // Leyenda con texto ajustable
           const row = document.createElement("div");
-          row.className = "flex items-center justify-between text-sm";
+          row.className = "flex items-center justify-between gap-2";
+          row.style.fontSize = labelFontSize;
           row.innerHTML = `
-            <div class="flex items-center gap-2">
-              <div class="w-3 h-3 rounded-full" style="background:${colors[index % colors.length]}"></div>
-              <span class="text-slate-600 truncate max-w-[120px]" title="${item.label}">${item.label}</span>
+            <div class="flex items-center gap-1.5 min-w-0 flex-1">
+              <div class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${colors[index % colors.length]}"></div>
+              <span class="text-slate-600 truncate" title="${item.label}">${item.label}</span>
             </div>
-            <span class="font-semibold text-slate-700">${item.count}</span>
+            <span class="font-semibold text-slate-700 shrink-0">${item.count} <span class="text-[10px] text-slate-400">(${percent.toFixed(0)}%)</span></span>
           `;
           legend.appendChild(row);
         });
@@ -3211,6 +3244,16 @@
         document.getElementById('prov-d14').textContent = formatCurrency(d14, currency);
         document.getElementById('prov-vac').textContent = formatCurrency(vac, currency);
         document.getElementById('prov-iess').textContent = formatCurrency(iessP, currency);
+        
+        // Proyección del 13er sueldo para diciembre
+        const periodosCount = Object.keys(periodoData || {}).length || [...new Set(employees.map(e => e.periodo))].filter(Boolean).length || 1;
+        const d13Monthly = d13 / periodosCount;
+        const d13Projected = d13Monthly * 12;
+        const now13 = new Date();
+        const monthsLeft = Math.max(0, 11 - now13.getMonth() + (now13.getDate() <= 24 ? 1 : 0));
+        if (document.getElementById('prov-d13-monthly')) document.getElementById('prov-d13-monthly').textContent = formatCurrency(d13Monthly, currency);
+        if (document.getElementById('prov-d13-projected')) document.getElementById('prov-d13-projected').textContent = formatCurrency(d13Projected, currency);
+        if (document.getElementById('prov-d13-months-left')) document.getElementById('prov-d13-months-left').textContent = String(monthsLeft);
         
         // Agrupar datos por período
         const periodoData = {};
@@ -3447,17 +3490,15 @@
         
         const absPersonal = Math.abs(iessPersonal);
         const absPatronal = Math.abs(iessPatronal);
-        const absFondos = Math.abs(fondosReserva);
-        const total = absPersonal + absPatronal + absFondos;
+        const total = absPersonal + absPatronal;
         const donutData = [
           { label: "IESS Personal", value: absPersonal, percent: total > 0 ? (absPersonal / total * 100) : 0 },
-          { label: "IESS Patronal", value: absPatronal, percent: total > 0 ? (absPatronal / total * 100) : 0 },
-          { label: "Fondos Reserva", value: absFondos, percent: total > 0 ? (absFondos / total * 100) : 0 }
+          { label: "IESS Patronal", value: absPatronal, percent: total > 0 ? (absPatronal / total * 100) : 0 }
         ];
         
         const radius = 70;
         const circumference = 2 * Math.PI * radius;
-        const donutColors = ["#ef4444", "#6366f1", "#13a4ec"];
+        const donutColors = ["#ef4444", "#6366f1"];
         let offset = 0;
 
         donutData.forEach((item, index) => {
@@ -3703,22 +3744,73 @@
         }
       };
 
-      // Exportar CSV
+      // Exportar CSV (tabla detalle de la pestaña activa)
       document.getElementById('export-csv').addEventListener('click', () => {
         const filtered = applyFiltersToData(allEmployees);
-        const headers = ['Nombre', 'Cédula', 'Área', 'Contrato', 'Ingresos', 'Descuentos', 'Provisiones', 'Neto'];
-        const rows = filtered.map(e => [
-          e.nombre, e.cedula, e.area, e.tipo_contrato,
-          e.total_ingresos, e.total_descuentos, e.total_provisiones, e.a_recibir
-        ]);
+        let headers, rows, filename;
         
-        const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-        const blob = new Blob([csv], { type: 'text/csv' });
+        switch (currentPage) {
+          case 'provisiones':
+            headers = ['Nombre', 'Período', 'Décimo 13', 'Décimo 14', 'Vacaciones', 'Fondos Reserva', 'IESS Patronal', 'Total'];
+            rows = filtered.map(e => [
+              e.nombre, e.periodo,
+              e.decimo_13 || 0, e.decimo_14 || 0, e.vacaciones_prov || 0,
+              e.fondos_reserva || 0, e.iess_patronal || 0,
+              (e.decimo_13 || 0) + (e.decimo_14 || 0) + (e.vacaciones_prov || 0) + (e.fondos_reserva || 0) + (e.iess_patronal || 0)
+            ]);
+            filename = 'provisiones_kapiroll.csv';
+            break;
+          case 'iess':
+            headers = ['Nombre', 'Período', 'IESS Personal', 'Pr. Hipotecario', 'Pr. Quirografario', 'IESS Patronal', 'Fondos Reserva', 'Total'];
+            rows = filtered.map(e => [
+              e.nombre, e.periodo,
+              e.iess_personal || 0, e.pr_h_iess || 0, e.pr_q_iess || 0,
+              e.iess_patronal || 0, e.fondos_reserva || 0,
+              (e.iess_personal || 0) + (e.iess_patronal || 0) + (e.pr_h_iess || 0) + (e.pr_q_iess || 0)
+            ]);
+            filename = 'iess_kapiroll.csv';
+            break;
+          case 'horas-extra':
+            headers = ['Nombre', 'Período', 'Área', 'H.Extra 100%', 'H.Extra 50%', 'Rec. Nocturno', 'Total'];
+            rows = filtered
+              .filter(e => (e.h_ext_100 || 0) > 0 || (e.h_ext_50 || 0) > 0 || (e.recnocturno || 0) > 0)
+              .map(e => [
+                e.nombre, e.periodo, e.area,
+                e.h_ext_100 || 0, e.h_ext_50 || 0, e.recnocturno || 0,
+                (e.h_ext_100 || 0) + (e.h_ext_50 || 0) + (e.recnocturno || 0)
+              ]);
+            filename = 'horas_extra_kapiroll.csv';
+            break;
+          case 'empleados':
+            headers = ['Nombre', 'Período', 'Cédula', 'Área', 'Contrato', 'Fecha Ingreso', 'Ingresos', 'Neto'];
+            rows = filtered.map(e => [
+              e.nombre, e.periodo, e.cedula, e.area, e.tipo_contrato,
+              e.fecha_ingreso, e.total_ingresos, e.a_recibir
+            ]);
+            filename = 'empleados_kapiroll.csv';
+            break;
+          default:
+            headers = ['Nombre', 'Cédula', 'Área', 'Contrato', 'Ingresos', 'Descuentos', 'Provisiones', 'Neto'];
+            rows = filtered.map(e => [
+              e.nombre, e.cedula, e.area, e.tipo_contrato,
+              e.total_ingresos, e.total_descuentos, e.total_provisiones, e.a_recibir
+            ]);
+            filename = 'nomina_kapiroll.csv';
+        }
+        
+        const escapeCsvField = (field) => {
+          const str = String(field ?? '');
+          return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str.replace(/"/g, '""')}"` : str;
+        };
+        const csv = [headers.join(','), ...rows.map(r => r.map(escapeCsvField).join(','))].join('\n');
+        const bom = '\uFEFF';
+        const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'nomina_kapiroll.csv';
+        a.download = filename;
         a.click();
+        URL.revokeObjectURL(url);
       });
 
       const applyFiltersToData = (employees) => {
