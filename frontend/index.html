@@ -3245,19 +3245,9 @@
         document.getElementById('prov-vac').textContent = formatCurrency(vac, currency);
         document.getElementById('prov-iess').textContent = formatCurrency(iessP, currency);
         
-        // Proyección del 13er sueldo para diciembre
-        const periodosCount = Object.keys(periodoData || {}).length || [...new Set(employees.map(e => e.periodo))].filter(Boolean).length || 1;
-        const d13Monthly = d13 / periodosCount;
-        const d13Projected = d13Monthly * 12;
-        const now13 = new Date();
-        const monthsLeft = Math.max(0, 11 - now13.getMonth() + (now13.getDate() <= 24 ? 1 : 0));
-        if (document.getElementById('prov-d13-monthly')) document.getElementById('prov-d13-monthly').textContent = formatCurrency(d13Monthly, currency);
-        if (document.getElementById('prov-d13-projected')) document.getElementById('prov-d13-projected').textContent = formatCurrency(d13Projected, currency);
-        if (document.getElementById('prov-d13-months-left')) document.getElementById('prov-d13-months-left').textContent = String(monthsLeft);
-        
         // Agrupar datos por período
         const periodoData = {};
-        employees.forEach(e => {
+        (employees || []).forEach(e => {
           const periodo = e.periodo || 'Sin período';
           if (!periodoData[periodo]) {
             periodoData[periodo] = { decimo_13: 0, decimo_14: 0, vacaciones_prov: 0, fondos_reserva: 0, iess_patronal: 0, total: 0 };
@@ -3269,6 +3259,16 @@
           periodoData[periodo].iess_patronal += (e.iess_patronal || 0);
           periodoData[periodo].total += (e.decimo_13 || 0) + (e.decimo_14 || 0) + (e.vacaciones_prov || 0) + (e.fondos_reserva || 0) + (e.iess_patronal || 0);
         });
+
+        // Proyección del 13er sueldo para diciembre
+        const periodosCount = Object.keys(periodoData).length || [...new Set((employees || []).map(e => e.periodo))].filter(Boolean).length || 1;
+        const d13Monthly = d13 / periodosCount;
+        const d13Projected = d13Monthly * 12;
+        const now13 = new Date();
+        const monthsLeft = Math.max(0, 11 - now13.getMonth() + (now13.getDate() <= 24 ? 1 : 0));
+        if (document.getElementById('prov-d13-monthly')) document.getElementById('prov-d13-monthly').textContent = formatCurrency(d13Monthly, currency);
+        if (document.getElementById('prov-d13-projected')) document.getElementById('prov-d13-projected').textContent = formatCurrency(d13Projected, currency);
+        if (document.getElementById('prov-d13-months-left')) document.getElementById('prov-d13-months-left').textContent = String(monthsLeft);
         
         // Ordenar períodos cronológicamente
         const sortedPeriodos = Object.keys(periodoData).sort();
