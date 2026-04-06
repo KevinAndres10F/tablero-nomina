@@ -2976,25 +2976,22 @@
 
       // Gráfico de líneas para comparativa mensual
       const buildMonthlyLineChart = (monthlyData, currency) => {
-        const svg = document.getElementById("monthly-line-chart");
         const container = document.getElementById('monthly-chart-container');
-        if (!svg) return;
-        
-        svg.innerHTML = "";
-        
-        if (!monthlyData || monthlyData.length === 0) {
-          if (container) {
-            renderEmptyState('monthly-chart-container', 'Sin tendencia mensual', 'Aun no hay periodos suficientes para graficar la evolucion.', 'timeline');
-          }
-          return;
-        }
+        if (!container) return;
 
-        if (container && !container.querySelector('#monthly-line-chart')) {
+        // Ensure the SVG element exists (skeleton or empty state may have destroyed it)
+        if (!container.querySelector('#monthly-line-chart')) {
           container.innerHTML = '<svg class="w-full h-full" id="monthly-line-chart" preserveAspectRatio="xMidYMid meet"></svg>';
         }
+
         const activeSvg = document.getElementById('monthly-line-chart');
         if (!activeSvg) return;
         activeSvg.innerHTML = "";
+
+        if (!monthlyData || monthlyData.length === 0) {
+          renderEmptyState('monthly-chart-container', 'Sin tendencia mensual', 'Aun no hay periodos suficientes para graficar la evolucion.', 'timeline');
+          return;
+        }
         
         const width = 600;
         const height = 240;
