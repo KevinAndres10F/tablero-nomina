@@ -37,11 +37,6 @@
 
 # Existing redirects
 [[redirects]]
-  from = "/.netlify/functions/ai"
-  to = "/.netlify/functions/ai"
-  status = 200
-
-[[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api-proxy/:splat"
   status = 200
