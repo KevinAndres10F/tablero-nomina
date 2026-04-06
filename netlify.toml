@@ -6,9 +6,9 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
-# Security headers (OWASP best practices)
+# Security headers only for HTML pages (not API responses)
 [[headers]]
-  for = "/*"
+  for = "/*.html"
   [headers.values]
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
@@ -16,19 +16,6 @@
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains"
 
-# Cache static assets aggressively
-[[headers]]
-  for = "/kapibot.js"
-  [headers.values]
-    Cache-Control = "public, max-age=86400, s-maxage=604800"
-
-# HTML: no cache (always fresh)
-[[headers]]
-  for = "/*.html"
-  [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
-
-# API proxy
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api-proxy/:splat"
