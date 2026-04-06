@@ -1,6 +1,6 @@
 [build]
   publish = "frontend"
-  command = "npm install && cd frontend && npm install && npm run build"
+  command = "npm install && cd frontend && npm install && npm run build && cp build/kapibot.js kapibot.js"
 
 [functions]
   directory = "netlify/functions"
