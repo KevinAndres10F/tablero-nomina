@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KAPIROLL | Inteligencia de Nomina para Ecuador</title>
+    <meta name="description" content="Elimina errores de nomina, automatiza provisiones IESS y toma decisiones con IA explicable. La plataforma de analitica de nomina mas avanzada de Ecuador." />
+    <meta property="og:title" content="KAPIROLL — Cada error de nomina le cuesta $4,200/ano" />
+    <meta property="og:description" content="Unifica roles de pago, provisiones IESS, decimos y horas extra en un solo registro maestro inteligente." />
+    <meta property="og:type" content="website" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4f46e5",
+              "primary-soft": "#818cf8",
+              "primary-dark": "#3730a3",
+              "accent-warm": "#06b6d4",
+            },
+            fontFamily: {
+              sans: ["Inter", "system-ui", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body { font-family: "Inter", system-ui, sans-serif; }
+      .hero-gradient {
+        background: linear-gradient(135deg, #312e81 0%, #1e1b4b 40%, #0f172a 100%);
+      }
+      .hero-pattern {
+        background-image:
+          radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.25), transparent),
+          radial-gradient(ellipse 60% 40% at 80% 60%, rgba(6, 182, 212, 0.12), transparent);
+      }
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+      }
+      .animate-fade-up { animation: fadeUp 0.6s ease-out both; }
+      .animate-fade-up-d1 { animation: fadeUp 0.6s ease-out 0.1s both; }
+      .animate-fade-up-d2 { animation: fadeUp 0.6s ease-out 0.2s both; }
+      .animate-fade-up-d3 { animation: fadeUp 0.6s ease-out 0.3s both; }
+      .animate-float { animation: float 3s ease-in-out infinite; }
+
+      .result-number {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .slider-styled::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 20px; height: 20px;
+        background: #4f46e5;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(79, 70, 229, 0.4);
+      }
+      .slider-styled::-moz-range-thumb {
+        width: 20px; height: 20px;
+        background: #4f46e5;
+        border-radius: 50%;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 2px 6px rgba(79, 70, 229, 0.4);
+      }
+      .slider-styled {
+        -webkit-appearance: none;
+        height: 6px;
+        background: #e2e8f0;
+        border-radius: 3px;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body class="bg-white text-slate-900 antialiased">
+
+    <!-- ============ NAV (1:1 attention ratio) ============ -->
+    <nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/60">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="bg-primary p-1.5 rounded-lg text-white">
+            <span class="material-symbols-outlined text-lg">account_balance_wallet</span>
+          </div>
+          <span class="text-lg font-bold tracking-tight text-slate-900">KAPIROLL</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="/index.html" class="hidden sm:inline text-sm text-slate-500 hover:text-primary transition-colors">Acceder al Dashboard &rarr;</a>
+          <a href="#demo" class="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-all shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/30">
+            Solicitar Demo
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============ HERO ============ -->
+    <section class="hero-gradient hero-pattern relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28 lg:pt-48 lg:pb-36">
+      <!-- Decorative grid -->
+      <div class="absolute inset-0 opacity-[0.04]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cpath d=&quot;M60 0H0v60&quot; fill=&quot;none&quot; stroke=&quot;white&quot; stroke-width=&quot;0.5&quot;/%3E%3C/svg%3E');"></div>
+      <!-- Floating shapes -->
+      <div class="absolute top-20 left-[10%] w-64 h-64 rounded-full bg-indigo-500/10 blur-3xl animate-float"></div>
+      <div class="absolute bottom-10 right-[15%] w-48 h-48 rounded-full bg-cyan-400/10 blur-3xl animate-float" style="animation-delay: 1.5s;"></div>
+
+      <div class="relative max-w-5xl mx-auto px-4 sm:px-6 text-center">
+        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full px-4 py-1.5 mb-8 animate-fade-up">
+          <span class="w-2 h-2 bg-emerald-400 rounded-full"></span>
+          <span class="text-xs font-medium text-slate-300 tracking-wide">Plataforma activa &middot; Ecuador 2026</span>
+        </div>
+
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] tracking-tight mb-6 animate-fade-up-d1">
+          Cada error de nomina le cuesta<br class="hidden sm:block" />
+          a tu empresa <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-cyan-300">$4,200 al ano.</span><br class="hidden sm:block" />
+          Nosotros los eliminamos.
+        </h1>
+
+        <p class="max-w-2xl mx-auto text-base sm:text-lg text-slate-300 leading-relaxed mb-10 animate-fade-up-d2">
+          Unifica roles de pago, provisiones IESS, decimos y horas extra en un
+          <strong class="text-white">solo registro maestro inteligente</strong>.
+          Sin hojas de calculo. Sin sorpresas en la liquidacion.
+        </p>
+
+        <a href="#demo" class="inline-flex items-center gap-2 bg-white text-primary font-bold text-base px-8 py-4 rounded-xl shadow-xl shadow-black/20 hover:shadow-2xl hover:scale-[1.02] transition-all animate-fade-up-d3">
+          <span class="material-symbols-outlined text-xl">rocket_launch</span>
+          Solicitar Demo Gratuita
+        </a>
+        <p class="text-xs text-slate-400 mt-4 animate-fade-up-d3">Sin tarjeta de credito &middot; Setup en 24 horas</p>
+      </div>
+    </section>
+
+    <!-- ============ SOCIAL PROOF ============ -->
+    <section class="border-b border-slate-100 bg-slate-50/50">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+        <p class="text-center text-xs font-semibold text-slate-400 uppercase tracking-[0.2em] mb-8">Resultados comprobados</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+          <div>
+            <p class="text-3xl sm:text-4xl font-extrabold text-primary">720+</p>
+            <p class="text-sm text-slate-500 mt-1">Registros procesados</p>
+          </div>
+          <div>
+            <p class="text-3xl sm:text-4xl font-extrabold text-primary">99.8%</p>
+            <p class="text-sm text-slate-500 mt-1">Precision en calculos</p>
+          </div>
+          <div>
+            <p class="text-3xl sm:text-4xl font-extrabold text-primary">7</p>
+            <p class="text-sm text-slate-500 mt-1">Departamentos cubiertos</p>
+          </div>
+          <div>
+            <p class="text-3xl sm:text-4xl font-extrabold text-primary">12</p>
+            <p class="text-sm text-slate-500 mt-1">Meses de datos continuos</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FEATURES ============ -->
+    <section class="py-20 sm:py-28">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-14">
+          <p class="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-3">Por que KAPIROLL</p>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900">Deja de apagar incendios.<br class="hidden sm:block" /> Empieza a prevenirlos.</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Card 1 -->
+          <div class="group relative bg-white border border-slate-200 rounded-2xl p-8 hover:shadow-xl hover:border-primary/20 transition-all duration-300">
+            <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-5 group-hover:bg-primary group-hover:text-white transition-colors">
+              <span class="material-symbols-outlined text-2xl">shield</span>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Detecta fugas antes de las multas</h3>
+            <p class="text-sm text-slate-500 leading-relaxed">Monitoreo proactivo de anomalias en aportes IESS, provisiones y horas extra. Te alertamos antes de que el SRI o el IESS lo hagan.</p>
+          </div>
+          <!-- Card 2 -->
+          <div class="group relative bg-white border border-slate-200 rounded-2xl p-8 hover:shadow-xl hover:border-primary/20 transition-all duration-300">
+            <div class="w-12 h-12 bg-emerald-500/10 text-emerald-600 rounded-xl flex items-center justify-center mb-5 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+              <span class="material-symbols-outlined text-2xl">schedule</span>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Reduce 12 horas mensuales de trabajo manual</h3>
+            <p class="text-sm text-slate-500 leading-relaxed">Automatiza el calculo de D13, D14, vacaciones, fondos de reserva y aportes patronales. Tu equipo se enfoca en estrategia, no en Excel.</p>
+          </div>
+          <!-- Card 3 -->
+          <div class="group relative bg-white border border-slate-200 rounded-2xl p-8 hover:shadow-xl hover:border-primary/20 transition-all duration-300">
+            <div class="w-12 h-12 bg-amber-500/10 text-amber-600 rounded-xl flex items-center justify-center mb-5 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+              <span class="material-symbols-outlined text-2xl">auto_awesome</span>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Decisiones con contexto, no con hojas de calculo</h3>
+            <p class="text-sm text-slate-500 leading-relaxed">IA explicable que te dice POR QUE sube el costo, no solo QUE subio. Razonamiento causal sobre cada anomalia detectada.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ROI CALCULATOR ============ -->
+    <section id="roi-calculator" class="py-20 sm:py-28 bg-slate-50 border-y border-slate-200">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-12">
+          <p class="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-3">Calculadora de ROI</p>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900">Calcula cuanto ahorras con KAPIROLL</h2>
+          <p class="text-slate-500 mt-3 max-w-xl mx-auto">Ajusta los valores a tu empresa y ve el impacto en tiempo real.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+          <!-- Inputs -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-7">
+            <!-- Empleados -->
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <label class="text-sm font-semibold text-slate-700">Numero de empleados</label>
+                <span class="text-sm font-bold text-primary" id="roi-emp-val">60</span>
+              </div>
+              <input type="range" min="10" max="500" value="60" step="5" class="w-full slider-styled" id="roi-emp" oninput="updateROI()" />
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1"><span>10</span><span>500</span></div>
+            </div>
+            <!-- Salario -->
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <label class="text-sm font-semibold text-slate-700">Salario promedio (USD)</label>
+                <span class="text-sm font-bold text-primary">$<span id="roi-sal-val">800</span></span>
+              </div>
+              <input type="range" min="460" max="5000" value="800" step="10" class="w-full slider-styled" id="roi-sal" oninput="updateROI()" />
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1"><span>$460 (SBU)</span><span>$5,000</span></div>
+            </div>
+            <!-- Horas admin -->
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <label class="text-sm font-semibold text-slate-700">Horas de admin manual / mes</label>
+                <span class="text-sm font-bold text-primary"><span id="roi-hrs-val">12</span>h</span>
+              </div>
+              <input type="range" min="1" max="40" value="12" step="1" class="w-full slider-styled" id="roi-hrs" oninput="updateROI()" />
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1"><span>1h</span><span>40h</span></div>
+            </div>
+            <!-- Tasa error -->
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <label class="text-sm font-semibold text-slate-700">Tasa de error en nomina</label>
+                <span class="text-sm font-bold text-primary"><span id="roi-err-val">3.0</span>%</span>
+              </div>
+              <input type="range" min="0.5" max="10" value="3" step="0.5" class="w-full slider-styled" id="roi-err" oninput="updateROI()" />
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1"><span>0.5%</span><span>10%</span></div>
+            </div>
+          </div>
+
+          <!-- Results -->
+          <div class="space-y-5">
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+              <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Tu ahorro estimado</p>
+              <div class="space-y-5">
+                <div class="flex justify-between items-center">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                      <span class="material-symbols-outlined text-lg">schedule</span>
+                    </div>
+                    <span class="text-sm text-slate-600">Ahorro en tiempo</span>
+                  </div>
+                  <span class="text-lg font-bold text-emerald-600 result-number" id="roi-time-save">$126</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center">
+                      <span class="material-symbols-outlined text-lg">bug_report</span>
+                    </div>
+                    <span class="text-sm text-slate-600">Ahorro por errores eliminados</span>
+                  </div>
+                  <span class="text-lg font-bold text-amber-600 result-number" id="roi-error-save">$1,224</span>
+                </div>
+                <hr class="border-slate-100" />
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-semibold text-slate-700">Ahorro mensual</span>
+                  <span class="text-xl font-extrabold text-primary result-number" id="roi-monthly">$1,350</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-primary to-primary-dark rounded-2xl p-6 sm:p-8 text-white shadow-lg shadow-primary/25">
+              <div class="flex items-center gap-3 mb-1">
+                <span class="material-symbols-outlined text-3xl">savings</span>
+                <div>
+                  <p class="text-xs uppercase tracking-wider text-indigo-200">Ahorro anual proyectado</p>
+                  <p class="text-3xl sm:text-4xl font-extrabold result-number" id="roi-annual">$16,200</p>
+                </div>
+              </div>
+              <p class="text-sm text-indigo-200 mt-3">Retorno de inversion estimado: <strong class="text-white" id="roi-pct">6,514%</strong></p>
+            </div>
+
+            <a href="#demo" class="flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold text-base px-6 py-4 rounded-xl transition-all shadow-md shadow-primary/25 w-full">
+              <span class="material-symbols-outlined">trending_up</span>
+              Empieza a ahorrar &mdash; Solicitar Demo
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WHITEPAPERS ============ -->
+    <section class="py-20 sm:py-28">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-12">
+          <p class="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-3">Recursos para lideres</p>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900">Informes exclusivos para tu C-Suite</h2>
+          <p class="text-slate-500 mt-3">Descarga gratis. Solo necesitas tu email corporativo.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <button onclick="openLeadModal('Guia 2026: Cumplimiento IESS sin Sorpresas')" class="text-left bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg hover:border-primary/20 transition-all group">
+            <div class="w-10 h-10 bg-rose-50 text-rose-500 rounded-lg flex items-center justify-center mb-4 group-hover:bg-rose-500 group-hover:text-white transition-colors">
+              <span class="material-symbols-outlined">gavel</span>
+            </div>
+            <h3 class="font-bold mb-2">Guia 2026: Cumplimiento IESS sin Sorpresas</h3>
+            <p class="text-sm text-slate-500">15 errores que le cuestan millones a las empresas ecuatorianas y como evitarlos sistematicamente.</p>
+            <p class="text-xs font-semibold text-primary mt-4 flex items-center gap-1">Descargar PDF <span class="material-symbols-outlined text-sm">download</span></p>
+          </button>
+
+          <button onclick="openLeadModal('Benchmark: Costos de Nomina por Industria en Ecuador')" class="text-left bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg hover:border-primary/20 transition-all group">
+            <div class="w-10 h-10 bg-indigo-50 text-indigo-500 rounded-lg flex items-center justify-center mb-4 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+              <span class="material-symbols-outlined">analytics</span>
+            </div>
+            <h3 class="font-bold mb-2">Benchmark: Costos de Nomina por Industria</h3>
+            <p class="text-sm text-slate-500">Donde esta tu empresa comparada con el mercado ecuatoriano? Datos de 2025-2026 por sector.</p>
+            <p class="text-xs font-semibold text-primary mt-4 flex items-center gap-1">Descargar PDF <span class="material-symbols-outlined text-sm">download</span></p>
+          </button>
+
+          <button onclick="openLeadModal('La Era de la Nomina Agentica')" class="text-left bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg hover:border-primary/20 transition-all group">
+            <div class="w-10 h-10 bg-cyan-50 text-cyan-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+              <span class="material-symbols-outlined">smart_toy</span>
+            </div>
+            <h3 class="font-bold mb-2">La Era de la Nomina Agentica</h3>
+            <p class="text-sm text-slate-500">Como la IA esta transformando la gestion de talento en LATAM. Casos de uso y tendencias 2026.</p>
+            <p class="text-xs font-semibold text-primary mt-4 flex items-center gap-1">Descargar PDF <span class="material-symbols-outlined text-sm">download</span></p>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TRUST CENTER ============ -->
+    <section class="py-20 sm:py-28 bg-slate-900 text-white">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-14">
+          <p class="text-xs font-bold text-indigo-400 uppercase tracking-[0.2em] mb-3">Centro de confianza</p>
+          <h2 class="text-2xl sm:text-4xl font-extrabold">Tu data de nomina merece seguridad de clase mundial</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-7 backdrop-blur-sm">
+            <div class="w-12 h-12 bg-emerald-500/15 text-emerald-400 rounded-xl flex items-center justify-center mb-5">
+              <span class="material-symbols-outlined text-2xl">encrypted</span>
+            </div>
+            <h3 class="text-lg font-bold mb-3">Proteccion de Datos</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">Cumplimos con los principios de GDPR y la Ley Organica de Proteccion de Datos Personales de Ecuador (LOPDP). Datos cifrados en reposo con AES-256 y en transito con TLS 1.3. Politicas de retencion y eliminacion configurables.</p>
+          </div>
+
+          <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-7 backdrop-blur-sm">
+            <div class="w-12 h-12 bg-indigo-500/15 text-indigo-400 rounded-xl flex items-center justify-center mb-5">
+              <span class="material-symbols-outlined text-2xl">security</span>
+            </div>
+            <h3 class="text-lg font-bold mb-3">Infraestructura Segura</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">Arquitectura serverless en Netlify con aislamiento de funciones. Base de datos en Supabase con Row Level Security (RLS) activo. En proceso de certificacion ISO 27001. Backups automaticos cada 24h.</p>
+          </div>
+
+          <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-7 backdrop-blur-sm">
+            <div class="w-12 h-12 bg-amber-500/15 text-amber-400 rounded-xl flex items-center justify-center mb-5">
+              <span class="material-symbols-outlined text-2xl">verified_user</span>
+            </div>
+            <h3 class="text-lg font-bold mb-3">Auditabilidad</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">Controles de acceso basados en roles (RBAC). Logs de auditoria inmutables para cada operacion. Preparacion activa para certificacion SOC 2 Tipo II. Cumplimiento con normativa laboral ecuatoriana vigente.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DEMO FORM ============ -->
+    <section id="demo" class="py-20 sm:py-28 bg-gradient-to-b from-white to-slate-50">
+      <div class="max-w-xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-10">
+          <div class="inline-flex items-center justify-center w-14 h-14 bg-primary/10 text-primary rounded-2xl mb-5">
+            <span class="material-symbols-outlined text-3xl">calendar_month</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Solicita tu demo gratuita</h2>
+          <p class="text-slate-500 mt-3">Te configuramos en menos de 24 horas. Sin compromiso.</p>
+        </div>
+
+        <form name="demo-request" method="POST" data-netlify="true" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-5">
+          <input type="hidden" name="form-name" value="demo-request" />
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nombre completo</label>
+            <input type="text" name="nombre" required placeholder="Juan Perez" class="w-full rounded-lg border-slate-300 text-sm focus:ring-primary focus:border-primary" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Email corporativo</label>
+            <input type="email" name="email" required placeholder="juan@empresa.com" class="w-full rounded-lg border-slate-300 text-sm focus:ring-primary focus:border-primary" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Empresa</label>
+            <input type="text" name="empresa" required placeholder="Empresa S.A." class="w-full rounded-lg border-slate-300 text-sm focus:ring-primary focus:border-primary" />
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-1.5">No. de empleados</label>
+              <input type="number" name="numero_empleados" required min="1" placeholder="60" class="w-full rounded-lg border-slate-300 text-sm focus:ring-primary focus:border-primary" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-1.5">Telefono <span class="text-slate-400 font-normal">(opcional)</span></label>
+              <input type="tel" name="telefono" placeholder="+593 9X XXX XXXX" class="w-full rounded-lg border-slate-300 text-sm focus:ring-primary focus:border-primary" />
+            </div>
+          </div>
+          <button type="submit" class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold text-base py-4 rounded-xl transition-all shadow-md shadow-primary/25">
+            <span class="material-symbols-outlined">rocket_launch</span>
+            Solicitar Demo Gratuita
+          </button>
+          <p class="text-[11px] text-center text-slate-400">Al enviar aceptas nuestra politica de privacidad. No compartimos tus datos.</p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="border-t border-slate-200 bg-white">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <div class="bg-primary p-1 rounded text-white">
+            <span class="material-symbols-outlined text-sm">account_balance_wallet</span>
+          </div>
+          <span class="text-sm font-bold text-slate-700">KAPIROLL</span>
+          <span class="text-xs text-slate-400 ml-2">&copy; 2026. Todos los derechos reservados.</span>
+        </div>
+        <a href="/index.html" class="text-sm text-primary hover:text-primary-dark font-medium transition-colors">Acceder al Dashboard &rarr;</a>
+      </div>
+    </footer>
+
+    <!-- ============ LEAD CAPTURE MODAL ============ -->
+    <div id="lead-modal" class="fixed inset-0 z-[100] hidden">
+      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeLeadModal()"></div>
+      <div class="relative flex items-center justify-center min-h-screen p-4">
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8">
+          <button onclick="closeLeadModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+          <div class="mb-6">
+            <h3 class="text-xl font-bold text-slate-900">Descarga tu informe</h3>
+            <p class="text-sm text-slate-500 mt-1" id="lead-modal-title">Ingresa tus datos para acceder al PDF.</p>
+          </div>
+          <form name="whitepaper-download" method="POST" data-netlify="true" class="space-y-4" onsubmit="handleLeadSubmit(event)">
+            <input type="hidden" name="form-name" value="whitepaper-download" />
+            <input type="hidden" name="recurso" id="lead-recurso" value="" />
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Nombre</label>
+              <input type="text" name="nombre" required class="w-full rounded-lg border-slate-300 text-sm focus:ring-primary focus:border-primary" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Email corporativo</label>
+              <input type="email" name="email" required class="w-full rounded-lg border-slate-300 text-sm focus:ring-primary focus:border-primary" />
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">Empresa</label>
+                <input type="text" name="empresa" required class="w-full rounded-lg border-slate-300 text-sm focus:ring-primary focus:border-primary" />
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">Cargo</label>
+                <input type="text" name="cargo" required class="w-full rounded-lg border-slate-300 text-sm focus:ring-primary focus:border-primary" />
+              </div>
+            </div>
+            <button type="submit" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-xl transition-all">
+              Descargar Informe
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SCRIPTS ============ -->
+    <script>
+      // ROI Calculator
+      function formatMoney(n) {
+        return '$' + Math.round(n).toLocaleString('es-EC');
+      }
+
+      function updateROI() {
+        const emp = parseInt(document.getElementById('roi-emp').value);
+        const sal = parseInt(document.getElementById('roi-sal').value);
+        const hrs = parseInt(document.getElementById('roi-hrs').value);
+        const err = parseFloat(document.getElementById('roi-err').value);
+
+        document.getElementById('roi-emp-val').textContent = emp;
+        document.getElementById('roi-sal-val').textContent = sal.toLocaleString('es-EC');
+        document.getElementById('roi-hrs-val').textContent = hrs;
+        document.getElementById('roi-err-val').textContent = err.toFixed(1);
+
+        const costoHoraAdmin = 15;
+        const ahorroTiempo = hrs * 0.70 * costoHoraAdmin;
+        const ahorroErrores = (emp * sal * (err / 100)) * 0.85;
+        const ahorroMensual = ahorroTiempo + ahorroErrores;
+        const ahorroAnual = ahorroMensual * 12;
+
+        const costoAnualPlataforma = emp * 3.50 * 12;
+        const roiPct = costoAnualPlataforma > 0 ? ((ahorroAnual - costoAnualPlataforma) / costoAnualPlataforma * 100) : 0;
+
+        document.getElementById('roi-time-save').textContent = formatMoney(ahorroTiempo) + '/mes';
+        document.getElementById('roi-error-save').textContent = formatMoney(ahorroErrores) + '/mes';
+        document.getElementById('roi-monthly').textContent = formatMoney(ahorroMensual);
+        document.getElementById('roi-annual').textContent = formatMoney(ahorroAnual);
+        document.getElementById('roi-pct').textContent = Math.round(roiPct).toLocaleString('es-EC') + '%';
+      }
+
+      // Initialize on load
+      updateROI();
+
+      // Lead Modal
+      function openLeadModal(title) {
+        document.getElementById('lead-modal').classList.remove('hidden');
+        document.getElementById('lead-modal-title').textContent = title;
+        document.getElementById('lead-recurso').value = title;
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLeadModal() {
+        document.getElementById('lead-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+
+      function handleLeadSubmit(e) {
+        e.preventDefault();
+        const form = e.target;
+        const data = new FormData(form);
+        fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(data).toString()
+        }).then(() => {
+          form.innerHTML = '<div class="text-center py-6"><span class="material-symbols-outlined text-4xl text-emerald-500 mb-3">check_circle</span><p class="text-lg font-bold text-slate-900">Listo!</p><p class="text-sm text-slate-500 mt-2">Revisa tu email. Te enviamos el informe en los proximos minutos.</p></div>';
+        }).catch(() => {
+          alert('Error al enviar. Intenta de nuevo.');
+        });
+      }
+
+      // Smooth scroll
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+          e.preventDefault();
+          const target = document.querySelector(a.getAttribute('href'));
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    </script>
+  </body>
+</html>

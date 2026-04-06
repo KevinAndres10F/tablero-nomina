@@ -684,7 +684,25 @@
       </aside>
 
       <main class="flex-1 overflow-y-auto custom-scrollbar bg-background-light">
-        <header class="sticky top-0 z-10 border-b border-gray-200 bg-white backdrop-blur-md sm:px-6 lg:px-8">
+        <!-- Mobile KPI Bar: 3 KPIs criticos visibles en <3s en movil -->
+        <div id="mobile-kpi-bar" class="lg:hidden sticky top-0 z-20 bg-white/95 backdrop-blur-sm border-b border-slate-200 px-4 py-2.5 flex justify-between items-center">
+          <div class="text-center flex-1">
+            <p class="text-[9px] text-slate-400 uppercase tracking-wider">Costo Total</p>
+            <p class="text-sm font-bold text-slate-800" id="mobile-kpi-costo">--</p>
+          </div>
+          <div class="w-px h-8 bg-slate-200"></div>
+          <div class="text-center flex-1">
+            <p class="text-[9px] text-slate-400 uppercase tracking-wider">Variacion</p>
+            <p class="text-sm font-bold" id="mobile-kpi-var">--</p>
+          </div>
+          <div class="w-px h-8 bg-slate-200"></div>
+          <div class="text-center flex-1">
+            <p class="text-[9px] text-slate-400 uppercase tracking-wider">Empleados</p>
+            <p class="text-sm font-bold text-slate-800" id="mobile-kpi-emp">--</p>
+          </div>
+        </div>
+
+        <header class="sticky top-0 z-10 lg:top-0 border-b border-gray-200 bg-white backdrop-blur-md sm:px-6 lg:px-8">
           <!-- Fila 1: Título + acciones rápidas -->
           <div class="flex items-center justify-between gap-3 px-4 py-2">
             <div class="flex items-center gap-3 min-w-0">
@@ -807,6 +825,9 @@
           </div>
 
           <div id="alerts-strip" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"></div>
+
+          <!-- Proactive AI Insight Cards -->
+          <div id="proactive-insights" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 hidden"></div>
 
           <div class="advanced-grid grid-cols-1 xl:grid-cols-3 mb-8" id="advanced-suite">
             <div class="advanced-card xl:col-span-2">
@@ -1068,9 +1089,9 @@
             <div class="p-6 border-b border-slate-200">
               <h3 class="text-lg font-bold">Detalle de Provisiones por Empleado</h3>
             </div>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
               <table class="data-table w-full text-left border-collapse">
-                <thead>
+                <thead class="sticky top-0 z-[1]">
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
@@ -1158,9 +1179,9 @@
             <div class="p-6 border-b border-slate-200">
               <h3 class="text-lg font-bold">Detalle IESS por Empleado</h3>
             </div>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
               <table class="data-table w-full text-left border-collapse">
-                <thead>
+                <thead class="sticky top-0 z-[1]">
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
@@ -1186,9 +1207,9 @@
             <p class="text-slate-500">Listado completo de empleados y sus datos</p>
           </div>
           <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
               <table class="data-table w-full text-left border-collapse">
-                <thead>
+                <thead class="sticky top-0 z-[1]">
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
@@ -1285,9 +1306,9 @@
               <h3 class="text-lg font-bold">Detalle por Empleado</h3>
               <p class="text-sm text-slate-500">Empleados con horas extra registradas</p>
             </div>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
               <table class="data-table w-full text-left border-collapse">
-                <thead>
+                <thead class="sticky top-0 z-[1]">
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
@@ -1390,13 +1411,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script>
-      const DEFAULT_RENDER_API_BASE = "https://kapisg.com/apps/tablero-nomina-backend/";
+      const DEFAULT_RENDER_API_BASE = "";
       const API_BASE = (window.__KAPIROLL_API_BASE__ || window.__TABLERO_NOMINA_API_BASE__ || DEFAULT_RENDER_API_BASE).replace(/\/$/, "");
       const API_PREFIX = API_BASE ? `${API_BASE}/api` : "/api";
-      const KAPIBOT_API_URL = `${API_PREFIX}/chat`;
+      const KAPIBOT_API_URL = `${API_PREFIX}/chat`;  // legacy, unused
       const FORECAST_API_URL = `${API_PREFIX}/forecast`;
       const ALERTS_EMAIL_API_URL = `${API_PREFIX}/alerts/email`;
-      const BUSINESS_COPILOT_API_URL = `${API_PREFIX}/copilot/business-chat`;
+      const BUSINESS_COPILOT_API_URL = `${API_PREFIX}/copilot/business-chat`;  // legacy, unused
       const TELEMETRY_EVENTS_API_URL = `${API_PREFIX}/telemetry/events`;
       
       // Estado global
@@ -1873,6 +1894,22 @@
       };
 
       const formatPercent = (value) => `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
+
+      // Toast notification for chart interactions
+      const pushToast = (msg, type = 'ok') => {
+        const existing = document.getElementById('kapi-toast');
+        if (existing) existing.remove();
+        const colors = type === 'ok'
+          ? 'bg-primary text-white'
+          : 'bg-amber-500 text-white';
+        const toast = document.createElement('div');
+        toast.id = 'kapi-toast';
+        toast.className = `fixed bottom-6 left-1/2 -translate-x-1/2 z-50 ${colors} px-5 py-2.5 rounded-xl text-sm font-medium shadow-lg flex items-center gap-2 transition-all`;
+        toast.style.animation = 'fadeUp 0.3s ease-out';
+        toast.innerHTML = `<span class="material-symbols-outlined text-base">filter_alt</span>${msg}`;
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translate(-50%, 10px)'; setTimeout(() => toast.remove(), 300); }, 2500);
+      };
 
       const getRoleLabel = (role) => {
         if (role === 'finanzas') return 'Finanzas';
@@ -2640,153 +2677,37 @@
       document.getElementById('apply-filters').addEventListener('click', applyFilters);
       document.getElementById('clear-filters').addEventListener('click', clearFilters);
 
-      const initKapiBotUI = () => {
-        if (document.getElementById('kapibot-root')) return;
-
-        const root = document.createElement('div');
-        root.id = 'kapibot-root';
-        root.className = 'fixed bottom-6 left-6 z-50';
-        root.innerHTML = `
-          <div id="kapibot-panel" class="hidden mb-4 w-[340px] rounded-2xl border border-slate-200 bg-white shadow-lg">
-            <div class="flex items-center justify-between rounded-t-2xl bg-blue-700 px-4 py-3 text-white">
-              <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-base">smart_toy</span>
-                <h2 class="text-sm font-semibold">KapiBot - Asistente de Nómina</h2>
-              </div>
-              <button id="kapibot-close" type="button" class="rounded-full p-1 transition hover:bg-blue-600" aria-label="Cerrar chat">
-                <span class="material-symbols-outlined text-base">close</span>
-              </button>
-            </div>
-
-            <div id="kapibot-messages" class="h-80 space-y-3 overflow-y-auto bg-slate-50 p-4"></div>
-
-            <div id="kapibot-typing" class="hidden px-4 pb-2 text-sm text-slate-500">
-              Escribiendo...
-            </div>
-
-            <div class="border-t border-slate-200 bg-white p-3">
-              <div class="flex items-center gap-2">
-                <input id="kapibot-input" type="text" placeholder="Escribe tu pregunta de nómina..."
-                  class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
-                <button id="kapibot-send" type="button"
-                  class="inline-flex items-center justify-center rounded-xl bg-blue-600 p-2 text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
-                  aria-label="Enviar mensaje">
-                  <span class="material-symbols-outlined text-base">send</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button id="kapibot-toggle" type="button"
-            class="inline-flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition hover:bg-blue-700"
-            aria-label="Abrir KapiBot">
-            <span class="material-symbols-outlined">chat</span>
-          </button>
-        `;
-
-        document.body.appendChild(root);
-
-        const panel = document.getElementById('kapibot-panel');
-        const toggle = document.getElementById('kapibot-toggle');
-        const close = document.getElementById('kapibot-close');
-        const input = document.getElementById('kapibot-input');
-        const send = document.getElementById('kapibot-send');
-        const typing = document.getElementById('kapibot-typing');
-        const messagesEl = document.getElementById('kapibot-messages');
-
-        const messages = [
-          { role: 'assistant', text: 'Hola, soy KapiBot. ¿En qué tema de nómina te ayudo hoy?' }
-        ];
-        let isTyping = false;
-
-        const escapeHtml = (text) => String(text)
-          .replaceAll('&', '&amp;')
-          .replaceAll('<', '&lt;')
-          .replaceAll('>', '&gt;')
-          .replaceAll('"', '&quot;')
-          .replaceAll("'", '&#039;');
-
-        const renderMessages = () => {
-          messagesEl.innerHTML = messages.map((message) => {
-            const isUser = message.role === 'user';
-            return `
-              <div class="flex ${isUser ? 'justify-end' : 'justify-start'}">
-                <div class="max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
-                  isUser ? 'bg-blue-600 text-white' : 'border border-slate-200 bg-white text-slate-700'
-                }">
-                  ${escapeHtml(message.text)}
-                </div>
-              </div>
-            `;
-          }).join('');
-          messagesEl.scrollTop = messagesEl.scrollHeight;
-        };
-
-        const setTyping = (value) => {
-          isTyping = value;
-          typing.classList.toggle('hidden', !value);
-          send.disabled = value || !input.value.trim();
-          messagesEl.scrollTop = messagesEl.scrollHeight;
-        };
-
-        const sendMessage = async () => {
-          const question = input.value.trim();
-          if (!question || isTyping) return;
-
-          messages.push({ role: 'user', text: question });
-          input.value = '';
-          renderMessages();
-          setTyping(true);
-
-          try {
-            const response = await fetch(BUSINESS_COPILOT_API_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                question,
-                year: filters.year ? Number(filters.year) : undefined,
-                periodo: filters.periodo || undefined,
-              })
-            });
-
-            const data = await response.json();
-            if (!response.ok || !data?.ok) {
-              const fallback = await fetch(KAPIBOT_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question })
-              });
-              const fallbackData = await fallback.json();
-              if (!fallback.ok || !fallbackData?.ok) {
-                messages.push({ role: 'assistant', text: `Error: ${data?.error || fallbackData?.error || 'No se pudo obtener respuesta del asistente.'}` });
-              } else {
-                messages.push({ role: 'assistant', text: fallbackData.answer || 'No recibí contenido en la respuesta.' });
-              }
-            } else {
-              messages.push({ role: 'assistant', text: data.answer || 'No recibí contenido en la respuesta.' });
-            }
-          } catch (error) {
-            messages.push({ role: 'assistant', text: 'Error de conexión con KapiBot. Inténtalo nuevamente en unos segundos.' });
-          } finally {
-            setTyping(false);
-            renderMessages();
-          }
-        };
-
-        toggle.addEventListener('click', () => {
-          panel.classList.toggle('hidden');
+      // Bridge para KapiBot React widget — expone contexto del dashboard
+      window.__getKapibotContext = function() {
+        // Compute per-area breakdown for causal AI analysis
+        const areaMap = {};
+        (lastFilteredEmployees || []).forEach(e => {
+          const a = e.area || 'Sin area';
+          if (!areaMap[a]) areaMap[a] = { area: a, cost: 0, employees: new Set(), totalSalary: 0, overtimeTotal: 0 };
+          areaMap[a].cost += (e.total_ingresos || 0) + (e.total_provisiones || 0);
+          if (e.cedula) areaMap[a].employees.add(e.cedula);
+          areaMap[a].totalSalary += (e.total_ingresos || 0);
+          areaMap[a].overtimeTotal += (e.h_ext_100 || 0) + (e.h_ext_50 || 0) + (e.recnocturno || 0);
         });
-        close.addEventListener('click', () => panel.classList.add('hidden'));
-        send.addEventListener('click', sendMessage);
-        input.addEventListener('input', () => {
-          send.disabled = isTyping || !input.value.trim();
-        });
-        input.addEventListener('keydown', (event) => {
-          if (event.key === 'Enter') sendMessage();
-        });
+        const areaBreakdown = Object.values(areaMap).map(a => ({
+          area: a.area,
+          cost: a.cost,
+          employees: a.employees.size,
+          avgSalary: a.employees.size > 0 ? a.totalSalary / a.employees.size : 0,
+          overtimeTotal: a.overtimeTotal
+        })).sort((a, b) => b.cost - a.cost);
 
-        renderMessages();
-        setTyping(false);
+        return {
+          totalEmpleados: allEmployees.length,
+          empleadosFiltrados: lastFilteredEmployees.length,
+          kpis: lastDashboardData?.kpis || [],
+          monthlyCosts: lastDashboardData?.monthly_costs || [],
+          costBreakdown: lastDashboardData?.cost_breakdown || [],
+          filters: { ...filters },
+          areas: [...new Set(allEmployees.map(e => e.area))],
+          periodoActual: filters.periodo || 'todos',
+          areaBreakdown,
+        };
       };
 
       // Actualizar todas las vistas con datos filtrados
@@ -2796,13 +2717,30 @@
 
         renderInsights(employees, dashboardData);
         buildAlertsStrip(employees);
-        
+
         // Calcular KPIs desde empleados filtrados
         const totalIngresos = employees.reduce((sum, e) => sum + (e.total_ingresos || 0), 0);
         const totalDescuentos = employees.reduce((sum, e) => sum + (e.total_descuentos || 0), 0);
         const totalProvisiones = employees.reduce((sum, e) => sum + (e.total_provisiones || 0), 0);
         const totalNeto = employees.reduce((sum, e) => sum + (e.a_recibir || 0), 0);
         const costoPromedio = employees.length > 0 ? (totalIngresos + totalProvisiones) / employees.length : 0;
+
+        // Mobile KPI bar (3 KPIs criticos en <3s)
+        const costoTotal = totalIngresos + totalProvisiones;
+        document.getElementById('mobile-kpi-costo').textContent = formatCurrency(costoTotal, currency);
+        document.getElementById('mobile-kpi-emp').textContent = String(employees.length);
+        // Variacion mes a mes
+        const monthlyCostsForVar = dashboardData?.monthly_costs || calcMonthlyCosts(employees);
+        if (monthlyCostsForVar.length >= 2) {
+          const last = monthlyCostsForVar[monthlyCostsForVar.length - 1].costo_total;
+          const prev = monthlyCostsForVar[monthlyCostsForVar.length - 2].costo_total;
+          const varPct = prev > 0 ? ((last - prev) / prev * 100) : 0;
+          const varEl = document.getElementById('mobile-kpi-var');
+          varEl.textContent = (varPct >= 0 ? '+' : '') + varPct.toFixed(1) + '%';
+          varEl.className = 'text-sm font-bold ' + (varPct > 0 ? 'text-rose-500' : 'text-emerald-500');
+        } else {
+          document.getElementById('mobile-kpi-var').textContent = '--';
+        }
         
         const kpis = [
           { key: 'costo_total', label: "Costo Total Nómina", value: totalIngresos + totalProvisiones, icon: "payments" },
@@ -2825,14 +2763,61 @@
         
         // Calcular costos mensuales desde empleados filtrados
         const monthlyCosts = calcMonthlyCosts(employees);
-        
+
         buildMonthlyLineChart(monthlyCosts, currency);
         buildPieChart('contrato', distContrato);
         buildPieChart('area', distArea);
         setupScrollReveal();
         renderAdvancedSuite();
+
+        // Proactive AI insights (async, non-blocking)
+        requestProactiveInsights(employees, dashboardData);
       };
-      
+
+      // Proactive insight engine — asks AI to detect anomalies
+      let insightDebounce = null;
+      const requestProactiveInsights = (employees, dashboardData) => {
+        clearTimeout(insightDebounce);
+        insightDebounce = setTimeout(async () => {
+          const container = document.getElementById('proactive-insights');
+          if (!container || !employees.length) { if (container) container.classList.add('hidden'); return; }
+          try {
+            const ctx = window.__getKapibotContext ? window.__getKapibotContext() : null;
+            if (!ctx) return;
+            const contextStr = `Empleados: ${ctx.totalEmpleados}. KPIs: ${(ctx.kpis || []).map(k => k.label + '=' + k.value).join(', ')}. Areas: ${(ctx.areas || []).join(', ')}. Periodo: ${ctx.periodoActual}.`;
+            const res = await fetch('/.netlify/functions/ai', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                action: 'chat',
+                messages: [{ role: 'user', content: '[INSIGHT_MODE] Analiza los datos actuales y detecta las 2 anomalias o patrones mas importantes. Para cada una, explica POR QUE ocurre. Responde JSON: {"insights": [{"titulo": "...", "explicacion": "...", "severidad": "alta|media|baja"}], "message": "resumen"}' }],
+                pageContext: contextStr
+              })
+            });
+            const data = await res.json();
+            const parsed = typeof data.message === 'string' ? (() => { try { return JSON.parse(data.message); } catch { return data; } })() : data;
+            const insights = parsed.insights || [];
+            if (insights.length === 0) { container.classList.add('hidden'); return; }
+            container.innerHTML = '';
+            container.classList.remove('hidden');
+            const sevColors = { alta: 'from-rose-50 to-white border-rose-100 text-rose-600', media: 'from-amber-50 to-white border-amber-100 text-amber-600', baja: 'from-emerald-50 to-white border-emerald-100 text-emerald-600' };
+            const sevIcons = { alta: 'warning', media: 'info', baja: 'check_circle' };
+            insights.slice(0, 2).forEach(ins => {
+              const sev = ins.severidad || 'media';
+              const cls = sevColors[sev] || sevColors.media;
+              const icon = sevIcons[sev] || 'info';
+              const card = document.createElement('div');
+              card.className = `bg-gradient-to-br ${cls} border rounded-xl p-4`;
+              card.innerHTML = `<div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-lg">${icon}</span><p class="text-xs font-bold uppercase tracking-wider">Insight AI &middot; ${sev}</p></div><p class="text-sm font-semibold text-slate-800 mb-1">${ins.titulo}</p><p class="text-xs text-slate-600 leading-relaxed">${ins.explicacion}</p>`;
+              container.appendChild(card);
+            });
+          } catch (e) {
+            // Silent fail — proactive insights are non-critical
+            console.debug('Proactive insights skipped:', e.message);
+          }
+        }, 3000);
+      };
+
       // Calcular distribución por campo
       const calcDistribution = (employees, field) => {
         const counts = {};
@@ -2846,12 +2831,15 @@
       };
       
       // Calcular costos mensuales desde empleados
+      const monthNames = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
       const calcMonthlyCosts = (employees) => {
         const monthly = {};
         employees.forEach(e => {
           const periodo = e.periodo || 'Sin período';
+          const m = String(periodo).match(/^(\d{4})-(\d{2})$/);
+          const monthLabel = m ? monthNames[Number(m[2]) - 1] || periodo : periodo;
           if (!monthly[periodo]) {
-            monthly[periodo] = { periodo, month: periodo, costo_total: 0, ingresos: 0, total_ingresos: 0, total_provisiones: 0 };
+            monthly[periodo] = { periodo, month: monthLabel, costo_total: 0, ingresos: 0, total_ingresos: 0, total_provisiones: 0 };
           }
           monthly[periodo].total_ingresos += (e.total_ingresos || 0);
           monthly[periodo].total_provisiones += (e.total_provisiones || 0);
@@ -3082,11 +3070,11 @@
           path.setAttribute("stroke-linejoin", "round");
           activeSvg.appendChild(path);
           
-          // Puntos
+          // Puntos con click-to-filter
           data.forEach((d, i) => {
             const x = xScale(i);
             const y = yScale(d[key] || 0);
-            
+
             const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             circle.setAttribute("cx", x);
             circle.setAttribute("cy", y);
@@ -3094,6 +3082,20 @@
             circle.setAttribute("fill", color);
             circle.setAttribute("stroke", "white");
             circle.setAttribute("stroke-width", "2");
+            circle.style.cursor = 'pointer';
+            circle.style.transition = 'r 0.15s ease';
+            circle.addEventListener('mouseenter', () => circle.setAttribute("r", "7"));
+            circle.addEventListener('mouseleave', () => circle.setAttribute("r", "4"));
+            circle.addEventListener('click', () => {
+              const periodo = monthlyData[i]?.periodo;
+              if (periodo) {
+                filters.periodo = periodo;
+                const periodoSelect = document.getElementById('filter-periodo');
+                if (periodoSelect) periodoSelect.value = periodo;
+                loadDashboard(periodo, filters.year);
+                pushToast('Filtrado a periodo: ' + (monthlyData[i].month || periodo));
+              }
+            });
             activeSvg.appendChild(circle);
           });
         };
@@ -3158,13 +3160,23 @@
           circle.setAttribute("stroke-width", "24");
           circle.setAttribute("stroke-dasharray", `${segmentLength} ${circumference - segmentLength}`);
           circle.setAttribute("stroke-dashoffset", (-offset).toString());
+          circle.style.cursor = 'pointer';
+          circle.style.transition = 'opacity 0.15s';
+          circle.addEventListener('mouseenter', () => circle.setAttribute("stroke-width", "28"));
+          circle.addEventListener('mouseleave', () => circle.setAttribute("stroke-width", "24"));
+          circle.addEventListener('click', () => {
+            if (type === 'area') { filters.area = item.label; document.getElementById('filter-area').value = item.label; }
+            else if (type === 'contrato') { filters.contrato = item.label; document.getElementById('filter-contrato').value = item.label; }
+            applyFilters();
+            pushToast('Filtrado por: ' + item.label);
+          });
           svg.appendChild(circle);
 
           offset += segmentLength;
-          
-          // Leyenda con texto ajustable
+
+          // Leyenda con texto ajustable + click-to-filter
           const row = document.createElement("div");
-          row.className = "flex items-center justify-between gap-2";
+          row.className = "flex items-center justify-between gap-2 cursor-pointer hover:bg-slate-50 rounded px-1 -mx-1 transition-colors";
           row.style.fontSize = labelFontSize;
           row.innerHTML = `
             <div class="flex items-center gap-1.5 min-w-0 flex-1">
@@ -3173,6 +3185,12 @@
             </div>
             <span class="font-semibold text-slate-700 shrink-0">${item.count} <span class="text-[10px] text-slate-400">(${percent.toFixed(0)}%)</span></span>
           `;
+          row.addEventListener('click', () => {
+            if (type === 'area') { filters.area = item.label; document.getElementById('filter-area').value = item.label; }
+            else if (type === 'contrato') { filters.contrato = item.label; document.getElementById('filter-contrato').value = item.label; }
+            applyFilters();
+            pushToast('Filtrado por: ' + item.label);
+          });
           legend.appendChild(row);
         });
       };
@@ -4001,12 +4019,12 @@
       initCommandPalette();
       applyRolePreset(selectedRole, false);
       initTheme();
-      initKapiBotUI();
       if (!localStorage.getItem('tablero_onboarding_seen')) {
         document.getElementById('onboarding-overlay')?.classList.remove('hidden');
       }
       verifyDataSource();
       loadDashboard();
     </script>
+    <script src="./kapibot.js" defer></script>
   </body>
 </html>

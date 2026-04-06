@@ -26,6 +26,9 @@ def _get_data_service():
     source = os.getenv("DATA_SOURCE", "bigquery").strip().lower()
     if source == "bigquery":
         return bigquery_service
+    elif source == "supabase":
+        from app.services import supabase_service
+        return supabase_service
     return google_sheets_service
 
 app.add_middleware(
