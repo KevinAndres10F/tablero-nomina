@@ -1393,10 +1393,10 @@
       const DEFAULT_RENDER_API_BASE = "";
       const API_BASE = (window.__KAPIROLL_API_BASE__ || window.__TABLERO_NOMINA_API_BASE__ || DEFAULT_RENDER_API_BASE).replace(/\/$/, "");
       const API_PREFIX = API_BASE ? `${API_BASE}/api` : "/api";
-      const KAPIBOT_API_URL = `${API_PREFIX}/chat`;
+      const KAPIBOT_API_URL = `${API_PREFIX}/chat`;  // legacy, unused
       const FORECAST_API_URL = `${API_PREFIX}/forecast`;
       const ALERTS_EMAIL_API_URL = `${API_PREFIX}/alerts/email`;
-      const BUSINESS_COPILOT_API_URL = `${API_PREFIX}/copilot/business-chat`;
+      const BUSINESS_COPILOT_API_URL = `${API_PREFIX}/copilot/business-chat`;  // legacy, unused
       const TELEMETRY_EVENTS_API_URL = `${API_PREFIX}/telemetry/events`;
       
       // Estado global
@@ -2640,153 +2640,18 @@
       document.getElementById('apply-filters').addEventListener('click', applyFilters);
       document.getElementById('clear-filters').addEventListener('click', clearFilters);
 
-      const initKapiBotUI = () => {
-        if (document.getElementById('kapibot-root')) return;
-
-        const root = document.createElement('div');
-        root.id = 'kapibot-root';
-        root.className = 'fixed bottom-6 left-6 z-50';
-        root.innerHTML = `
-          <div id="kapibot-panel" class="hidden mb-4 w-[340px] rounded-2xl border border-slate-200 bg-white shadow-lg">
-            <div class="flex items-center justify-between rounded-t-2xl bg-blue-700 px-4 py-3 text-white">
-              <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-base">smart_toy</span>
-                <h2 class="text-sm font-semibold">KapiBot - Asistente de Nómina</h2>
-              </div>
-              <button id="kapibot-close" type="button" class="rounded-full p-1 transition hover:bg-blue-600" aria-label="Cerrar chat">
-                <span class="material-symbols-outlined text-base">close</span>
-              </button>
-            </div>
-
-            <div id="kapibot-messages" class="h-80 space-y-3 overflow-y-auto bg-slate-50 p-4"></div>
-
-            <div id="kapibot-typing" class="hidden px-4 pb-2 text-sm text-slate-500">
-              Escribiendo...
-            </div>
-
-            <div class="border-t border-slate-200 bg-white p-3">
-              <div class="flex items-center gap-2">
-                <input id="kapibot-input" type="text" placeholder="Escribe tu pregunta de nómina..."
-                  class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
-                <button id="kapibot-send" type="button"
-                  class="inline-flex items-center justify-center rounded-xl bg-blue-600 p-2 text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
-                  aria-label="Enviar mensaje">
-                  <span class="material-symbols-outlined text-base">send</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button id="kapibot-toggle" type="button"
-            class="inline-flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition hover:bg-blue-700"
-            aria-label="Abrir KapiBot">
-            <span class="material-symbols-outlined">chat</span>
-          </button>
-        `;
-
-        document.body.appendChild(root);
-
-        const panel = document.getElementById('kapibot-panel');
-        const toggle = document.getElementById('kapibot-toggle');
-        const close = document.getElementById('kapibot-close');
-        const input = document.getElementById('kapibot-input');
-        const send = document.getElementById('kapibot-send');
-        const typing = document.getElementById('kapibot-typing');
-        const messagesEl = document.getElementById('kapibot-messages');
-
-        const messages = [
-          { role: 'assistant', text: 'Hola, soy KapiBot. ¿En qué tema de nómina te ayudo hoy?' }
-        ];
-        let isTyping = false;
-
-        const escapeHtml = (text) => String(text)
-          .replaceAll('&', '&amp;')
-          .replaceAll('<', '&lt;')
-          .replaceAll('>', '&gt;')
-          .replaceAll('"', '&quot;')
-          .replaceAll("'", '&#039;');
-
-        const renderMessages = () => {
-          messagesEl.innerHTML = messages.map((message) => {
-            const isUser = message.role === 'user';
-            return `
-              <div class="flex ${isUser ? 'justify-end' : 'justify-start'}">
-                <div class="max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
-                  isUser ? 'bg-blue-600 text-white' : 'border border-slate-200 bg-white text-slate-700'
-                }">
-                  ${escapeHtml(message.text)}
-                </div>
-              </div>
-            `;
-          }).join('');
-          messagesEl.scrollTop = messagesEl.scrollHeight;
+      // Bridge para KapiBot React widget — expone contexto del dashboard
+      window.__getKapibotContext = function() {
+        return {
+          totalEmpleados: allEmployees.length,
+          empleadosFiltrados: lastFilteredEmployees.length,
+          kpis: lastDashboardData?.kpis || [],
+          monthlyCosts: lastDashboardData?.monthly_costs || [],
+          costBreakdown: lastDashboardData?.cost_breakdown || [],
+          filters: { ...filters },
+          areas: [...new Set(allEmployees.map(e => e.area))],
+          periodoActual: filters.periodo || 'todos',
         };
-
-        const setTyping = (value) => {
-          isTyping = value;
-          typing.classList.toggle('hidden', !value);
-          send.disabled = value || !input.value.trim();
-          messagesEl.scrollTop = messagesEl.scrollHeight;
-        };
-
-        const sendMessage = async () => {
-          const question = input.value.trim();
-          if (!question || isTyping) return;
-
-          messages.push({ role: 'user', text: question });
-          input.value = '';
-          renderMessages();
-          setTyping(true);
-
-          try {
-            const response = await fetch(BUSINESS_COPILOT_API_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                question,
-                year: filters.year ? Number(filters.year) : undefined,
-                periodo: filters.periodo || undefined,
-              })
-            });
-
-            const data = await response.json();
-            if (!response.ok || !data?.ok) {
-              const fallback = await fetch(KAPIBOT_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question })
-              });
-              const fallbackData = await fallback.json();
-              if (!fallback.ok || !fallbackData?.ok) {
-                messages.push({ role: 'assistant', text: `Error: ${data?.error || fallbackData?.error || 'No se pudo obtener respuesta del asistente.'}` });
-              } else {
-                messages.push({ role: 'assistant', text: fallbackData.answer || 'No recibí contenido en la respuesta.' });
-              }
-            } else {
-              messages.push({ role: 'assistant', text: data.answer || 'No recibí contenido en la respuesta.' });
-            }
-          } catch (error) {
-            messages.push({ role: 'assistant', text: 'Error de conexión con KapiBot. Inténtalo nuevamente en unos segundos.' });
-          } finally {
-            setTyping(false);
-            renderMessages();
-          }
-        };
-
-        toggle.addEventListener('click', () => {
-          panel.classList.toggle('hidden');
-        });
-        close.addEventListener('click', () => panel.classList.add('hidden'));
-        send.addEventListener('click', sendMessage);
-        input.addEventListener('input', () => {
-          send.disabled = isTyping || !input.value.trim();
-        });
-        input.addEventListener('keydown', (event) => {
-          if (event.key === 'Enter') sendMessage();
-        });
-
-        renderMessages();
-        setTyping(false);
       };
 
       // Actualizar todas las vistas con datos filtrados
@@ -4001,12 +3866,12 @@
       initCommandPalette();
       applyRolePreset(selectedRole, false);
       initTheme();
-      initKapiBotUI();
       if (!localStorage.getItem('tablero_onboarding_seen')) {
         document.getElementById('onboarding-overlay')?.classList.remove('hidden');
       }
       verifyDataSource();
       loadDashboard();
     </script>
+    <script src="./dist/kapibot.js" defer></script>
   </body>
 </html>
