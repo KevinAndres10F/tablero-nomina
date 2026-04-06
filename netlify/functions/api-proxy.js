@@ -1,5 +1,58 @@
 const DEFAULT_SHEET_ID = "1pyzugIeZBDCMq0kTCyWBis9toyzTXWmubGjLhng9vhk";
 
+// ---------------------------------------------------------------------------
+// Supabase — fetch directo via REST API (no necesita SDK)
+// ---------------------------------------------------------------------------
+const fetchSupabaseRows = async () => {
+  const url = (process.env.SUPABASE_URL || "").trim();
+  const key = (process.env.SUPABASE_KEY || "").trim();
+  if (!url || !key) throw new Error("SUPABASE_URL y SUPABASE_KEY no configurados");
+
+  const restUrl = `${url}/rest/v1/nomina?select=*&order=periodo.asc,cedula.asc`;
+  const response = await fetch(restUrl, {
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+    },
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Supabase HTTP ${response.status}: ${body}`);
+  }
+
+  const data = await response.json();
+
+  return data.map((row) => {
+    const r = emptyEmployee();
+    r.cedula = String(row.cedula || "");
+    r.nombre = String(row.nombre || "");
+    r.area = String(row.area || "");
+    r.tipo_contrato = String(row.tipo_contrato || "");
+    r.fecha_ingreso = String(row.fecha_ingreso || "");
+    r.periodo = normalizePeriod(row.periodo);
+    r.total_ingresos = toNumber(row.total_ingresos);
+    r.total_descuentos = toNumber(row.total_descuentos);
+    r.total_provisiones = toNumber(row.total_provisiones);
+    r.a_recibir = toNumber(row.a_recibir);
+    r.h_ext_100 = toNumber(row.h_ext_100);
+    r.h_ext_50 = toNumber(row.h_ext_50);
+    r.recnocturno = toNumber(row.recnocturno);
+    r.decimo_13 = toNumber(row.decimo_13);
+    r.decimo_14 = toNumber(row.decimo_14);
+    r.vacaciones_prov = toNumber(row.vacaciones_prov);
+    r.fondos_reserva = toNumber(row.fondos_reserva);
+    r.iess_patronal = toNumber(row.iess_patronal);
+    r.iess_personal = toNumber(row.iess_personal);
+    r.pr_h_iess = toNumber(row.pr_h_iess);
+    r.pr_q_iess = toNumber(row.pr_q_iess);
+    r.horas_extras = r.h_ext_100 + r.h_ext_50;
+    return r;
+  });
+};
+
 const normalizeBackendOrigin = (rawOrigin) => {
   if (!rawOrigin) return "";
 
@@ -387,6 +440,71 @@ const jsonResponse = (statusCode, payload) => ({
   body: JSON.stringify(payload),
 });
 
+const tryServeFromSupabase = async (event) => {
+  const rawSplat = event.path.replace(/^\/\.netlify\/functions\/api-proxy\/?/, "");
+  const splat = rawSplat.replace(/^\/+/, "").replace(/^api\/+/, "");
+  const pathname = (splat || "").split("?")[0];
+
+  if (!["overview", "filters", "employees", "health", ""].includes(pathname)) {
+    return null;
+  }
+
+  const params = new URLSearchParams(event.rawQuery || "");
+  const periodo = params.get("periodo");
+  const year = params.get("year");
+  const limit = Number(params.get("limit") || "25");
+  const offset = Number(params.get("offset") || "0");
+
+  try {
+    const rows = await fetchSupabaseRows();
+
+    if (pathname === "health" || pathname === "") {
+      return jsonResponse(200, {
+        status: "ok",
+        data_source: "supabase",
+        mode: "netlify-direct",
+        total_rows: rows.length,
+      });
+    }
+
+    if (pathname === "filters") {
+      return jsonResponse(200, buildFilterOptions(rows));
+    }
+
+    if (pathname === "employees") {
+      const filtered = filterRows(rows, periodo, year)
+        .slice()
+        .sort((a, b) => String(b.periodo).localeCompare(String(a.periodo)) || b.total_ingresos - a.total_ingresos);
+      const safeLimit = Number.isFinite(limit) ? Math.max(1, Math.min(500, limit)) : 25;
+      const safeOffset = Number.isFinite(offset) ? Math.max(0, offset) : 0;
+      return jsonResponse(200, {
+        employees: filtered.slice(safeOffset, safeOffset + safeLimit),
+        total: filtered.length,
+        limit: safeLimit,
+        offset: safeOffset,
+      });
+    }
+
+    const overview = buildOverviewFromRows(rows, periodo, year);
+    return jsonResponse(200, overview);
+  } catch (error) {
+    return jsonResponse(200, {
+      kpis: [],
+      monthly_costs: [],
+      cost_breakdown: [],
+      employees: [],
+      distribution_contrato: [],
+      distribution_area: [],
+      currency: "USD",
+      period: "N/D",
+      total_employees: 0,
+      filter_options: { areas: [], contratos: [], periodos: [], years: [] },
+      data_source: "supabase",
+      error: `No se pudo leer Supabase en Netlify: ${error.message}`,
+    });
+  }
+};
+
 const tryServeFromSheet = async (event) => {
   const rawSplat = event.path.replace(/^\/\.netlify\/functions\/api-proxy\/?/, "");
   const splat = rawSplat.replace(/^\/+/, "").replace(/^api\/+/, "");
@@ -488,10 +606,17 @@ exports.handler = async (event) => {
     process.env.BACKEND_API_ORIGIN
   );
 
+  const dataSource = (process.env.DATA_SOURCE || "").trim().toLowerCase();
   const allowDirectSheetsFallback = (process.env.NETLIFY_DIRECT_SHEETS || "false").toLowerCase() === "true";
 
+  // Modo Supabase directo: si DATA_SOURCE=supabase, servir desde Supabase sin backend.
+  if (dataSource === "supabase") {
+    const supabaseResponse = await tryServeFromSupabase(event);
+    if (supabaseResponse) return supabaseResponse;
+  }
+
   // Modo opcional: servir directo desde Sheet en Netlify (solo si se habilita explícitamente).
-  if (allowDirectSheetsFallback || !backendOrigin) {
+  if (allowDirectSheetsFallback || (!backendOrigin && dataSource !== "supabase")) {
     const sheetResponse = await tryServeFromSheet(event);
     if (sheetResponse) return sheetResponse;
   }
@@ -499,7 +624,7 @@ exports.handler = async (event) => {
   if (!backendOrigin) {
     return jsonResponse(500, {
       ok: false,
-      error: "No hay BACKEND_API_ORIGIN configurado y fallo el fallback de Google Sheet",
+      error: "No hay BACKEND_API_ORIGIN configurado y fallo el fallback de datos",
     });
   }
 
