@@ -6,6 +6,36 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# Security headers (OWASP best practices)
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://generativelanguage.googleapis.com; img-src 'self' data: https:;"
+
+# Cache static assets aggressively
+[[headers]]
+  for = "/kapibot.js"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, s-maxage=604800"
+
+# HTML: no cache (always fresh)
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Landing page served at root
+[[redirects]]
+  from = "/"
+  to = "/landing.html"
+  status = 200
+
+# Existing redirects
 [[redirects]]
   from = "/.netlify/functions/ai"
   to = "/.netlify/functions/ai"

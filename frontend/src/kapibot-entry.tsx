@@ -48,6 +48,15 @@ function buildPageContext(): string {
     lines.push(`Áreas: ${areas.join(", ")}.`);
   }
 
+  // Per-area cost breakdown for causal analysis
+  const areaBreakdown = ctx.areaBreakdown as Array<{ area: string; cost: number; employees: number; avgSalary: number; overtimeTotal: number }> | undefined;
+  if (areaBreakdown && areaBreakdown.length > 0) {
+    const areaStr = areaBreakdown
+      .map((a) => `${a.area}: $${Math.round(a.cost).toLocaleString("es-EC")} (${a.employees} emp, prom $${Math.round(a.avgSalary).toLocaleString("es-EC")}, HE: $${Math.round(a.overtimeTotal).toLocaleString("es-EC")})`)
+      .join("; ");
+    lines.push(`Desglose por area: ${areaStr}.`);
+  }
+
   // Active filters
   const filters = ctx.filters as Record<string, string> | undefined;
   if (filters) {

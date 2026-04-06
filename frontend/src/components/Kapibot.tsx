@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, X, Send, Loader2 } from "lucide-react";
+import { Bot, X, Send, Loader2, Sparkles } from "lucide-react";
 import { chatWithBot, type ChatMessage } from "../lib/aiClient";
 
 interface DisplayMessage {
@@ -31,6 +31,7 @@ export default function Kapibot({ getContext }: KapibotProps) {
   const [messages, setMessages] = useState<DisplayMessage[]>([WELCOME_MESSAGE]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [insightMode, setInsightMode] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const nextId = useRef(1);
@@ -62,7 +63,8 @@ export default function Kapibot({ getContext }: KapibotProps) {
         role: m.role === "user" ? ("user" as const) : ("model" as const),
         content: m.text,
       }));
-    history.push({ role: "user", content: trimmed });
+    const contentToSend = insightMode ? `[INSIGHT_MODE] ${trimmed}` : trimmed;
+    history.push({ role: "user", content: contentToSend });
 
     try {
       const context = getContext();
@@ -140,13 +142,23 @@ export default function Kapibot({ getContext }: KapibotProps) {
                   <span className="inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
                 </span>
               </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="rounded-full p-1 transition hover:bg-white/20"
-                aria-label="Cerrar chat"
-              >
-                <X className="h-4 w-4" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setInsightMode(!insightMode)}
+                  className={`rounded-full p-1 transition ${insightMode ? "bg-amber-400/30 ring-1 ring-amber-300" : "hover:bg-white/20"}`}
+                  aria-label={insightMode ? "Desactivar modo insight" : "Activar modo insight"}
+                  title="Modo Insight: analisis causal profundo"
+                >
+                  <Sparkles className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-full p-1 transition hover:bg-white/20"
+                  aria-label="Cerrar chat"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
             </div>
 
             {/* Messages */}
