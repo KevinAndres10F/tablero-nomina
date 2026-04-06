@@ -1068,9 +1068,9 @@
             <div class="p-6 border-b border-slate-200">
               <h3 class="text-lg font-bold">Detalle de Provisiones por Empleado</h3>
             </div>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
               <table class="data-table w-full text-left border-collapse">
-                <thead>
+                <thead class="sticky top-0 z-[1]">
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
@@ -1158,9 +1158,9 @@
             <div class="p-6 border-b border-slate-200">
               <h3 class="text-lg font-bold">Detalle IESS por Empleado</h3>
             </div>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
               <table class="data-table w-full text-left border-collapse">
-                <thead>
+                <thead class="sticky top-0 z-[1]">
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
@@ -1186,9 +1186,9 @@
             <p class="text-slate-500">Listado completo de empleados y sus datos</p>
           </div>
           <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
               <table class="data-table w-full text-left border-collapse">
-                <thead>
+                <thead class="sticky top-0 z-[1]">
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
@@ -1285,9 +1285,9 @@
               <h3 class="text-lg font-bold">Detalle por Empleado</h3>
               <p class="text-sm text-slate-500">Empleados con horas extra registradas</p>
             </div>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
               <table class="data-table w-full text-left border-collapse">
-                <thead>
+                <thead class="sticky top-0 z-[1]">
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
@@ -2690,7 +2690,7 @@
         
         // Calcular costos mensuales desde empleados filtrados
         const monthlyCosts = calcMonthlyCosts(employees);
-        
+
         buildMonthlyLineChart(monthlyCosts, currency);
         buildPieChart('contrato', distContrato);
         buildPieChart('area', distArea);
@@ -2711,12 +2711,15 @@
       };
       
       // Calcular costos mensuales desde empleados
+      const monthNames = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
       const calcMonthlyCosts = (employees) => {
         const monthly = {};
         employees.forEach(e => {
           const periodo = e.periodo || 'Sin período';
+          const m = String(periodo).match(/^(\d{4})-(\d{2})$/);
+          const monthLabel = m ? monthNames[Number(m[2]) - 1] || periodo : periodo;
           if (!monthly[periodo]) {
-            monthly[periodo] = { periodo, month: periodo, costo_total: 0, ingresos: 0, total_ingresos: 0, total_provisiones: 0 };
+            monthly[periodo] = { periodo, month: monthLabel, costo_total: 0, ingresos: 0, total_ingresos: 0, total_provisiones: 0 };
           }
           monthly[periodo].total_ingresos += (e.total_ingresos || 0);
           monthly[periodo].total_provisiones += (e.total_provisiones || 0);
