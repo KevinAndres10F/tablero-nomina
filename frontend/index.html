@@ -1895,22 +1895,6 @@
 
       const formatPercent = (value) => `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
 
-      // Toast notification for chart interactions
-      const pushToast = (msg, type = 'ok') => {
-        const existing = document.getElementById('kapi-toast');
-        if (existing) existing.remove();
-        const colors = type === 'ok'
-          ? 'bg-primary text-white'
-          : 'bg-amber-500 text-white';
-        const toast = document.createElement('div');
-        toast.id = 'kapi-toast';
-        toast.className = `fixed bottom-6 left-1/2 -translate-x-1/2 z-50 ${colors} px-5 py-2.5 rounded-xl text-sm font-medium shadow-lg flex items-center gap-2 transition-all`;
-        toast.style.animation = 'fadeUp 0.3s ease-out';
-        toast.innerHTML = `<span class="material-symbols-outlined text-base">filter_alt</span>${msg}`;
-        document.body.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translate(-50%, 10px)'; setTimeout(() => toast.remove(), 300); }, 2500);
-      };
-
       const getRoleLabel = (role) => {
         if (role === 'finanzas') return 'Finanzas';
         if (role === 'rrhh') return 'RRHH';
