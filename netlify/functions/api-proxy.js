@@ -601,7 +601,98 @@ const proxyRequest = async (targetUrl, event, timeoutMs) => {
   }
 };
 
+// ---------------------------------------------------------------------------
+// Gmail OAuth2 — envío de correo directo desde Netlify Function
+// ---------------------------------------------------------------------------
+const sendGmailOAuth2 = async (to, subject, body) => {
+  const clientId = (process.env.GMAIL_CLIENT_ID || "").trim();
+  const clientSecret = (process.env.GMAIL_CLIENT_SECRET || "").trim();
+  const refreshToken = (process.env.GMAIL_REFRESH_TOKEN || "").trim();
+  const fromEmail = (process.env.GMAIL_FROM || "").trim();
+
+  if (!clientId || !clientSecret || !refreshToken || !fromEmail) {
+    return { ok: false, error: "Gmail OAuth2 no configurado. Define GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN y GMAIL_FROM en Netlify." };
+  }
+
+  // 1. Get access token from refresh token
+  const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      refresh_token: refreshToken,
+      grant_type: "refresh_token",
+    }),
+  });
+
+  if (!tokenResponse.ok) {
+    const err = await tokenResponse.text();
+    return { ok: false, error: `Error obteniendo access token: ${err}` };
+  }
+
+  const { access_token } = await tokenResponse.json();
+
+  // 2. Build RFC 2822 email
+  const emailLines = [
+    `From: ${fromEmail}`,
+    `To: ${to}`,
+    `Subject: ${subject}`,
+    `Content-Type: text/plain; charset=UTF-8`,
+    "",
+    body,
+  ].join("\r\n");
+
+  // Base64url encode
+  const raw = Buffer.from(emailLines).toString("base64url");
+
+  // 3. Send via Gmail API
+  const sendResponse = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ raw }),
+  });
+
+  if (!sendResponse.ok) {
+    const err = await sendResponse.text();
+    return { ok: false, error: `Error enviando correo: ${err}` };
+  }
+
+  return { ok: true, message: "Alerta enviada por correo (Gmail OAuth2)." };
+};
+
+const tryHandleEmail = async (event) => {
+  const rawSplat = event.path.replace(/^\/\.netlify\/functions\/api-proxy\/?/, "");
+  const splat = rawSplat.replace(/^\/+/, "").replace(/^api\/+/, "");
+  const pathname = (splat || "").split("?")[0];
+
+  if (pathname !== "alerts/email" || event.httpMethod !== "POST") return null;
+
+  try {
+    const payload = JSON.parse(event.body || "{}");
+    const to = (payload.to || "").trim();
+    const subject = (payload.subject || "KAPIROLL - Alerta Operativa").trim();
+    const message = (payload.message || "").trim();
+
+    if (!to || !message) {
+      return jsonResponse(400, { ok: false, error: "Faltan campos: to, message" });
+    }
+
+    const result = await sendGmailOAuth2(to, subject, message);
+    return jsonResponse(result.ok ? 200 : 500, result);
+  } catch (err) {
+    return jsonResponse(500, { ok: false, error: `Error procesando email: ${err.message}` });
+  }
+};
+
 exports.handler = async (event) => {
+  // Handle email alerts directly (no backend needed)
+  const emailResponse = await tryHandleEmail(event);
+  if (emailResponse) return emailResponse;
+
   const backendOrigin = normalizeBackendOrigin(
     process.env.BACKEND_API_ORIGIN
   );
