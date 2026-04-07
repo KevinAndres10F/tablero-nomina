@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>KAPIROLL | Inteligencia de Nomina</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <script id="tailwind-config">
       tailwind.config = {
@@ -13,21 +13,14 @@
         theme: {
           extend: {
             colors: {
-              primary: "#0f766e",
-              "primary-soft": "#14b8a6",
-              "accent-warm": "#f97316",
-              "background-light": "#f4f6f8",
+              primary: "#4f46e5",
+              "primary-soft": "#818cf8",
+              "accent-warm": "#06b6d4",
+              "background-light": "#f8fafc",
               "background-dark": "#0f172a",
             },
             fontFamily: {
-              display: ["Space Grotesk", "sans-serif"],
-              sans: ["Plus Jakarta Sans", "sans-serif"],
-            },
-            borderRadius: {
-              DEFAULT: "0.25rem",
-              lg: "0.5rem",
-              xl: "0.75rem",
-              full: "9999px",
+              sans: ["Inter", "system-ui", "sans-serif"],
             },
           },
         },
@@ -35,18 +28,18 @@
     </script>
     <style>
       :root {
-        --bg-main: #f4f6f8;
-        --text-main: #0f172a;
-        --text-muted: #475569;
-        --surface: rgba(255, 255, 255, 0.78);
-        --surface-strong: rgba(255, 255, 255, 0.92);
-        --border-soft: rgba(148, 163, 184, 0.24);
-        --shadow-soft: 0 10px 35px rgba(15, 23, 42, 0.08);
-        --shadow-strong: 0 20px 45px rgba(15, 23, 42, 0.12);
+        --bg-main: #f8fafc;
+        --text-main: #1e293b;
+        --text-muted: #6b7280;
+        --surface: #ffffff;
+        --surface-strong: #ffffff;
+        --border-soft: #e5e7eb;
+        --shadow-soft: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+        --shadow-strong: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
       }
 
       body {
-        font-family: "Plus Jakarta Sans", sans-serif;
+        font-family: "Inter", system-ui, sans-serif;
         background: var(--bg-main);
         color: var(--text-main);
       }
@@ -55,57 +48,14 @@
       h1,
       h2,
       h3 {
-        font-family: "Space Grotesk", sans-serif;
-      }
-
-      .ambient-orb {
-        position: absolute;
-        border-radius: 999px;
-        filter: blur(60px);
-        opacity: 0.45;
-        animation: drift 18s ease-in-out infinite;
-      }
-
-      .ambient-orb.teal {
-        width: 28rem;
-        height: 28rem;
-        left: -8rem;
-        top: -9rem;
-        background: radial-gradient(circle at 40% 40%, #2dd4bf 0%, #0f766e 70%);
-      }
-
-      .ambient-orb.orange {
-        width: 24rem;
-        height: 24rem;
-        right: -6rem;
-        top: 25%;
-        background: radial-gradient(circle at 50% 50%, #fb923c 0%, #f97316 70%);
-        animation-delay: -6s;
-      }
-
-      .ambient-orb.blue {
-        width: 20rem;
-        height: 20rem;
-        left: 35%;
-        bottom: -6rem;
-        background: radial-gradient(circle at 50% 50%, #38bdf8 0%, #0ea5e9 70%);
-        animation-delay: -10s;
-      }
-
-      .hero-glow {
-        background:
-          radial-gradient(130% 180% at 0% 0%, rgba(15, 118, 110, 0.18) 0%, rgba(15, 118, 110, 0) 55%),
-          radial-gradient(120% 150% at 100% 20%, rgba(249, 115, 22, 0.16) 0%, rgba(249, 115, 22, 0) 45%),
-          var(--surface-strong);
-        border: 1px solid var(--border-soft);
-        box-shadow: var(--shadow-strong);
+        font-family: "Inter", system-ui, sans-serif;
+        letter-spacing: -0.01em;
       }
 
       .glass-card,
       main .bg-white {
         background: var(--surface);
         border-color: var(--border-soft) !important;
-        backdrop-filter: blur(9px);
         box-shadow: var(--shadow-soft);
       }
 
@@ -132,8 +82,8 @@
       }
 
       .empty-state {
-        border: 1px dashed rgba(148, 163, 184, 0.5);
-        background: linear-gradient(135deg, rgba(15, 118, 110, 0.06), rgba(56, 189, 248, 0.05));
+        border: 2px dashed #e5e7eb;
+        background: transparent;
       }
 
       .skeleton {
@@ -157,7 +107,7 @@
       }
 
       .page-content {
-        animation: fadeUp 0.45s ease;
+        animation: fadeUp 0.3s ease-out;
       }
 
       .reveal-on-scroll {
@@ -180,7 +130,7 @@
         border-radius: 999px;
         border: 1px solid var(--border-soft);
         background: rgba(255, 255, 255, 0.8);
-        color: #0f766e;
+        color: #4f46e5;
         font-size: 11px;
         font-weight: 700;
       }
@@ -213,8 +163,8 @@
         inset: 0;
         z-index: 80;
         background:
-          radial-gradient(110% 140% at 0% 0%, rgba(20, 184, 166, 0.2), transparent 45%),
-          radial-gradient(80% 100% at 100% 10%, rgba(249, 115, 22, 0.2), transparent 50%),
+          radial-gradient(110% 140% at 0% 0%, rgba(79, 70, 229, 0.15), transparent 45%),
+          radial-gradient(80% 100% at 100% 10%, rgba(6, 182, 212, 0.15), transparent 50%),
           rgba(2, 6, 23, 0.9);
         backdrop-filter: blur(6px);
       }
@@ -281,7 +231,7 @@
 
       .command-item:hover,
       .command-item.active {
-        background: rgba(15, 118, 110, 0.12);
+        background: rgba(79, 70, 229, 0.08);
       }
 
       .drilldown-drawer {
@@ -379,56 +329,39 @@
         animation-delay: 0.16s;
       }
 
-      .nav-link {
-        border: 1px solid transparent;
+      /* ── Sidebar: always dark (bg-slate-900) ── */
+      #sidebar {
+        background: #0f172a !important;
+        border-right-color: #1e293b !important;
       }
-
-      .nav-link:hover {
-        border-color: rgba(148, 163, 184, 0.22);
-      }
-
-      .nav-link.active-nav {
-        background: linear-gradient(135deg, rgba(20, 184, 166, 0.16), rgba(56, 189, 248, 0.12));
-        color: #0f766e;
-        border-color: rgba(15, 118, 110, 0.25);
-      }
-
-      .dark #sidebar {
-        background:
-          radial-gradient(120% 60% at 0% 0%, rgba(20, 184, 166, 0.14), transparent 45%),
-          linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.96));
-        border-right-color: rgba(71, 85, 105, 0.65) !important;
-        box-shadow: 12px 0 35px rgba(2, 6, 23, 0.35);
-      }
-
-      .dark #sidebar .brand-title {
+      #sidebar .brand-title {
         color: #f8fafc !important;
       }
-
-      .dark #sidebar .bg-primary {
-        background: linear-gradient(135deg, #14b8a6, #0ea5e9);
-        box-shadow: 0 8px 24px rgba(14, 165, 233, 0.3);
+      #sidebar .bg-primary {
+        background: #4f46e5 !important;
+        box-shadow: 0 4px 12px rgba(79,70,229,0.35);
       }
 
-      .dark #sidebar .nav-link {
-        color: #cbd5e1 !important;
+      .nav-link {
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+      }
+      #sidebar .nav-link {
+        color: #94a3b8 !important;
+      }
+      #sidebar .nav-link:hover {
+        color: #e2e8f0 !important;
+        background: rgba(30, 41, 59, 0.8) !important;
         border-color: transparent;
       }
-
-      .dark #sidebar .nav-link:hover {
-        color: #f1f5f9 !important;
-        background: rgba(30, 41, 59, 0.75) !important;
-        border-color: rgba(71, 85, 105, 0.6);
+      .nav-link.active-nav,
+      #sidebar .nav-link.active-nav {
+        background: rgba(79, 70, 229, 0.15) !important;
+        color: #a5b4fc !important;
+        border-color: rgba(99, 102, 241, 0.3);
       }
-
-      .dark #sidebar .nav-link.active-nav {
-        color: #5eead4 !important;
-        background: linear-gradient(135deg, rgba(20, 184, 166, 0.22), rgba(56, 189, 248, 0.18));
-        border-color: rgba(94, 234, 212, 0.4);
-        box-shadow: inset 0 0 0 1px rgba(94, 234, 212, 0.16);
-      }
-
-      .dark #sidebar .text-slate-400 {
+      #sidebar .text-slate-400,
+      #sidebar .text-slate-600 {
         color: #64748b !important;
       }
 
@@ -436,15 +369,15 @@
         --bg-main: #020617;
         --text-main: #e2e8f0;
         --text-muted: #94a3b8;
-        --surface: rgba(15, 23, 42, 0.72);
-        --surface-strong: rgba(15, 23, 42, 0.88);
+        --surface: rgba(15, 23, 42, 0.85);
+        --surface-strong: rgba(15, 23, 42, 0.92);
         --border-soft: rgba(51, 65, 85, 0.75);
-        --shadow-soft: 0 14px 40px rgba(2, 6, 23, 0.5);
-        --shadow-strong: 0 24px 48px rgba(2, 6, 23, 0.6);
+        --shadow-soft: 0 2px 8px rgba(0,0,0,0.3);
+        --shadow-strong: 0 8px 24px rgba(0,0,0,0.4);
       }
 
       .dark .bg-white {
-        background-color: rgba(15, 23, 42, 0.72) !important;
+        background-color: rgba(15, 23, 42, 0.85) !important;
       }
 
       .dark .bg-background-light,
@@ -506,8 +439,7 @@
       .dark textarea::placeholder {
         color: #b2c0d2 !important;
       }
-        color: #6ee7b7;
-      }
+
       .dark .status-pill.warn {
         color: #fcd34d;
       }
@@ -519,7 +451,7 @@
       }
       .dark .command-item:hover,
       .dark .command-item.active {
-        background: rgba(20, 184, 166, 0.2);
+        background: rgba(79, 70, 229, 0.15);
       }
       .dark .toast {
         color: #e2e8f0;
@@ -528,8 +460,8 @@
       .dark input:focus,
       .dark select:focus,
       .dark textarea:focus {
-        border-color: rgba(45, 212, 191, 0.85) !important;
-        box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.2) !important;
+        border-color: rgba(99, 102, 241, 0.85) !important;
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25) !important;
       }
 
       .dark option {
@@ -544,8 +476,8 @@
       }
 
       .dark .empty-state {
-        background: linear-gradient(135deg, rgba(15, 118, 110, 0.18), rgba(30, 41, 59, 0.58));
-        border-color: rgba(71, 85, 105, 0.65);
+        background: transparent;
+        border-color: rgba(71, 85, 105, 0.5);
       }
 
       .dark .onboarding-card,
@@ -567,6 +499,63 @@
       .dark #sim-result {
         background: rgba(2, 6, 23, 0.55) !important;
         border-color: rgba(71, 85, 105, 0.65) !important;
+      }
+
+      /* Dark mode: botones header */
+      .dark .bg-primary\/10,
+      .dark .bg-indigo-500\/10,
+      .dark .bg-emerald-500\/10,
+      .dark .bg-amber-500\/10,
+      .dark .bg-rose-500\/10,
+      .dark .bg-indigo-50,
+      .dark .bg-amber-50,
+      .dark .bg-cyan-50,
+      .dark .bg-slate-50 {
+        background-color: rgba(30, 41, 59, 0.7) !important;
+      }
+
+      /* Dark mode: KPI text visible */
+      .dark .text-emerald-600 { color: #6ee7b7 !important; }
+      .dark .text-rose-500 { color: #fca5a5 !important; }
+      .dark .text-rose-600 { color: #fca5a5 !important; }
+      .dark .text-indigo-500 { color: #a5b4fc !important; }
+      .dark .text-indigo-600 { color: #a5b4fc !important; }
+      .dark .text-indigo-800 { color: #c7d2fe !important; }
+      .dark .text-amber-500 { color: #fcd34d !important; }
+      .dark .text-amber-600 { color: #fcd34d !important; }
+      .dark .text-amber-800 { color: #fde68a !important; }
+      .dark .text-violet-600 { color: #c4b5fd !important; }
+      .dark .text-cyan-800 { color: #67e8f9 !important; }
+      .dark .text-primary { color: #a5b4fc !important; }
+
+      /* Dark mode: info boxes */
+      .dark .bg-amber-50,
+      .dark .border-amber-200 { border-color: rgba(245, 158, 11, 0.3) !important; }
+      .dark .bg-indigo-50,
+      .dark .border-indigo-200 { border-color: rgba(99, 102, 241, 0.3) !important; }
+      .dark .bg-cyan-50,
+      .dark .border-cyan-200 { border-color: rgba(6, 182, 212, 0.3) !important; }
+
+      /* Dark mode: data table headers */
+      .dark .data-table thead tr,
+      .dark .bg-slate-50 {
+        background: rgba(30, 41, 59, 0.85) !important;
+      }
+
+      /* Dark mode: bar chart labels */
+      .dark .text-slate-600 { color: #cbd5e1 !important; }
+
+      /* Dark mode: border-gray-100 */
+      .dark .border-gray-100 {
+        border-color: rgba(71, 85, 105, 0.6) !important;
+      }
+
+      /* Dark mode: KapiBot panel */
+      .dark #kapibot-messages {
+        background: rgba(2, 6, 23, 0.6) !important;
+      }
+      .dark #kapibot-messages .border-slate-200 {
+        background: rgba(15, 23, 42, 0.85) !important;
       }
 
       .theme-switch input {
@@ -598,7 +587,7 @@
       }
 
       .theme-switch input:checked + .theme-switch-track {
-        background: #14b8a6;
+        background: #4f46e5;
       }
 
       .theme-switch input:checked + .theme-switch-track::after {
@@ -629,21 +618,11 @@
 
       #kapibot-panel > div:first-child,
       #kapibot-toggle {
-        background: linear-gradient(135deg, #0f766e, #0ea5e9) !important;
+        background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
       }
 
       #kapibot-toggle {
-        box-shadow: 0 14px 30px rgba(15, 118, 110, 0.35);
-      }
-
-      @keyframes drift {
-        0%,
-        100% {
-          transform: translate3d(0, 0, 0) scale(1);
-        }
-        50% {
-          transform: translate3d(15px, -20px, 0) scale(1.05);
-        }
+        box-shadow: 0 8px 24px rgba(79, 70, 229, 0.35);
       }
 
       @keyframes fadeUp {
@@ -665,61 +644,65 @@
     </style>
   </head>
   <body class="bg-background-light text-slate-900 antialiased font-sans">
-    <div class="pointer-events-none fixed inset-0 overflow-hidden">
-      <div class="ambient-orb teal"></div>
-      <div class="ambient-orb orange"></div>
-      <div class="ambient-orb blue"></div>
-    </div>
-
-    <div id="sidebar-backdrop" class="fixed inset-0 z-20 hidden bg-slate-950/50 backdrop-blur-sm lg:hidden"></div>
+    <div id="sidebar-backdrop" class="fixed inset-0 z-20 hidden bg-black/40 backdrop-blur-sm lg:hidden"></div>
 
     <div class="relative z-30 flex h-screen overflow-hidden">
-      <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-72 -translate-x-full border-r border-slate-200 bg-white/90 backdrop-blur-md transition-transform duration-300 ease-out lg:static lg:w-64 lg:translate-x-0 lg:flex lg:flex-col lg:shrink-0">
-        <div class="p-6 flex items-center gap-3">
-          <div class="bg-primary p-2 rounded-lg text-white shadow-lg shadow-teal-700/30">
-            <span class="material-symbols-outlined align-middle">account_balance_wallet</span>
+      <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-64 -translate-x-full bg-slate-900 transition-transform duration-300 ease-out lg:static lg:w-60 lg:translate-x-0 lg:flex lg:flex-col lg:shrink-0">
+        <div class="px-5 pt-6 pb-4 flex items-center gap-3">
+          <div class="bg-primary p-2 rounded-lg text-white shadow-sm">
+            <span class="material-symbols-outlined align-middle text-lg">account_balance_wallet</span>
           </div>
-          <h1 class="brand-title text-xl font-bold tracking-tight text-slate-900">KAPIROLL</h1>
+          <h1 class="brand-title text-lg font-bold tracking-tight text-white">KAPIROLL</h1>
         </div>
-        <nav class="flex-1 px-4 py-4 space-y-1">
-          <a class="nav-link active-nav flex items-center gap-3 px-3 py-2 rounded-lg font-medium" href="#" data-page="dashboard">
-            <span class="material-symbols-outlined">dashboard</span>
+        <nav class="flex-1 px-3 py-3 space-y-0.5">
+          <a class="nav-link active-nav flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium" href="#" data-page="dashboard">
+            <span class="material-symbols-outlined text-lg">dashboard</span>
             <span>Dashboard</span>
           </a>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors" href="#" data-page="empleados">
-            <span class="material-symbols-outlined">group</span>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors" href="#" data-page="empleados">
+            <span class="material-symbols-outlined text-lg">group</span>
             <span>Empleados</span>
           </a>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors" href="#" data-page="provisiones">
-            <span class="material-symbols-outlined">savings</span>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors" href="#" data-page="provisiones">
+            <span class="material-symbols-outlined text-lg">savings</span>
             <span>Provisiones</span>
           </a>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors" href="#" data-page="iess">
-            <span class="material-symbols-outlined">account_balance</span>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors" href="#" data-page="iess">
+            <span class="material-symbols-outlined text-lg">account_balance</span>
             <span>Análisis IESS</span>
           </a>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors" href="#" data-page="horas-extra">
-            <span class="material-symbols-outlined">schedule</span>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors" href="#" data-page="horas-extra">
+            <span class="material-symbols-outlined text-lg">schedule</span>
             <span>Horas Extra</span>
           </a>
-          <div class="pt-4 pb-2 px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Sistema</div>
-          <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors" href="#" data-page="config">
-            <span class="material-symbols-outlined">settings</span>
+          <div class="pt-5 pb-1.5 px-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Sistema</div>
+          <a class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors" href="#" data-page="config">
+            <span class="material-symbols-outlined text-lg">settings</span>
             <span>Configuración</span>
           </a>
         </nav>
-        <!-- Botón Ejecutar nómina oculto temporalmente
-        <div class="p-4 mt-auto border-t border-slate-200">
-          <button class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold py-2.5 px-4 rounded-lg transition-all">
-            <span class="material-symbols-outlined text-sm">play_arrow</span>
-            <span>Ejecutar nómina</span>
-          </button>
-        </div>
-        -->
       </aside>
 
       <main class="flex-1 overflow-y-auto custom-scrollbar bg-background-light">
-        <header class="sticky top-0 z-10 border-b border-slate-200 bg-white/70 backdrop-blur-md sm:px-6 lg:px-8">
+        <!-- Mobile KPI Bar: 3 KPIs criticos visibles en <3s en movil -->
+        <div id="mobile-kpi-bar" class="lg:hidden sticky top-0 z-20 bg-white/95 backdrop-blur-sm border-b border-slate-200 px-4 py-2.5 flex justify-between items-center">
+          <div class="text-center flex-1">
+            <p class="text-[9px] text-slate-400 uppercase tracking-wider">Costo Total</p>
+            <p class="text-sm font-bold text-slate-800" id="mobile-kpi-costo">--</p>
+          </div>
+          <div class="w-px h-8 bg-slate-200"></div>
+          <div class="text-center flex-1">
+            <p class="text-[9px] text-slate-400 uppercase tracking-wider">Variacion</p>
+            <p class="text-sm font-bold" id="mobile-kpi-var">--</p>
+          </div>
+          <div class="w-px h-8 bg-slate-200"></div>
+          <div class="text-center flex-1">
+            <p class="text-[9px] text-slate-400 uppercase tracking-wider">Empleados</p>
+            <p class="text-sm font-bold text-slate-800" id="mobile-kpi-emp">--</p>
+          </div>
+        </div>
+
+        <header class="sticky top-0 z-10 lg:top-0 border-b border-gray-200 bg-white backdrop-blur-md sm:px-6 lg:px-8">
           <!-- Fila 1: Título + acciones rápidas -->
           <div class="flex items-center justify-between gap-3 px-4 py-2">
             <div class="flex items-center gap-3 min-w-0">
@@ -736,10 +719,6 @@
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <button id="command-palette-btn" class="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors" title="Comandos (Ctrl/Cmd + K)">
-                <span class="material-symbols-outlined text-sm">terminal</span>
-                <span class="hidden sm:inline">Comandos</span>
-              </button>
               <button id="export-csv" class="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors">
                 <span class="material-symbols-outlined text-sm">download</span>
                 <span class="hidden md:inline">CSV</span>
@@ -764,11 +743,11 @@
                   <p class="text-xs font-semibold">KAPI</p>
                   <p class="text-[10px] text-slate-500">Admin</p>
                 </div>
-                <div class="h-8 w-8 rounded-full bg-gradient-to-br from-primary/60 to-indigo-400 flex items-center justify-center text-white text-xs font-semibold">KP</div>
+                <div class="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white text-xs font-semibold">KP</div>
               </div>
             </div>
           </div>
-          <!-- Fila 2: Filtros + búsqueda (colapsable, compacta) -->
+          <!-- Fila 2: Filtros + búsqueda compacta -->
           <div class="flex flex-wrap items-center gap-2 px-4 py-2 border-t border-slate-100">
             <div class="relative flex-1 max-w-xs">
               <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
@@ -847,25 +826,34 @@
 
           <div id="alerts-strip" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"></div>
 
+          <!-- Proactive AI Insight Cards -->
+          <div id="proactive-insights" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 hidden"></div>
+
           <div class="advanced-grid grid-cols-1 xl:grid-cols-3 mb-8" id="advanced-suite">
             <div class="advanced-card xl:col-span-2">
               <div class="flex items-center justify-between mb-3">
-                <p class="tiny-label">Centro de Alertas</p>
-                <button id="add-alert-task" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">Nueva tarea</button>
+                <div>
+                  <p class="tiny-label">Centro de Alertas</p>
+                  <p class="text-xs text-gray-400 mt-0.5">Crea tareas de seguimiento y envía notificaciones por correo</p>
+                </div>
+                <button id="add-alert-task" class="text-xs font-medium px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-colors">+ Nueva tarea</button>
               </div>
               <div id="alerts-workflow" class="space-y-2 mb-3"></div>
               <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
-                <input id="alert-owner" class="rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="Responsable" />
-                <input id="alert-note" class="rounded-lg border border-slate-200 px-3 py-2 text-sm sm:col-span-2" placeholder="Accion a ejecutar" />
-                <input id="alert-deadline" type="date" class="rounded-lg border border-slate-200 px-3 py-2 text-sm" />
+                <input id="alert-owner" class="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Responsable" />
+                <input id="alert-note" class="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent sm:col-span-2" placeholder="Acción a ejecutar" />
+                <input id="alert-deadline" type="date" class="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 mt-2">
-                <input id="alert-email-to" type="email" class="rounded-lg border border-slate-200 px-3 py-2 text-sm sm:col-span-3" placeholder="Correo destino para alerta" />
-                <button id="send-alert-email" class="rounded-lg bg-slate-900 text-white px-3 py-2 text-sm font-semibold hover:bg-slate-800">Enviar correo</button>
+                <input id="alert-email-to" type="email" class="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent sm:col-span-3" placeholder="Correo destino para alerta" />
+                <button id="send-alert-email" class="rounded-lg bg-blue-600 hover:bg-blue-700 text-white px-3 py-2.5 text-sm font-medium shadow-sm transition-colors">Enviar correo</button>
               </div>
             </div>
             <div class="advanced-card">
               <p class="tiny-label mb-3">Escenarios What-if</p>
+              <div class="rounded-lg bg-cyan-50 border border-cyan-200 px-3 py-2 mb-3 text-xs text-cyan-800">
+                <strong>¿Qué es esto?</strong> Simula el impacto en el costo de nómina ajustando salarios, horas extra o estructura organizacional. Mueve los controles deslizantes y observa cómo cambia el presupuesto proyectado respecto al costo actual.
+              </div>
               <div class="space-y-2">
                 <label class="text-xs text-slate-500">Ajuste salarial %</label>
                 <input id="sim-salary" type="range" min="-15" max="30" value="0" class="w-full" />
@@ -877,17 +865,12 @@
               <div id="sim-result" class="mt-3 rounded-lg border border-slate-200 bg-white p-3 text-sm text-slate-600"></div>
             </div>
 
-            <div class="advanced-card">
-              <p class="tiny-label mb-3">Presupuesto vs Real</p>
-              <div class="space-y-2">
-                <input id="budget-input" type="number" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="Presupuesto mensual" />
-                <button id="budget-save" class="w-full rounded-lg bg-primary text-white px-3 py-2 text-sm font-semibold">Guardar presupuesto</button>
+            <div class="advanced-card xl:col-span-3">
+              <div class="flex items-center justify-between mb-3">
+                <p class="tiny-label">Objetivos por Área</p>
+                <a href="#" data-page="config" class="nav-link text-xs font-medium text-primary hover:underline">Editar objetivos →</a>
               </div>
-              <div id="budget-result" class="mt-3 rounded-lg border border-slate-200 bg-white p-3 text-sm"></div>
-            </div>
-            <div class="advanced-card xl:col-span-2">
-              <p class="tiny-label mb-3">Objetivos por Área</p>
-              <div id="goals-area" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+              <div id="goals-area" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
             </div>
 
             <div class="advanced-card">
@@ -897,54 +880,23 @@
               </div>
               <div id="forecast-summary" class="space-y-2 text-sm"></div>
             </div>
-            <div class="advanced-card xl:col-span-2">
-              <p class="tiny-label mb-3">Copilot de Negocio</p>
-              <div class="rounded-lg bg-teal-50 border border-teal-200 px-3 py-2 mb-3 text-xs text-teal-800">
-                <strong>¿Cómo funciona?</strong> Escribe una pregunta sobre costos, riesgos, áreas o acciones y el asistente de IA analizará los datos de nómina actuales para darte recomendaciones ejecutivas. Usa los botones rápidos o escribe tu propia pregunta.
-              </div>
-              <div class="flex flex-wrap gap-2 mb-3">
-                <button class="text-xs px-2 py-1 rounded border border-slate-200 hover:bg-slate-50" data-copilot-prompt="¿Cuál es el mayor riesgo de costo este mes?">Riesgo principal</button>
-                <button class="text-xs px-2 py-1 rounded border border-slate-200 hover:bg-slate-50" data-copilot-prompt="¿Qué área explica más el costo y por qué?">Driver por área</button>
-                <button class="text-xs px-2 py-1 rounded border border-slate-200 hover:bg-slate-50" data-copilot-prompt="¿Qué acciones priorizar para reducir la desviación?">Plan de acción</button>
-              </div>
-              <div class="flex gap-2 mb-2">
-                <input id="business-copilot-input" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="Pregunta de negocio (costos, riesgos, áreas, acciones)" />
-                <button id="business-copilot-send" class="rounded-lg bg-primary text-white px-3 py-2 text-sm font-semibold">Preguntar</button>
-              </div>
-              <div id="business-copilot-output" class="rounded-lg border border-slate-200 bg-white p-3 text-sm text-slate-700">Haz una pregunta para recibir recomendaciones ejecutivas.</div>
-            </div>
+            <!-- Copilot de Negocio removido — funcionalidad movida a KapiBot -->
             <div class="advanced-card">
               <p class="tiny-label mb-3">Detección de Anomalías</p>
               <div id="anomaly-summary" class="space-y-2 text-sm"></div>
             </div>
             <div class="advanced-card">
-              <p class="tiny-label mb-3">Cohortes de Talento</p>
+              <p class="tiny-label mb-3">Antigüedad de Empleados</p>
               <div id="cohort-summary" class="space-y-2 text-sm"></div>
             </div>
 
-            <div class="advanced-card xl:col-span-3">
-              <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
-                <p class="tiny-label">Timeline + Driver Tree + Tabla Smart</p>
-                <div class="flex items-center gap-2">
-                  <button id="save-view" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">Guardar vista</button>
-                  <button id="load-view" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">Cargar vista</button>
-                  <button id="story-mode" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">Story 2 min</button>
-                </div>
-              </div>
-              <input id="timeline-range" type="range" min="0" max="0" value="0" class="w-full mb-3" />
-              <div id="timeline-label" class="text-sm text-slate-600 mb-3"></div>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div id="driver-tree" class="rounded-lg border border-slate-200 bg-white p-3 text-sm"></div>
-                <div id="telemetry-panel" class="rounded-lg border border-slate-200 bg-white p-3 text-sm"></div>
-                <div id="audit-panel" class="rounded-lg border border-slate-200 bg-white p-3 text-sm"></div>
-              </div>
-            </div>
+
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8" id="kpi-grid">
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="flex justify-between items-start mb-3">
-                <div class="p-2 bg-primary/10 rounded-lg text-primary">
+                <div class="p-2 bg-indigo-50 rounded-lg text-indigo-600">
                   <span class="material-symbols-outlined">payments</span>
                 </div>
               </div>
@@ -955,7 +907,7 @@
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-8">
             <!-- Gráfica de líneas: Comparativa mes a mes -->
-            <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div class="lg:col-span-2 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="flex items-center justify-between mb-4">
                 <div>
                   <h3 class="text-lg font-bold">Comparativa Mes a Mes</h3>
@@ -977,14 +929,14 @@
               </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <h3 class="text-lg font-bold mb-1">Desglose de Provisiones</h3>
               <p class="text-sm text-slate-500 mb-6">Distribución porcentual</p>
               <div class="relative flex justify-center mb-6">
-                <svg class="w-40 h-40 transform -rotate-90" id="donut-chart"></svg>
+                <svg class="w-44 h-44 transform -rotate-90" id="donut-chart"></svg>
                 <div class="absolute inset-0 flex items-center justify-center flex-col">
-                  <span class="text-2xl font-bold" id="donut-total">100%</span>
-                  <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">Total</span>
+                  <span class="font-bold leading-tight" id="donut-total" style="font-size:clamp(0.75rem, 3.5vw, 1.15rem)">100%</span>
+                  <span class="text-[9px] text-slate-400 font-medium uppercase tracking-widest">Total</span>
                 </div>
               </div>
               <div class="space-y-3" id="breakdown-list"></div>
@@ -993,7 +945,7 @@
 
           <!-- Gráficas de pastel: Tipo de Contrato y Área -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8">
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <h3 class="text-lg font-bold mb-1">Distribución por Tipo de Contrato</h3>
               <p class="text-sm text-slate-500 mb-6">Empleados por modalidad contractual</p>
               <div class="flex items-center gap-8">
@@ -1004,7 +956,7 @@
               </div>
             </div>
             
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <h3 class="text-lg font-bold mb-1">Distribución por Área</h3>
               <p class="text-sm text-slate-500 mb-6">Empleados por departamento</p>
               <div class="flex items-center gap-8">
@@ -1027,35 +979,37 @@
           
           <!-- KPIs de Provisiones -->
           <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8" id="prov-kpi-grid">
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-              <div class="p-2 bg-primary/10 rounded-lg text-primary w-fit mb-3">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+              <div class="p-2 bg-indigo-50 rounded-lg text-indigo-600 w-fit mb-3">
                 <span class="material-symbols-outlined">savings</span>
               </div>
               <p class="text-slate-500 text-xs font-medium uppercase">Total Provisiones</p>
               <h3 class="text-xl font-bold mt-1" id="prov-total">$0</h3>
             </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="p-2 bg-amber-500/10 rounded-lg text-amber-500 w-fit mb-3">
                 <span class="material-symbols-outlined">redeem</span>
               </div>
               <p class="text-slate-500 text-xs font-medium uppercase">Décimo Tercero</p>
               <h3 class="text-xl font-bold mt-1" id="prov-d13">$0</h3>
+              <p class="text-[10px] text-slate-400 mt-1">Cálculo: Dic 1 – Nov 30 · Pago: hasta 24 Dic</p>
             </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="p-2 bg-indigo-500/10 rounded-lg text-indigo-500 w-fit mb-3">
                 <span class="material-symbols-outlined">school</span>
               </div>
               <p class="text-slate-500 text-xs font-medium uppercase">Décimo Cuarto</p>
               <h3 class="text-xl font-bold mt-1" id="prov-d14">$0</h3>
+              <p class="text-[10px] text-slate-400 mt-1">Cálculo: Ago 1 – Jul 31 (Sierra) / Mar 1 – Feb 28 (Costa) · Pago: hasta 15 Mar / 15 Ago</p>
             </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="p-2 bg-emerald-500/10 rounded-lg text-emerald-500 w-fit mb-3">
                 <span class="material-symbols-outlined">beach_access</span>
               </div>
               <p class="text-slate-500 text-xs font-medium uppercase">Vacaciones</p>
               <h3 class="text-xl font-bold mt-1" id="prov-vac">$0</h3>
             </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="p-2 bg-rose-500/10 rounded-lg text-rose-500 w-fit mb-3">
                 <span class="material-symbols-outlined">account_balance</span>
               </div>
@@ -1064,16 +1018,46 @@
             </div>
           </div>
 
+          <!-- Proyección Décimo Tercero en Diciembre -->
+          <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm mb-8">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="p-2 bg-amber-500/10 rounded-lg text-amber-500">
+                <span class="material-symbols-outlined">calendar_month</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Proyección del 13er Sueldo — Pago Diciembre</h3>
+                <p class="text-sm text-slate-500">Estimación del monto total a desembolsar en diciembre por concepto de Décimo Tercero</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="rounded-lg border border-slate-200 p-3">
+                <p class="text-xs text-slate-500 uppercase mb-1">Provisión mensual acumulada</p>
+                <h4 class="text-xl font-bold" id="prov-d13-monthly">$0</h4>
+                <p class="text-[10px] text-slate-400">Promedio mensual D13 del período visible</p>
+              </div>
+              <div class="rounded-lg border border-slate-200 p-3">
+                <p class="text-xs text-slate-500 uppercase mb-1">Proyección anual (×12)</p>
+                <h4 class="text-xl font-bold text-amber-600" id="prov-d13-projected">$0</h4>
+                <p class="text-[10px] text-slate-400">Total proyectado a pagar en diciembre</p>
+              </div>
+              <div class="rounded-lg border border-slate-200 p-3">
+                <p class="text-xs text-slate-500 uppercase mb-1">Meses restantes para pago</p>
+                <h4 class="text-xl font-bold" id="prov-d13-months-left">0</h4>
+                <p class="text-[10px] text-slate-400">Hasta 24 de diciembre</p>
+              </div>
+            </div>
+          </div>
+
           <!-- Scatter Plot de Provisiones -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <h3 class="text-lg font-bold mb-2">Evolución de Provisiones por Período</h3>
               <p class="text-sm text-slate-500 mb-4">Total y desglose mensual</p>
               <div class="relative h-80" id="scatter-container">
                 <canvas id="scatter-chart"></canvas>
               </div>
             </div>
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <h3 class="text-lg font-bold mb-2">Desglose de Provisiones</h3>
               <p class="text-sm text-slate-500 mb-6">Distribución por componente</p>
               <div class="h-64 flex items-end justify-between gap-4 px-2" id="prov-bars"></div>
@@ -1081,13 +1065,13 @@
           </div>
 
           <!-- Tabla de Provisiones por Empleado -->
-          <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
             <div class="p-6 border-b border-slate-200">
               <h3 class="text-lg font-bold">Detalle de Provisiones por Empleado</h3>
             </div>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
               <table class="data-table w-full text-left border-collapse">
-                <thead>
+                <thead class="sticky top-0 z-[1]">
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
@@ -1115,15 +1099,15 @@
           
           <!-- KPIs de IESS -->
           <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-              <div class="p-2 bg-primary/10 rounded-lg text-primary w-fit mb-3">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+              <div class="p-2 bg-indigo-50 rounded-lg text-indigo-600 w-fit mb-3">
                 <span class="material-symbols-outlined">account_balance</span>
               </div>
               <p class="text-slate-500 text-xs font-medium uppercase">Total IESS a Pagar</p>
               <h3 class="text-xl font-bold mt-1" id="iess-total">$0</h3>
               <p class="text-[10px] text-slate-400 mt-1">Personal + Patronal</p>
             </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="p-2 bg-rose-500/10 rounded-lg text-rose-500 w-fit mb-3">
                 <span class="material-symbols-outlined">person</span>
               </div>
@@ -1131,7 +1115,7 @@
               <h3 class="text-xl font-bold mt-1" id="iess-personal">$0</h3>
               <p class="text-[10px] text-slate-400 mt-1">9.45% del sueldo</p>
             </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="p-2 bg-indigo-500/10 rounded-lg text-indigo-500 w-fit mb-3">
                 <span class="material-symbols-outlined">business</span>
               </div>
@@ -1139,7 +1123,7 @@
               <h3 class="text-xl font-bold mt-1" id="iess-patronal">$0</h3>
               <p class="text-[10px] text-slate-400 mt-1">11.15% del sueldo</p>
             </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="p-2 bg-amber-500/10 rounded-lg text-amber-500 w-fit mb-3">
                 <span class="material-symbols-outlined">savings</span>
               </div>
@@ -1151,19 +1135,19 @@
 
           <!-- Gráfica de Descuentos IESS -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <h3 class="text-lg font-bold mb-2">Desglose de Descuentos IESS</h3>
               <p class="text-sm text-slate-500 mb-6">Préstamos hipotecarios, quirografarios y aportes</p>
               <div class="h-64 flex items-end justify-between gap-4 px-2" id="iess-bars"></div>
             </div>
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <h3 class="text-lg font-bold mb-2">Distribución de Aportes</h3>
               <p class="text-sm text-slate-500 mb-6">Personal vs Patronal</p>
               <div class="relative flex justify-center mb-8">
-                <svg class="w-40 h-40 transform -rotate-90" id="iess-donut"></svg>
+                <svg class="w-44 h-44 transform -rotate-90" id="iess-donut"></svg>
                 <div class="absolute inset-0 flex items-center justify-center flex-col">
-                  <span class="text-2xl font-bold" id="iess-donut-total">100%</span>
-                  <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">Total</span>
+                  <span class="font-bold leading-tight" id="iess-donut-total" style="font-size:clamp(0.75rem, 3.5vw, 1.15rem)">100%</span>
+                  <span class="text-[9px] text-slate-400 font-medium uppercase tracking-widest">Total</span>
                 </div>
               </div>
               <div class="space-y-3" id="iess-breakdown-list"></div>
@@ -1171,13 +1155,13 @@
           </div>
 
           <!-- Tabla de IESS por Empleado -->
-          <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
             <div class="p-6 border-b border-slate-200">
               <h3 class="text-lg font-bold">Detalle IESS por Empleado</h3>
             </div>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
               <table class="data-table w-full text-left border-collapse">
-                <thead>
+                <thead class="sticky top-0 z-[1]">
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
@@ -1202,10 +1186,10 @@
             <h2 class="text-2xl font-bold text-slate-900">Gestión de Empleados</h2>
             <p class="text-slate-500">Listado completo de empleados y sus datos</p>
           </div>
-          <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div class="overflow-x-auto">
+          <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
               <table class="data-table w-full text-left border-collapse">
-                <thead>
+                <thead class="sticky top-0 z-[1]">
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
@@ -1233,7 +1217,7 @@
           
           <!-- KPIs de Horas Extra -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="horas-extra-kpis">
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="flex items-center gap-3 mb-3">
                 <div class="p-2 bg-amber-500/10 rounded-lg text-amber-500">
                   <span class="material-symbols-outlined">schedule</span>
@@ -1242,7 +1226,7 @@
               </div>
               <h3 class="text-xl font-bold" id="he-total-100">$0</h3>
             </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="flex items-center gap-3 mb-3">
                 <div class="p-2 bg-indigo-500/10 rounded-lg text-indigo-500">
                   <span class="material-symbols-outlined">more_time</span>
@@ -1251,7 +1235,7 @@
               </div>
               <h3 class="text-xl font-bold" id="he-total-50">$0</h3>
             </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="flex items-center gap-3 mb-3">
                 <div class="p-2 bg-violet-500/10 rounded-lg text-violet-500">
                   <span class="material-symbols-outlined">nightlight</span>
@@ -1260,7 +1244,7 @@
               </div>
               <h3 class="text-xl font-bold" id="he-recargo-nocturno">$0</h3>
             </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="flex items-center gap-3 mb-3">
                 <div class="p-2 bg-emerald-500/10 rounded-lg text-emerald-500">
                   <span class="material-symbols-outlined">attach_money</span>
@@ -1273,21 +1257,21 @@
 
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <!-- Áreas que más horas extra generan -->
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <h3 class="text-lg font-bold mb-1">Áreas con Mayor Costo en Horas Extra</h3>
               <p class="text-sm text-slate-500 mb-6">Ranking por costo total de horas extraordinarias</p>
               <div class="space-y-4" id="he-areas-ranking"></div>
             </div>
 
             <!-- Distribución por tipo de hora extra -->
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <h3 class="text-lg font-bold mb-1">Distribución por Tipo</h3>
               <p class="text-sm text-slate-500 mb-6">Composición del costo de horas extra</p>
               <div class="flex items-center gap-8">
                 <div class="relative flex justify-center">
                   <svg class="w-40 h-40 transform -rotate-90" id="he-donut"></svg>
                   <div class="absolute inset-0 flex items-center justify-center flex-col">
-                    <span class="text-lg font-bold" id="he-donut-total">$0</span>
+                    <span class="font-bold leading-tight" id="he-donut-total" style="font-size:clamp(0.75rem, 3.5vw, 1.1rem)">$0</span>
                     <span class="text-[10px] text-slate-400 uppercase">Total</span>
                   </div>
                 </div>
@@ -1297,14 +1281,14 @@
           </div>
 
           <!-- Tabla de empleados con horas extra -->
-          <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
             <div class="p-6 border-b border-slate-200">
               <h3 class="text-lg font-bold">Detalle por Empleado</h3>
               <p class="text-sm text-slate-500">Empleados con horas extra registradas</p>
             </div>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
               <table class="data-table w-full text-left border-collapse">
-                <thead>
+                <thead class="sticky top-0 z-[1]">
                   <tr class="bg-slate-50">
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
@@ -1321,6 +1305,107 @@
           </div>
         </div>
         <!-- FIN PÁGINA: ANÁLISIS HORAS EXTRA -->
+
+        <!-- PÁGINA: CONFIGURACIÓN -->
+        <div class="p-4 sm:p-6 lg:p-8 page-content hidden" id="page-config">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold text-slate-900">Configuración</h2>
+            <p class="text-sm text-gray-500">Ajusta presupuestos, objetivos por área y parámetros del sistema</p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Presupuesto Mensual -->
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+              <h3 class="text-lg font-semibold tracking-tight mb-1">Presupuesto Mensual</h3>
+              <p class="text-sm text-gray-500 mb-4">Define el presupuesto mensual de nómina para comparar contra el gasto real</p>
+              <div class="space-y-3">
+                <div>
+                  <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Monto del presupuesto (USD)</label>
+                  <input id="budget-input" type="number" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Ej: 50000" />
+                </div>
+                <button id="budget-save" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium shadow-sm transition-colors text-sm">
+                  Guardar presupuesto
+                </button>
+              </div>
+              <div id="budget-result" class="mt-4 rounded-lg border border-gray-200 bg-slate-50 p-4 text-sm"></div>
+            </div>
+
+            <!-- Umbrales de Alertas -->
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+              <h3 class="text-lg font-semibold tracking-tight mb-1">Umbrales de Alertas</h3>
+              <p class="text-sm text-gray-500 mb-4">Define los umbrales para generar alertas automáticas en el dashboard</p>
+              <div class="space-y-4">
+                <div>
+                  <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Desviación máxima de presupuesto (%)</label>
+                  <input id="config-budget-threshold" type="number" value="10" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="10" />
+                </div>
+                <div>
+                  <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Umbral horas extra por empleado (USD)</label>
+                  <input id="config-he-threshold" type="number" value="500" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="500" />
+                </div>
+                <div>
+                  <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Correo para alertas automáticas</label>
+                  <input id="config-alert-email" type="email" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="admin@empresa.com" />
+                </div>
+                <button id="config-save-thresholds" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium shadow-sm transition-colors text-sm">
+                  Guardar umbrales
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Objetivos por Área -->
+          <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-8">
+            <h3 class="text-lg font-semibold tracking-tight mb-1">Objetivos de Costo por Área</h3>
+            <p class="text-sm text-gray-500 mb-4">Define metas de costo mensual por departamento. Estos objetivos se muestran en el dashboard.</p>
+            <div id="config-goals-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            <button id="config-save-goals" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium shadow-sm transition-colors text-sm">
+              Guardar objetivos
+            </button>
+          </div>
+
+          <!-- Configuración General -->
+          <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+            <h3 class="text-lg font-semibold tracking-tight mb-1">Preferencias Generales</h3>
+            <p class="text-sm text-gray-500 mb-4">Ajustes de visualización y comportamiento del tablero</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Moneda de visualización</label>
+                <select id="config-currency" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="USD">USD — Dólar estadounidense</option>
+                  <option value="EUR">EUR — Euro</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Formato de fecha</label>
+                <select id="config-date-format" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                  <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                  <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Rol por defecto</label>
+                <select id="config-default-role" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="ceo">CEO</option>
+                  <option value="finanzas">Finanzas</option>
+                  <option value="rrhh">RRHH</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Datos de origen</label>
+                <select id="config-data-source" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="bigquery">BigQuery</option>
+                  <option value="sheets">Google Sheets</option>
+                </select>
+              </div>
+            </div>
+            <button id="config-save-general" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium shadow-sm transition-colors text-sm">
+              Guardar preferencias
+            </button>
+          </div>
+        </div>
+        <!-- FIN PÁGINA: CONFIGURACIÓN -->
 
       </main>
     </div>
@@ -1342,7 +1427,7 @@
             <div class="rounded-xl border border-slate-500/30 bg-slate-900/40 p-5 lg:col-span-2">
               <p class="text-xs uppercase tracking-[0.2em] text-slate-300">Periodo</p>
               <h3 id="presentation-period" class="mt-1 text-4xl font-bold">-</h3>
-              <p id="presentation-cost" class="mt-3 text-2xl font-semibold text-teal-300">$0</p>
+              <p id="presentation-cost" class="mt-3 text-2xl font-semibold text-indigo-300">$0</p>
               <p id="presentation-variation" class="mt-2 text-sm text-slate-200">Sin comparativa</p>
               <p id="presentation-story" class="mt-6 text-lg leading-relaxed text-slate-100">Preparando narrativa...</p>
             </div>
@@ -1353,23 +1438,12 @@
               <div class="mt-5 grid grid-cols-2 gap-3">
                 <button id="presentation-prev" class="rounded-lg border border-slate-500/40 px-3 py-2 text-sm hover:bg-slate-700/60">Anterior</button>
                 <button id="presentation-next" class="rounded-lg border border-slate-500/40 px-3 py-2 text-sm hover:bg-slate-700/60">Siguiente</button>
-                <button id="presentation-autoplay" class="col-span-2 rounded-lg bg-teal-600 px-3 py-2 text-sm font-semibold hover:bg-teal-500">Auto Play</button>
+                <button id="presentation-autoplay" class="col-span-2 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold hover:bg-indigo-500">Auto Play</button>
                 <button id="presentation-tv" class="col-span-2 rounded-lg border border-slate-500/40 px-3 py-2 text-sm hover:bg-slate-700/60">Modo TV/Kiosco</button>
                 <button id="presentation-fullscreen" class="col-span-2 rounded-lg border border-slate-500/40 px-3 py-2 text-sm hover:bg-slate-700/60">Pantalla Completa</button>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="command-palette" class="command-palette hidden">
-      <div class="flex h-full items-start justify-center pt-[12vh]">
-        <div class="command-card overflow-hidden">
-          <div class="border-b border-slate-200 p-3">
-            <input id="command-input" type="text" placeholder="Buscar acciones, páginas o atajos..." class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/30" />
-          </div>
-          <div id="command-list" class="max-h-[52vh] overflow-y-auto p-2"></div>
         </div>
       </div>
     </div>
@@ -1418,13 +1492,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script>
-      const DEFAULT_RENDER_API_BASE = "https://kapisg.com/apps/tablero-nomina-backend/";
+      const DEFAULT_RENDER_API_BASE = "";
       const API_BASE = (window.__KAPIROLL_API_BASE__ || window.__TABLERO_NOMINA_API_BASE__ || DEFAULT_RENDER_API_BASE).replace(/\/$/, "");
       const API_PREFIX = API_BASE ? `${API_BASE}/api` : "/api";
-      const KAPIBOT_API_URL = `${API_PREFIX}/chat`;
+      const KAPIBOT_API_URL = `${API_PREFIX}/chat`;  // legacy, unused
       const FORECAST_API_URL = `${API_PREFIX}/forecast`;
       const ALERTS_EMAIL_API_URL = `${API_PREFIX}/alerts/email`;
-      const BUSINESS_COPILOT_API_URL = `${API_PREFIX}/copilot/business-chat`;
+      const BUSINESS_COPILOT_API_URL = `${API_PREFIX}/copilot/business-chat`;  // legacy, unused
       const TELEMETRY_EVENTS_API_URL = `${API_PREFIX}/telemetry/events`;
       
       // Estado global
@@ -1452,9 +1526,9 @@
       };
 
       const ROLE_PAGE_ACCESS = {
-        ceo: ['dashboard', 'provisiones', 'iess', 'horas-extra'],
-        finanzas: ['dashboard', 'provisiones', 'iess'],
-        rrhh: ['dashboard', 'empleados', 'horas-extra']
+        ceo: ['dashboard', 'provisiones', 'iess', 'horas-extra', 'config'],
+        finanzas: ['dashboard', 'provisiones', 'iess', 'config'],
+        rrhh: ['dashboard', 'empleados', 'horas-extra', 'config']
       };
 
       const getBanner = () => document.getElementById('data-status-banner');
@@ -1776,62 +1850,28 @@
         const node = document.getElementById('cohort-summary');
         if (!node) return;
         const now = new Date();
-        const buckets = { '0-1y': 0, '1-3y': 0, '3y+': 0 };
+        const buckets = { 'Menos de 1 año': 0, '1 a 3 años': 0, '3 a 5 años': 0, '5 a 10 años': 0, 'Más de 10 años': 0 };
         lastFilteredEmployees.forEach((e) => {
           const d = e.fecha_ingreso ? new Date(e.fecha_ingreso) : null;
           const y = d && !Number.isNaN(d.getTime()) ? (now - d) / (1000 * 60 * 60 * 24 * 365) : 0;
-          if (y < 1) buckets['0-1y'] += 1;
-          else if (y < 3) buckets['1-3y'] += 1;
-          else buckets['3y+'] += 1;
+          if (y < 1) buckets['Menos de 1 año'] += 1;
+          else if (y < 3) buckets['1 a 3 años'] += 1;
+          else if (y < 5) buckets['3 a 5 años'] += 1;
+          else if (y < 10) buckets['5 a 10 años'] += 1;
+          else buckets['Más de 10 años'] += 1;
         });
-        node.innerHTML = Object.entries(buckets).map(([k, v]) => `<div class="flex justify-between"><span>${k}</span><strong>${v}</strong></div>`).join('');
+        const total = lastFilteredEmployees.length || 1;
+        node.innerHTML = Object.entries(buckets).map(([k, v]) => {
+          const pct = ((v / total) * 100).toFixed(0);
+          return `<div class="flex justify-between items-center"><span class="text-slate-600">${k}</span><div class="flex items-center gap-2"><span class="text-xs text-slate-400">${pct}%</span><strong>${v}</strong></div></div>`;
+        }).join('');
       };
 
-      const renderDriverTree = () => {
-        const node = document.getElementById('driver-tree');
-        if (!node) return;
-        const ingresos = lastFilteredEmployees.reduce((s, e) => s + (e.total_ingresos || 0), 0);
-        const provisiones = lastFilteredEmployees.reduce((s, e) => s + (e.total_provisiones || 0), 0);
-        const descuentos = lastFilteredEmployees.reduce((s, e) => s + (e.total_descuentos || 0), 0);
-        const he = lastFilteredEmployees.reduce((s, e) => s + (e.h_ext_100 || 0) + (e.h_ext_50 || 0) + (e.recnocturno || 0), 0);
-        node.innerHTML = `
-          <p class="tiny-label mb-2">Driver Tree variación</p>
-          <div class="space-y-1">
-            <div class="flex justify-between"><span>Ingresos</span><strong>${formatCurrency(ingresos, 'USD')}</strong></div>
-            <div class="flex justify-between"><span>Provisiones</span><strong>${formatCurrency(provisiones, 'USD')}</strong></div>
-            <div class="flex justify-between"><span>Descuentos</span><strong>${formatCurrency(descuentos, 'USD')}</strong></div>
-            <div class="flex justify-between"><span>Horas extra</span><strong>${formatCurrency(he, 'USD')}</strong></div>
-          </div>
-        `;
-      };
+      const renderDriverTree = () => {};
 
-      const setupTimeline = () => {
-        const range = document.getElementById('timeline-range');
-        const label = document.getElementById('timeline-label');
-        if (!range || !label) return;
-        timelineData = (lastDashboardData?.monthly_costs || calcMonthlyCosts(lastFilteredEmployees)).map((m) => ({
-          periodo: m.periodo || m.month || '-',
-          costo_total: m.costo_total ?? ((m.total_ingresos || 0) + (m.total_provisiones || 0)),
-        })).sort((a, b) => String(a.periodo).localeCompare(String(b.periodo)));
-        const max = Math.max(0, timelineData.length - 1);
-        range.max = String(max);
-        range.value = String(max);
-        const current = timelineData[max];
-        label.textContent = current ? `Periodo activo: ${current.periodo} · ${formatCurrency(current.costo_total, 'USD')}` : 'Sin timeline disponible';
-      };
+      const setupTimeline = () => {};
 
-      const applyTimelineSelection = () => {
-        const range = document.getElementById('timeline-range');
-        const label = document.getElementById('timeline-label');
-        if (!range || !label || !timelineData.length) return;
-        const idx = Number(range.value);
-        const current = timelineData[idx];
-        if (!current) return;
-        label.textContent = `Periodo activo: ${current.periodo} · ${formatCurrency(current.costo_total, 'USD')}`;
-        document.getElementById('filter-periodo').value = current.periodo;
-        filters.periodo = current.periodo;
-        applyFilters();
-      };
+      const applyTimelineSelection = () => {};
 
       const saveCurrentView = () => {
         const view = { ...filters, role: selectedRole };
@@ -1936,6 +1976,22 @@
 
       const formatPercent = (value) => `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
 
+      // Toast notification for chart interactions
+      const pushToast = (msg, type = 'ok') => {
+        const existing = document.getElementById('kapi-toast');
+        if (existing) existing.remove();
+        const colors = type === 'ok'
+          ? 'bg-primary text-white'
+          : 'bg-amber-500 text-white';
+        const toast = document.createElement('div');
+        toast.id = 'kapi-toast';
+        toast.className = `fixed bottom-6 left-1/2 -translate-x-1/2 z-50 ${colors} px-5 py-2.5 rounded-xl text-sm font-medium shadow-lg flex items-center gap-2 transition-all`;
+        toast.style.animation = 'fadeUp 0.3s ease-out';
+        toast.innerHTML = `<span class="material-symbols-outlined text-base">filter_alt</span>${msg}`;
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translate(-50%, 10px)'; setTimeout(() => toast.remove(), 300); }, 2500);
+      };
+
       const getRoleLabel = (role) => {
         if (role === 'finanzas') return 'Finanzas';
         if (role === 'rrhh') return 'RRHH';
@@ -1998,7 +2054,7 @@
 
         if (kpi) {
           kpi.innerHTML = Array.from({ length: 5 }).map(() => `
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="skeleton h-9 w-9 rounded-lg mb-4"></div>
               <div class="skeleton h-3 w-24 mb-2"></div>
               <div class="skeleton h-6 w-28"></div>
@@ -2240,93 +2296,7 @@
         }
       };
 
-      const initCommandPalette = () => {
-        const palette = document.getElementById('command-palette');
-        const input = document.getElementById('command-input');
-        const list = document.getElementById('command-list');
-        if (!palette || !input || !list) return;
-
-        const renderItems = (items) => {
-          currentCommandItems = items;
-          list.innerHTML = items.map((item, index) => `
-            <button class="command-item ${index === 0 ? 'active' : ''} w-full rounded-lg px-3 py-2 text-left" data-command-index="${index}">
-              <p class="text-sm font-semibold text-slate-800">${item.label}</p>
-              <p class="text-xs text-slate-500">${item.hint}</p>
-            </button>
-          `).join('');
-        };
-
-        const getItems = () => {
-          const allowed = ROLE_PAGE_ACCESS[selectedRole] || ROLE_PAGE_ACCESS.ceo;
-          const pages = [
-            { page: 'dashboard', label: 'Ir a Dashboard' },
-            { page: 'empleados', label: 'Ir a Empleados' },
-            { page: 'provisiones', label: 'Ir a Provisiones' },
-            { page: 'iess', label: 'Ir a Análisis IESS' },
-            { page: 'horas-extra', label: 'Ir a Horas Extra' }
-          ].filter((p) => allowed.includes(p.page)).map((p) => ({
-            label: p.label,
-            hint: 'Navegación rápida',
-            action: () => navigateTo(p.page)
-          }));
-
-          const actions = [
-            { label: 'Aplicar filtros', hint: 'Ejecuta filtros actuales', action: () => applyFilters() },
-            { label: 'Limpiar filtros', hint: 'Reinicia filtros activos', action: () => clearFilters() },
-            { label: 'Abrir modo presentación', hint: 'Narrativa mensual', action: () => openPresentationMode() },
-            { label: 'Exportar CSV', hint: 'Descarga datos tabulares', action: () => document.getElementById('export-csv')?.click() },
-            { label: 'Exportar PDF ejecutivo', hint: 'Resumen listo para comité', action: () => exportExecutivePdf() },
-            { label: 'Ejecutar smoke test UX', hint: 'Valida flujo critico in-app', action: () => runSmokeChecks() },
-          ];
-
-          return [...pages, ...actions];
-        };
-
-        const openPalette = () => {
-          palette.classList.remove('hidden');
-          const items = getItems();
-          renderItems(items);
-          input.value = '';
-          input.focus();
-        };
-
-        const closePalette = () => palette.classList.add('hidden');
-
-        const activateIndex = (index) => {
-          const item = currentCommandItems[index];
-          if (!item) return;
-          item.action();
-          closePalette();
-        };
-
-        document.getElementById('command-palette-btn')?.addEventListener('click', openPalette);
-        palette.addEventListener('click', (event) => {
-          if (event.target.id === 'command-palette') closePalette();
-        });
-
-        input.addEventListener('input', () => {
-          const value = input.value.trim().toLowerCase();
-          const items = getItems().filter((i) => (`${i.label} ${i.hint}`).toLowerCase().includes(value));
-          renderItems(items);
-        });
-
-        list.addEventListener('click', (event) => {
-          const button = event.target.closest('[data-command-index]');
-          if (!button) return;
-          activateIndex(Number(button.dataset.commandIndex));
-        });
-
-        document.addEventListener('keydown', (event) => {
-          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
-            event.preventDefault();
-            openPalette();
-            return;
-          }
-          if (event.key === 'Escape' && !palette.classList.contains('hidden')) {
-            closePalette();
-          }
-        });
-      };
+      const initCommandPalette = () => {};
 
       const openDrilldown = (metricKey, metricLabel) => {
         const overlay = document.getElementById('drilldown-overlay');
@@ -2382,34 +2352,83 @@
       };
 
       const exportExecutivePdf = () => {
-        const jspdfNS = window.jspdf;
-        if (!jspdfNS?.jsPDF) {
-          showBanner('No se pudo cargar el motor de PDF en este momento.', 'warning');
-          return;
-        }
-
-        const { jsPDF } = jspdfNS;
-        const doc = new jsPDF();
-        const monthly = lastDashboardData?.monthly_costs || calcMonthlyCosts(lastFilteredEmployees);
-        const insights = deriveInsights(lastFilteredEmployees, monthly);
-        const totalCost = lastFilteredEmployees.reduce((s, e) => s + (e.total_ingresos || 0) + (e.total_provisiones || 0), 0);
-
-        doc.setFontSize(18);
-        doc.text('Resumen Ejecutivo de Nomina', 14, 18);
-        doc.setFontSize(11);
-        doc.text(`Rol: ${getRoleLabel(selectedRole)}`, 14, 28);
-        doc.text(`Registros: ${lastFilteredEmployees.length}`, 14, 35);
-        doc.text(`Costo total: ${formatCurrency(totalCost, 'USD')}`, 14, 42);
-        doc.text(`Fecha: ${new Date().toLocaleDateString('es-EC')}`, 14, 49);
-
-        doc.setFontSize(12);
-        doc.text('Insights clave', 14, 63);
-        doc.setFontSize(10);
-        doc.text(`1) ${insights.main}`, 14, 71, { maxWidth: 180 });
-        doc.text(`2) ${insights.risk}`, 14, 82, { maxWidth: 180 });
-        doc.text(`3) ${insights.action}`, 14, 93, { maxWidth: 180 });
-
-        doc.save(`resumen_nomina_${Date.now()}.pdf`);
+        const activePage = document.getElementById(`page-${currentPage}`);
+        if (!activePage) return;
+        
+        const pageTitles = {
+          dashboard: 'Dashboard Ejecutivo',
+          empleados: 'Gestión de Empleados',
+          provisiones: 'Análisis de Provisiones',
+          iess: 'Análisis IESS',
+          'horas-extra': 'Análisis de Horas Extra'
+        };
+        
+        const filteredEmployees = applyFiltersToData(allEmployees);
+        const totalCost = filteredEmployees.reduce((s, e) => s + (e.total_ingresos || 0) + (e.total_provisiones || 0), 0);
+        const insights = deriveInsights(filteredEmployees, lastDashboardData?.monthly_costs || calcMonthlyCosts(filteredEmployees));
+        const filterDesc = [
+          filters.area ? `Área: ${filters.area}` : '',
+          filters.contrato ? `Contrato: ${filters.contrato}` : '',
+          filters.periodo ? `Período: ${filters.periodo}` : '',
+          filters.year ? `Año: ${filters.year}` : ''
+        ].filter(Boolean).join(' · ') || 'Todos los datos';
+        
+        const isDark = document.documentElement.classList.contains('dark');
+        
+        const htmlContent = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>KAPIROLL - ${pageTitles[currentPage] || 'Reporte'}</title>
+<style>
+  body { font-family: 'Segoe UI', 'Inter', Arial, sans-serif; margin: 0; padding: 40px; color: #1e293b; background: #fff; }
+  .header { border-bottom: 3px solid #4f46e5; padding-bottom: 16px; margin-bottom: 24px; }
+  .header h1 { font-size: 24px; color: #4f46e5; margin: 0 0 4px 0; }
+  .header p { font-size: 12px; color: #64748b; margin: 2px 0; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  .kpi-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
+  .kpi-card .label { font-size: 10px; text-transform: uppercase; color: #64748b; margin-bottom: 4px; }
+  .kpi-card .value { font-size: 20px; font-weight: 700; }
+  .insight-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+  .insight-box .title { font-size: 10px; text-transform: uppercase; color: #64748b; margin-bottom: 4px; }
+  .insight-box .text { font-size: 13px; }
+  .section-title { font-size: 16px; font-weight: 700; margin: 20px 0 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: #f1f5f9; padding: 8px 12px; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 10px; color: #64748b; }
+  td { padding: 6px 12px; border-bottom: 1px solid #f1f5f9; }
+  .footer { margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 12px; font-size: 10px; color: #94a3b8; text-align: center; }
+  @media print { body { padding: 20px; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>KAPIROLL — ${pageTitles[currentPage] || 'Reporte'}</h1>
+  <p>Rol: ${getRoleLabel(selectedRole)} · Filtros: ${filterDesc}</p>
+  <p>Generado: ${new Date().toLocaleString('es-EC')} · Registros: ${filteredEmployees.length}</p>
+</div>
+<div class="kpi-grid">
+  <div class="kpi-card"><div class="label">Costo Total</div><div class="value">${formatCurrency(totalCost, 'USD')}</div></div>
+  <div class="kpi-card"><div class="label">Total Ingresos</div><div class="value">${formatCurrency(filteredEmployees.reduce((s,e)=>s+(e.total_ingresos||0),0), 'USD')}</div></div>
+  <div class="kpi-card"><div class="label">Total Provisiones</div><div class="value">${formatCurrency(filteredEmployees.reduce((s,e)=>s+(e.total_provisiones||0),0), 'USD')}</div></div>
+</div>
+<div class="insight-box"><div class="title">Insight Principal</div><div class="text">${insights.main}</div></div>
+<div class="insight-box"><div class="title">Riesgo</div><div class="text">${insights.risk}</div></div>
+<div class="insight-box"><div class="title">Acción Recomendada</div><div class="text">${insights.action}</div></div>
+<h3 class="section-title">Detalle de Empleados</h3>
+<table>
+<thead><tr><th>Nombre</th><th>Área</th><th>Contrato</th><th style="text-align:right">Ingresos</th><th style="text-align:right">Descuentos</th><th style="text-align:right">Provisiones</th><th style="text-align:right">Neto</th></tr></thead>
+<tbody>${filteredEmployees.slice(0, 100).map(e => `<tr><td>${e.nombre||'-'}</td><td>${e.area||'-'}</td><td>${e.tipo_contrato||'-'}</td><td style="text-align:right">${formatCurrency(e.total_ingresos,'USD')}</td><td style="text-align:right">${formatCurrency(e.total_descuentos,'USD')}</td><td style="text-align:right">${formatCurrency(e.total_provisiones,'USD')}</td><td style="text-align:right">${formatCurrency(e.a_recibir,'USD')}</td></tr>`).join('')}</tbody>
+</table>
+<div class="footer">KAPIROLL — Inteligencia de Nómina · Reporte generado automáticamente</div>
+</body></html>`;
+        
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reporte_${currentPage}_${Date.now()}.html`;
+        a.click();
+        URL.revokeObjectURL(url);
       };
 
       const createPresentationSlides = (monthlyData) => {
@@ -2488,10 +2507,45 @@
       const openPresentationMode = () => {
         const overlay = document.getElementById('presentation-overlay');
         if (!overlay) return;
+        // Capturar contenido de la pestaña activa con filtros aplicados
+        const activePage = document.getElementById(`page-${currentPage}`);
+        if (!activePage) return;
+        
         const filteredEmployees = applyFiltersToData(allEmployees);
         const monthlyData = lastDashboardData?.monthly_costs || calcMonthlyCosts(filteredEmployees);
-        presentationSlides = createPresentationSlides(monthlyData);
-        presentationIndex = Math.max(0, presentationSlides.length - 1);
+        
+        // Crear slides basados únicamente en la pestaña activa
+        const pageTitles = {
+          dashboard: 'Dashboard Ejecutivo',
+          empleados: 'Gestión de Empleados',
+          provisiones: 'Análisis de Provisiones',
+          iess: 'Análisis IESS',
+          'horas-extra': 'Análisis de Horas Extra'
+        };
+        
+        const pageTitle = pageTitles[currentPage] || 'Resumen';
+        const totalCost = filteredEmployees.reduce((s, e) => s + (e.total_ingresos || 0) + (e.total_provisiones || 0), 0);
+        const filterDesc = [
+          filters.area ? `Área: ${filters.area}` : '',
+          filters.contrato ? `Contrato: ${filters.contrato}` : '',
+          filters.periodo ? `Período: ${filters.periodo}` : '',
+          filters.year ? `Año: ${filters.year}` : ''
+        ].filter(Boolean).join(' · ') || 'Sin filtros aplicados';
+        
+        presentationSlides = [{
+          periodo: pageTitle,
+          costo: totalCost,
+          variation: 0,
+          story: `Pestaña: ${pageTitle}\nFiltros: ${filterDesc}\nRegistros: ${filteredEmployees.length} empleados\nCosto total: ${formatCurrency(totalCost, 'USD')}`
+        }];
+        
+        // Add monthly slides if on dashboard
+        if (currentPage === 'dashboard') {
+          const monthlySlides = createPresentationSlides(monthlyData);
+          presentationSlides = [...presentationSlides, ...monthlySlides];
+        }
+        
+        presentationIndex = 0;
         overlay.classList.remove('hidden');
         renderPresentationSlide();
       };
@@ -2646,10 +2700,12 @@
           `<option value="${n.cedula}" ${n.cedula === currentEmpleado ? 'selected' : ''}>${n.nombre}</option>`
         ).join('');
         
-        // Poblar períodos desde la base de datos
+        // Poblar períodos desde la base de datos (solo año en curso)
         if (filterOptions?.periodos?.length > 0) {
+          const activeYear = filters.year || filterOptions.years?.[0] || new Date().getFullYear().toString();
+          const periodosDelAnio = filterOptions.periodos.filter(p => String(p.value).startsWith(String(activeYear)));
           periodoSelect.innerHTML = '<option value="">Todos los períodos</option>' + 
-            filterOptions.periodos.map(p => 
+            periodosDelAnio.map(p => 
               `<option value="${p.value}" ${p.value === currentPeriodo ? 'selected' : ''}>${p.label}</option>`
             ).join('');
           periodoSelect.disabled = false;
@@ -2702,153 +2758,37 @@
       document.getElementById('apply-filters').addEventListener('click', applyFilters);
       document.getElementById('clear-filters').addEventListener('click', clearFilters);
 
-      const initKapiBotUI = () => {
-        if (document.getElementById('kapibot-root')) return;
-
-        const root = document.createElement('div');
-        root.id = 'kapibot-root';
-        root.className = 'fixed bottom-6 left-6 z-50';
-        root.innerHTML = `
-          <div id="kapibot-panel" class="hidden mb-4 w-[340px] rounded-2xl border border-slate-200 bg-white shadow-lg">
-            <div class="flex items-center justify-between rounded-t-2xl bg-blue-700 px-4 py-3 text-white">
-              <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-base">smart_toy</span>
-                <h2 class="text-sm font-semibold">KapiBot - Asistente de Nómina</h2>
-              </div>
-              <button id="kapibot-close" type="button" class="rounded-full p-1 transition hover:bg-blue-600" aria-label="Cerrar chat">
-                <span class="material-symbols-outlined text-base">close</span>
-              </button>
-            </div>
-
-            <div id="kapibot-messages" class="h-80 space-y-3 overflow-y-auto bg-slate-50 p-4"></div>
-
-            <div id="kapibot-typing" class="hidden px-4 pb-2 text-sm text-slate-500">
-              Escribiendo...
-            </div>
-
-            <div class="border-t border-slate-200 bg-white p-3">
-              <div class="flex items-center gap-2">
-                <input id="kapibot-input" type="text" placeholder="Escribe tu pregunta de nómina..."
-                  class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
-                <button id="kapibot-send" type="button"
-                  class="inline-flex items-center justify-center rounded-xl bg-blue-600 p-2 text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
-                  aria-label="Enviar mensaje">
-                  <span class="material-symbols-outlined text-base">send</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button id="kapibot-toggle" type="button"
-            class="inline-flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition hover:bg-blue-700"
-            aria-label="Abrir KapiBot">
-            <span class="material-symbols-outlined">chat</span>
-          </button>
-        `;
-
-        document.body.appendChild(root);
-
-        const panel = document.getElementById('kapibot-panel');
-        const toggle = document.getElementById('kapibot-toggle');
-        const close = document.getElementById('kapibot-close');
-        const input = document.getElementById('kapibot-input');
-        const send = document.getElementById('kapibot-send');
-        const typing = document.getElementById('kapibot-typing');
-        const messagesEl = document.getElementById('kapibot-messages');
-
-        const messages = [
-          { role: 'assistant', text: 'Hola, soy KapiBot. ¿En qué tema de nómina te ayudo hoy?' }
-        ];
-        let isTyping = false;
-
-        const escapeHtml = (text) => String(text)
-          .replaceAll('&', '&amp;')
-          .replaceAll('<', '&lt;')
-          .replaceAll('>', '&gt;')
-          .replaceAll('"', '&quot;')
-          .replaceAll("'", '&#039;');
-
-        const renderMessages = () => {
-          messagesEl.innerHTML = messages.map((message) => {
-            const isUser = message.role === 'user';
-            return `
-              <div class="flex ${isUser ? 'justify-end' : 'justify-start'}">
-                <div class="max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
-                  isUser ? 'bg-blue-600 text-white' : 'border border-slate-200 bg-white text-slate-700'
-                }">
-                  ${escapeHtml(message.text)}
-                </div>
-              </div>
-            `;
-          }).join('');
-          messagesEl.scrollTop = messagesEl.scrollHeight;
-        };
-
-        const setTyping = (value) => {
-          isTyping = value;
-          typing.classList.toggle('hidden', !value);
-          send.disabled = value || !input.value.trim();
-          messagesEl.scrollTop = messagesEl.scrollHeight;
-        };
-
-        const sendMessage = async () => {
-          const question = input.value.trim();
-          if (!question || isTyping) return;
-
-          messages.push({ role: 'user', text: question });
-          input.value = '';
-          renderMessages();
-          setTyping(true);
-
-          try {
-            const response = await fetch(BUSINESS_COPILOT_API_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                question,
-                year: filters.year ? Number(filters.year) : undefined,
-                periodo: filters.periodo || undefined,
-              })
-            });
-
-            const data = await response.json();
-            if (!response.ok || !data?.ok) {
-              const fallback = await fetch(KAPIBOT_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question })
-              });
-              const fallbackData = await fallback.json();
-              if (!fallback.ok || !fallbackData?.ok) {
-                messages.push({ role: 'assistant', text: `Error: ${data?.error || fallbackData?.error || 'No se pudo obtener respuesta del asistente.'}` });
-              } else {
-                messages.push({ role: 'assistant', text: fallbackData.answer || 'No recibí contenido en la respuesta.' });
-              }
-            } else {
-              messages.push({ role: 'assistant', text: data.answer || 'No recibí contenido en la respuesta.' });
-            }
-          } catch (error) {
-            messages.push({ role: 'assistant', text: 'Error de conexión con KapiBot. Inténtalo nuevamente en unos segundos.' });
-          } finally {
-            setTyping(false);
-            renderMessages();
-          }
-        };
-
-        toggle.addEventListener('click', () => {
-          panel.classList.toggle('hidden');
+      // Bridge para KapiBot React widget — expone contexto del dashboard
+      window.__getKapibotContext = function() {
+        // Compute per-area breakdown for causal AI analysis
+        const areaMap = {};
+        (lastFilteredEmployees || []).forEach(e => {
+          const a = e.area || 'Sin area';
+          if (!areaMap[a]) areaMap[a] = { area: a, cost: 0, employees: new Set(), totalSalary: 0, overtimeTotal: 0 };
+          areaMap[a].cost += (e.total_ingresos || 0) + (e.total_provisiones || 0);
+          if (e.cedula) areaMap[a].employees.add(e.cedula);
+          areaMap[a].totalSalary += (e.total_ingresos || 0);
+          areaMap[a].overtimeTotal += (e.h_ext_100 || 0) + (e.h_ext_50 || 0) + (e.recnocturno || 0);
         });
-        close.addEventListener('click', () => panel.classList.add('hidden'));
-        send.addEventListener('click', sendMessage);
-        input.addEventListener('input', () => {
-          send.disabled = isTyping || !input.value.trim();
-        });
-        input.addEventListener('keydown', (event) => {
-          if (event.key === 'Enter') sendMessage();
-        });
+        const areaBreakdown = Object.values(areaMap).map(a => ({
+          area: a.area,
+          cost: a.cost,
+          employees: a.employees.size,
+          avgSalary: a.employees.size > 0 ? a.totalSalary / a.employees.size : 0,
+          overtimeTotal: a.overtimeTotal
+        })).sort((a, b) => b.cost - a.cost);
 
-        renderMessages();
-        setTyping(false);
+        return {
+          totalEmpleados: allEmployees.length,
+          empleadosFiltrados: lastFilteredEmployees.length,
+          kpis: lastDashboardData?.kpis || [],
+          monthlyCosts: lastDashboardData?.monthly_costs || [],
+          costBreakdown: lastDashboardData?.cost_breakdown || [],
+          filters: { ...filters },
+          areas: [...new Set(allEmployees.map(e => e.area))],
+          periodoActual: filters.periodo || 'todos',
+          areaBreakdown,
+        };
       };
 
       // Actualizar todas las vistas con datos filtrados
@@ -2858,13 +2798,30 @@
 
         renderInsights(employees, dashboardData);
         buildAlertsStrip(employees);
-        
+
         // Calcular KPIs desde empleados filtrados
         const totalIngresos = employees.reduce((sum, e) => sum + (e.total_ingresos || 0), 0);
         const totalDescuentos = employees.reduce((sum, e) => sum + (e.total_descuentos || 0), 0);
         const totalProvisiones = employees.reduce((sum, e) => sum + (e.total_provisiones || 0), 0);
         const totalNeto = employees.reduce((sum, e) => sum + (e.a_recibir || 0), 0);
         const costoPromedio = employees.length > 0 ? (totalIngresos + totalProvisiones) / employees.length : 0;
+
+        // Mobile KPI bar (3 KPIs criticos en <3s)
+        const costoTotal = totalIngresos + totalProvisiones;
+        document.getElementById('mobile-kpi-costo').textContent = formatCurrency(costoTotal, currency);
+        document.getElementById('mobile-kpi-emp').textContent = String(employees.length);
+        // Variacion mes a mes
+        const monthlyCostsForVar = dashboardData?.monthly_costs || calcMonthlyCosts(employees);
+        if (monthlyCostsForVar.length >= 2) {
+          const last = monthlyCostsForVar[monthlyCostsForVar.length - 1].costo_total;
+          const prev = monthlyCostsForVar[monthlyCostsForVar.length - 2].costo_total;
+          const varPct = prev > 0 ? ((last - prev) / prev * 100) : 0;
+          const varEl = document.getElementById('mobile-kpi-var');
+          varEl.textContent = (varPct >= 0 ? '+' : '') + varPct.toFixed(1) + '%';
+          varEl.className = 'text-sm font-bold ' + (varPct > 0 ? 'text-rose-500' : 'text-emerald-500');
+        } else {
+          document.getElementById('mobile-kpi-var').textContent = '--';
+        }
         
         const kpis = [
           { key: 'costo_total', label: "Costo Total Nómina", value: totalIngresos + totalProvisiones, icon: "payments" },
@@ -2887,14 +2844,61 @@
         
         // Calcular costos mensuales desde empleados filtrados
         const monthlyCosts = calcMonthlyCosts(employees);
-        
+
         buildMonthlyLineChart(monthlyCosts, currency);
         buildPieChart('contrato', distContrato);
         buildPieChart('area', distArea);
         setupScrollReveal();
         renderAdvancedSuite();
+
+        // Proactive AI insights (async, non-blocking)
+        requestProactiveInsights(employees, dashboardData);
       };
-      
+
+      // Proactive insight engine — asks AI to detect anomalies
+      let insightDebounce = null;
+      const requestProactiveInsights = (employees, dashboardData) => {
+        clearTimeout(insightDebounce);
+        insightDebounce = setTimeout(async () => {
+          const container = document.getElementById('proactive-insights');
+          if (!container || !employees.length) { if (container) container.classList.add('hidden'); return; }
+          try {
+            const ctx = window.__getKapibotContext ? window.__getKapibotContext() : null;
+            if (!ctx) return;
+            const contextStr = `Empleados: ${ctx.totalEmpleados}. KPIs: ${(ctx.kpis || []).map(k => k.label + '=' + k.value).join(', ')}. Areas: ${(ctx.areas || []).join(', ')}. Periodo: ${ctx.periodoActual}.`;
+            const res = await fetch('/.netlify/functions/ai', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                action: 'chat',
+                messages: [{ role: 'user', content: '[INSIGHT_MODE] Analiza los datos actuales y detecta las 2 anomalias o patrones mas importantes. Para cada una, explica POR QUE ocurre. Responde JSON: {"insights": [{"titulo": "...", "explicacion": "...", "severidad": "alta|media|baja"}], "message": "resumen"}' }],
+                pageContext: contextStr
+              })
+            });
+            const data = await res.json();
+            const parsed = typeof data.message === 'string' ? (() => { try { return JSON.parse(data.message); } catch { return data; } })() : data;
+            const insights = parsed.insights || [];
+            if (insights.length === 0) { container.classList.add('hidden'); return; }
+            container.innerHTML = '';
+            container.classList.remove('hidden');
+            const sevColors = { alta: 'from-rose-50 to-white border-rose-100 text-rose-600', media: 'from-amber-50 to-white border-amber-100 text-amber-600', baja: 'from-emerald-50 to-white border-emerald-100 text-emerald-600' };
+            const sevIcons = { alta: 'warning', media: 'info', baja: 'check_circle' };
+            insights.slice(0, 2).forEach(ins => {
+              const sev = ins.severidad || 'media';
+              const cls = sevColors[sev] || sevColors.media;
+              const icon = sevIcons[sev] || 'info';
+              const card = document.createElement('div');
+              card.className = `bg-gradient-to-br ${cls} border rounded-xl p-4`;
+              card.innerHTML = `<div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-lg">${icon}</span><p class="text-xs font-bold uppercase tracking-wider">Insight AI &middot; ${sev}</p></div><p class="text-sm font-semibold text-slate-800 mb-1">${ins.titulo}</p><p class="text-xs text-slate-600 leading-relaxed">${ins.explicacion}</p>`;
+              container.appendChild(card);
+            });
+          } catch (e) {
+            // Silent fail — proactive insights are non-critical
+            console.debug('Proactive insights skipped:', e.message);
+          }
+        }, 3000);
+      };
+
       // Calcular distribución por campo
       const calcDistribution = (employees, field) => {
         const counts = {};
@@ -2908,12 +2912,15 @@
       };
       
       // Calcular costos mensuales desde empleados
+      const monthNames = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
       const calcMonthlyCosts = (employees) => {
         const monthly = {};
         employees.forEach(e => {
           const periodo = e.periodo || 'Sin período';
+          const m = String(periodo).match(/^(\d{4})-(\d{2})$/);
+          const monthLabel = m ? monthNames[Number(m[2]) - 1] || periodo : periodo;
           if (!monthly[periodo]) {
-            monthly[periodo] = { periodo, month: periodo, costo_total: 0, ingresos: 0, total_ingresos: 0, total_provisiones: 0 };
+            monthly[periodo] = { periodo, month: monthLabel, costo_total: 0, ingresos: 0, total_ingresos: 0, total_provisiones: 0 };
           }
           monthly[periodo].total_ingresos += (e.total_ingresos || 0);
           monthly[periodo].total_provisiones += (e.total_provisiones || 0);
@@ -2937,7 +2944,7 @@
 
         kpis.forEach((kpi, index) => {
           const card = document.createElement("div");
-          card.className = "bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer";
+          card.className = "bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer";
           card.dataset.kpiKey = kpi.key || '';
           card.dataset.kpiLabel = kpi.label;
           card.innerHTML = `
@@ -3144,11 +3151,11 @@
           path.setAttribute("stroke-linejoin", "round");
           activeSvg.appendChild(path);
           
-          // Puntos
+          // Puntos con click-to-filter
           data.forEach((d, i) => {
             const x = xScale(i);
             const y = yScale(d[key] || 0);
-            
+
             const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             circle.setAttribute("cx", x);
             circle.setAttribute("cy", y);
@@ -3156,6 +3163,20 @@
             circle.setAttribute("fill", color);
             circle.setAttribute("stroke", "white");
             circle.setAttribute("stroke-width", "2");
+            circle.style.cursor = 'pointer';
+            circle.style.transition = 'r 0.15s ease';
+            circle.addEventListener('mouseenter', () => circle.setAttribute("r", "7"));
+            circle.addEventListener('mouseleave', () => circle.setAttribute("r", "4"));
+            circle.addEventListener('click', () => {
+              const periodo = monthlyData[i]?.periodo;
+              if (periodo) {
+                filters.periodo = periodo;
+                const periodoSelect = document.getElementById('filter-periodo');
+                if (periodoSelect) periodoSelect.value = periodo;
+                loadDashboard(periodo, filters.year);
+                pushToast('Filtrado a periodo: ' + (monthlyData[i].month || periodo));
+              }
+            });
             activeSvg.appendChild(circle);
           });
         };
@@ -3205,6 +3226,8 @@
         
         svg.setAttribute("viewBox", "0 0 144 144");
         
+        const labelFontSize = data.length > 5 ? '11px' : '13px';
+        
         data.forEach((item, index) => {
           const percent = (item.count / total) * 100;
           const segmentLength = (percent / 100) * circumference;
@@ -3218,20 +3241,37 @@
           circle.setAttribute("stroke-width", "24");
           circle.setAttribute("stroke-dasharray", `${segmentLength} ${circumference - segmentLength}`);
           circle.setAttribute("stroke-dashoffset", (-offset).toString());
+          circle.style.cursor = 'pointer';
+          circle.style.transition = 'opacity 0.15s';
+          circle.addEventListener('mouseenter', () => circle.setAttribute("stroke-width", "28"));
+          circle.addEventListener('mouseleave', () => circle.setAttribute("stroke-width", "24"));
+          circle.addEventListener('click', () => {
+            if (type === 'area') { filters.area = item.label; document.getElementById('filter-area').value = item.label; }
+            else if (type === 'contrato') { filters.contrato = item.label; document.getElementById('filter-contrato').value = item.label; }
+            applyFilters();
+            pushToast('Filtrado por: ' + item.label);
+          });
           svg.appendChild(circle);
 
           offset += segmentLength;
-          
-          // Leyenda
+
+          // Leyenda con texto ajustable + click-to-filter
           const row = document.createElement("div");
-          row.className = "flex items-center justify-between text-sm";
+          row.className = "flex items-center justify-between gap-2 cursor-pointer hover:bg-slate-50 rounded px-1 -mx-1 transition-colors";
+          row.style.fontSize = labelFontSize;
           row.innerHTML = `
-            <div class="flex items-center gap-2">
-              <div class="w-3 h-3 rounded-full" style="background:${colors[index % colors.length]}"></div>
-              <span class="text-slate-600 truncate max-w-[120px]" title="${item.label}">${item.label}</span>
+            <div class="flex items-center gap-1.5 min-w-0 flex-1">
+              <div class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${colors[index % colors.length]}"></div>
+              <span class="text-slate-600 truncate" title="${item.label}">${item.label}</span>
             </div>
-            <span class="font-semibold text-slate-700">${item.count}</span>
+            <span class="font-semibold text-slate-700 shrink-0">${item.count} <span class="text-[10px] text-slate-400">(${percent.toFixed(0)}%)</span></span>
           `;
+          row.addEventListener('click', () => {
+            if (type === 'area') { filters.area = item.label; document.getElementById('filter-area').value = item.label; }
+            else if (type === 'contrato') { filters.contrato = item.label; document.getElementById('filter-contrato').value = item.label; }
+            applyFilters();
+            pushToast('Filtrado por: ' + item.label);
+          });
           legend.appendChild(row);
         });
       };
@@ -3306,7 +3346,7 @@
         
         // Agrupar datos por período
         const periodoData = {};
-        employees.forEach(e => {
+        (employees || []).forEach(e => {
           const periodo = e.periodo || 'Sin período';
           if (!periodoData[periodo]) {
             periodoData[periodo] = { decimo_13: 0, decimo_14: 0, vacaciones_prov: 0, fondos_reserva: 0, iess_patronal: 0, total: 0 };
@@ -3318,6 +3358,16 @@
           periodoData[periodo].iess_patronal += (e.iess_patronal || 0);
           periodoData[periodo].total += (e.decimo_13 || 0) + (e.decimo_14 || 0) + (e.vacaciones_prov || 0) + (e.fondos_reserva || 0) + (e.iess_patronal || 0);
         });
+
+        // Proyección del 13er sueldo para diciembre
+        const periodosCount = Object.keys(periodoData).length || [...new Set((employees || []).map(e => e.periodo))].filter(Boolean).length || 1;
+        const d13Monthly = d13 / periodosCount;
+        const d13Projected = d13Monthly * 12;
+        const now13 = new Date();
+        const monthsLeft = Math.max(0, 11 - now13.getMonth() + (now13.getDate() <= 24 ? 1 : 0));
+        if (document.getElementById('prov-d13-monthly')) document.getElementById('prov-d13-monthly').textContent = formatCurrency(d13Monthly, currency);
+        if (document.getElementById('prov-d13-projected')) document.getElementById('prov-d13-projected').textContent = formatCurrency(d13Projected, currency);
+        if (document.getElementById('prov-d13-months-left')) document.getElementById('prov-d13-months-left').textContent = String(monthsLeft);
         
         // Ordenar períodos cronológicamente
         const sortedPeriodos = Object.keys(periodoData).sort();
@@ -3539,17 +3589,15 @@
         
         const absPersonal = Math.abs(iessPersonal);
         const absPatronal = Math.abs(iessPatronal);
-        const absFondos = Math.abs(fondosReserva);
-        const total = absPersonal + absPatronal + absFondos;
+        const total = absPersonal + absPatronal;
         const donutData = [
           { label: "IESS Personal", value: absPersonal, percent: total > 0 ? (absPersonal / total * 100) : 0 },
-          { label: "IESS Patronal", value: absPatronal, percent: total > 0 ? (absPatronal / total * 100) : 0 },
-          { label: "Fondos Reserva", value: absFondos, percent: total > 0 ? (absFondos / total * 100) : 0 }
+          { label: "IESS Patronal", value: absPatronal, percent: total > 0 ? (absPatronal / total * 100) : 0 }
         ];
         
         const radius = 70;
         const circumference = 2 * Math.PI * radius;
-        const donutColors = ["#ef4444", "#6366f1", "#13a4ec"];
+        const donutColors = ["#ef4444", "#6366f1"];
         let offset = 0;
 
         donutData.forEach((item, index) => {
@@ -3795,22 +3843,73 @@
         }
       };
 
-      // Exportar CSV
+      // Exportar CSV (tabla detalle de la pestaña activa)
       document.getElementById('export-csv').addEventListener('click', () => {
         const filtered = applyFiltersToData(allEmployees);
-        const headers = ['Nombre', 'Cédula', 'Área', 'Contrato', 'Ingresos', 'Descuentos', 'Provisiones', 'Neto'];
-        const rows = filtered.map(e => [
-          e.nombre, e.cedula, e.area, e.tipo_contrato,
-          e.total_ingresos, e.total_descuentos, e.total_provisiones, e.a_recibir
-        ]);
+        let headers, rows, filename;
         
-        const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-        const blob = new Blob([csv], { type: 'text/csv' });
+        switch (currentPage) {
+          case 'provisiones':
+            headers = ['Nombre', 'Período', 'Décimo 13', 'Décimo 14', 'Vacaciones', 'Fondos Reserva', 'IESS Patronal', 'Total'];
+            rows = filtered.map(e => [
+              e.nombre, e.periodo,
+              e.decimo_13 || 0, e.decimo_14 || 0, e.vacaciones_prov || 0,
+              e.fondos_reserva || 0, e.iess_patronal || 0,
+              (e.decimo_13 || 0) + (e.decimo_14 || 0) + (e.vacaciones_prov || 0) + (e.fondos_reserva || 0) + (e.iess_patronal || 0)
+            ]);
+            filename = 'provisiones_kapiroll.csv';
+            break;
+          case 'iess':
+            headers = ['Nombre', 'Período', 'IESS Personal', 'Pr. Hipotecario', 'Pr. Quirografario', 'IESS Patronal', 'Fondos Reserva', 'Total'];
+            rows = filtered.map(e => [
+              e.nombre, e.periodo,
+              e.iess_personal || 0, e.pr_h_iess || 0, e.pr_q_iess || 0,
+              e.iess_patronal || 0, e.fondos_reserva || 0,
+              (e.iess_personal || 0) + (e.iess_patronal || 0) + (e.pr_h_iess || 0) + (e.pr_q_iess || 0)
+            ]);
+            filename = 'iess_kapiroll.csv';
+            break;
+          case 'horas-extra':
+            headers = ['Nombre', 'Período', 'Área', 'H.Extra 100%', 'H.Extra 50%', 'Rec. Nocturno', 'Total'];
+            rows = filtered
+              .filter(e => (e.h_ext_100 || 0) > 0 || (e.h_ext_50 || 0) > 0 || (e.recnocturno || 0) > 0)
+              .map(e => [
+                e.nombre, e.periodo, e.area,
+                e.h_ext_100 || 0, e.h_ext_50 || 0, e.recnocturno || 0,
+                (e.h_ext_100 || 0) + (e.h_ext_50 || 0) + (e.recnocturno || 0)
+              ]);
+            filename = 'horas_extra_kapiroll.csv';
+            break;
+          case 'empleados':
+            headers = ['Nombre', 'Período', 'Cédula', 'Área', 'Contrato', 'Fecha Ingreso', 'Ingresos', 'Neto'];
+            rows = filtered.map(e => [
+              e.nombre, e.periodo, e.cedula, e.area, e.tipo_contrato,
+              e.fecha_ingreso, e.total_ingresos, e.a_recibir
+            ]);
+            filename = 'empleados_kapiroll.csv';
+            break;
+          default:
+            headers = ['Nombre', 'Cédula', 'Área', 'Contrato', 'Ingresos', 'Descuentos', 'Provisiones', 'Neto'];
+            rows = filtered.map(e => [
+              e.nombre, e.cedula, e.area, e.tipo_contrato,
+              e.total_ingresos, e.total_descuentos, e.total_provisiones, e.a_recibir
+            ]);
+            filename = 'nomina_kapiroll.csv';
+        }
+        
+        const escapeCsvField = (field) => {
+          const str = String(field ?? '');
+          return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str.replace(/"/g, '""')}"` : str;
+        };
+        const csv = [headers.join(','), ...rows.map(r => r.map(escapeCsvField).join(','))].join('\n');
+        const bom = '\uFEFF';
+        const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'nomina_kapiroll.csv';
+        a.download = filename;
         a.click();
+        URL.revokeObjectURL(url);
       });
 
       const applyFiltersToData = (employees) => {
@@ -3998,15 +4097,109 @@
         localStorage.setItem('tablero_onboarding_seen', '1');
       });
 
+      // ── CONFIG PAGE LOGIC ──
+      const initConfigPage = () => {
+        // Load saved thresholds
+        const savedThresholds = JSON.parse(localStorage.getItem('tablero_thresholds') || '{}');
+        if (savedThresholds.budget) document.getElementById('config-budget-threshold').value = savedThresholds.budget;
+        if (savedThresholds.he) document.getElementById('config-he-threshold').value = savedThresholds.he;
+        if (savedThresholds.email) document.getElementById('config-alert-email').value = savedThresholds.email;
+
+        // Load saved budget
+        const savedBudget = localStorage.getItem('tablero_budget');
+        if (savedBudget && document.getElementById('budget-input')) {
+          document.getElementById('budget-input').value = savedBudget;
+        }
+
+        // Save thresholds
+        document.getElementById('config-save-thresholds')?.addEventListener('click', () => {
+          const thresholds = {
+            budget: Number(document.getElementById('config-budget-threshold')?.value || 10),
+            he: Number(document.getElementById('config-he-threshold')?.value || 500),
+            email: document.getElementById('config-alert-email')?.value || ''
+          };
+          localStorage.setItem('tablero_thresholds', JSON.stringify(thresholds));
+          logAudit('umbrales_guardados', JSON.stringify(thresholds));
+          pushToast('Umbrales guardados correctamente');
+        });
+
+        // Render goals editors
+        const renderConfigGoals = () => {
+          const node = document.getElementById('config-goals-area');
+          if (!node) return;
+          const byArea = {};
+          lastFilteredEmployees.forEach((e) => {
+            const area = e.area || 'Sin area';
+            byArea[area] = (byArea[area] || 0) + (e.total_ingresos || 0) + (e.total_provisiones || 0);
+          });
+          const goals = JSON.parse(localStorage.getItem('tablero_area_goals') || '{}');
+          node.innerHTML = Object.entries(byArea).map(([area, value]) => {
+            const goal = goals[area] || Math.round(value * 0.96);
+            return `
+              <div class="rounded-lg border border-gray-200 p-3">
+                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">${area}</label>
+                <p class="text-xs text-gray-400 mb-1">Actual: ${formatCurrency(value, 'USD')}</p>
+                <input type="number" class="config-goal-input w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  data-area="${area}" value="${goal}" placeholder="Meta mensual" />
+              </div>
+            `;
+          }).join('') || '<p class="text-sm text-gray-500 col-span-3">Carga datos en el dashboard primero para definir objetivos por área.</p>';
+        };
+
+        // Observe page switch to render goals
+        const observer = new MutationObserver(() => {
+          const configPage = document.getElementById('page-config');
+          if (configPage && !configPage.classList.contains('hidden')) {
+            renderConfigGoals();
+            updateBudgetVsReal();
+          }
+        });
+        const configPage = document.getElementById('page-config');
+        if (configPage) observer.observe(configPage, { attributes: true, attributeFilter: ['class'] });
+
+        // Save goals
+        document.getElementById('config-save-goals')?.addEventListener('click', () => {
+          const goals = {};
+          document.querySelectorAll('.config-goal-input').forEach(input => {
+            if (input.dataset.area) goals[input.dataset.area] = Number(input.value || 0);
+          });
+          localStorage.setItem('tablero_area_goals', JSON.stringify(goals));
+          logAudit('objetivos_guardados', JSON.stringify(goals));
+          pushToast('Objetivos por área guardados');
+          renderGoalsByArea();
+        });
+
+        // Save general preferences
+        document.getElementById('config-save-general')?.addEventListener('click', () => {
+          const prefs = {
+            currency: document.getElementById('config-currency')?.value,
+            dateFormat: document.getElementById('config-date-format')?.value,
+            defaultRole: document.getElementById('config-default-role')?.value,
+            dataSource: document.getElementById('config-data-source')?.value
+          };
+          localStorage.setItem('tablero_preferences', JSON.stringify(prefs));
+          logAudit('preferencias_guardadas', JSON.stringify(prefs));
+          pushToast('Preferencias guardadas');
+        });
+
+        // Load saved preferences
+        const savedPrefs = JSON.parse(localStorage.getItem('tablero_preferences') || '{}');
+        if (savedPrefs.currency) document.getElementById('config-currency').value = savedPrefs.currency;
+        if (savedPrefs.dateFormat) document.getElementById('config-date-format').value = savedPrefs.dateFormat;
+        if (savedPrefs.defaultRole) document.getElementById('config-default-role').value = savedPrefs.defaultRole;
+        if (savedPrefs.dataSource) document.getElementById('config-data-source').value = savedPrefs.dataSource;
+      };
+
+      initConfigPage();
       initCommandPalette();
       applyRolePreset(selectedRole, false);
       initTheme();
-      initKapiBotUI();
       if (!localStorage.getItem('tablero_onboarding_seen')) {
         document.getElementById('onboarding-overlay')?.classList.remove('hidden');
       }
       verifyDataSource();
       loadDashboard();
     </script>
+    <script src="./kapibot.js" defer></script>
   </body>
 </html>
