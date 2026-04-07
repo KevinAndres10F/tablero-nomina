@@ -292,35 +292,78 @@ def get_forecast(
     return result
 
 
-@app.post("/api/alerts/email")
-def send_email_alert(payload: EmailAlertRequest):
+def _send_via_gmail_oauth2(to: str, subject: str, body: str) -> dict:
+    """Send email using Gmail API with OAuth2 refresh token."""
+    import base64
+    from google.oauth2.credentials import Credentials
+    from googleapiclient.discovery import build
+
+    client_id = os.getenv("GMAIL_CLIENT_ID", "").strip()
+    client_secret = os.getenv("GMAIL_CLIENT_SECRET", "").strip()
+    refresh_token = os.getenv("GMAIL_REFRESH_TOKEN", "").strip()
+    from_email = os.getenv("GMAIL_FROM", "").strip()
+
+    if not all([client_id, client_secret, refresh_token, from_email]):
+        return {"ok": False, "error": "Gmail OAuth2 no configurado. Define GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN y GMAIL_FROM."}
+
+    creds = Credentials(
+        token=None,
+        refresh_token=refresh_token,
+        token_uri="https://oauth2.googleapis.com/token",
+        client_id=client_id,
+        client_secret=client_secret,
+        scopes=["https://mail.google.com/"],
+    )
+
+    service = build("gmail", "v1", credentials=creds)
+
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = from_email
+    msg["To"] = to
+    msg.set_content(body)
+
+    raw = base64.urlsafe_b64encode(msg.as_bytes()).decode("utf-8")
+    service.users().messages().send(userId="me", body={"raw": raw}).execute()
+    return {"ok": True, "message": "Alerta enviada por correo (Gmail OAuth2)."}
+
+
+def _send_via_smtp(to: str, subject: str, body: str) -> dict:
+    """Send email using basic SMTP with App Password."""
     smtp_host = os.getenv("SMTP_HOST", "").strip()
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
     smtp_user = os.getenv("SMTP_USER", "").strip()
     smtp_password = os.getenv("SMTP_PASSWORD", "").strip()
     from_email = os.getenv("SMTP_FROM", smtp_user).strip()
 
-    if not smtp_host or not smtp_user or not smtp_password or not from_email:
-        return {
-            "ok": False,
-            "error": "SMTP no configurado. Define SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD y SMTP_FROM."
-        }
+    if not all([smtp_host, smtp_user, smtp_password, from_email]):
+        return {"ok": False, "error": "SMTP no configurado. Define SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD y SMTP_FROM."}
 
     msg = EmailMessage()
-    msg["Subject"] = payload.subject or "KAPIROLL - Alerta Operativa"
+    msg["Subject"] = subject
     msg["From"] = from_email
-    msg["To"] = payload.to
-    msg.set_content(payload.message)
+    msg["To"] = to
+    msg.set_content(body)
+
+    with smtplib.SMTP(smtp_host, smtp_port, timeout=20) as server:
+        server.starttls()
+        server.login(smtp_user, smtp_password)
+        server.send_message(msg)
+    return {"ok": True, "message": "Alerta enviada por correo (SMTP)."}
+
+
+@app.post("/api/alerts/email")
+def send_email_alert(payload: EmailAlertRequest):
+    subject = payload.subject or "KAPIROLL - Alerta Operativa"
 
     try:
-        with smtplib.SMTP(smtp_host, smtp_port, timeout=20) as server:
-            server.starttls()
-            server.login(smtp_user, smtp_password)
-            server.send_message(msg)
+        # Try Gmail OAuth2 first, fallback to SMTP
+        if os.getenv("GMAIL_REFRESH_TOKEN", "").strip():
+            return _send_via_gmail_oauth2(payload.to, subject, payload.message)
+        else:
+            return _send_via_smtp(payload.to, subject, payload.message)
     except Exception as exc:
         return {"ok": False, "error": f"No se pudo enviar correo: {exc}"}
-
-    return {"ok": True, "message": "Alerta enviada por correo."}
 
 
 @app.post("/api/copilot/business-chat")
