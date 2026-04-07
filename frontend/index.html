@@ -832,18 +832,21 @@
           <div class="advanced-grid grid-cols-1 xl:grid-cols-3 mb-8" id="advanced-suite">
             <div class="advanced-card xl:col-span-2">
               <div class="flex items-center justify-between mb-3">
-                <p class="tiny-label">Centro de Alertas</p>
-                <button id="add-alert-task" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50">Nueva tarea</button>
+                <div>
+                  <p class="tiny-label">Centro de Alertas</p>
+                  <p class="text-xs text-gray-400 mt-0.5">Crea tareas de seguimiento y envía notificaciones por correo</p>
+                </div>
+                <button id="add-alert-task" class="text-xs font-medium px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-colors">+ Nueva tarea</button>
               </div>
               <div id="alerts-workflow" class="space-y-2 mb-3"></div>
               <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
-                <input id="alert-owner" class="rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="Responsable" />
-                <input id="alert-note" class="rounded-lg border border-slate-200 px-3 py-2 text-sm sm:col-span-2" placeholder="Accion a ejecutar" />
-                <input id="alert-deadline" type="date" class="rounded-lg border border-slate-200 px-3 py-2 text-sm" />
+                <input id="alert-owner" class="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Responsable" />
+                <input id="alert-note" class="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent sm:col-span-2" placeholder="Acción a ejecutar" />
+                <input id="alert-deadline" type="date" class="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 mt-2">
-                <input id="alert-email-to" type="email" class="rounded-lg border border-slate-200 px-3 py-2 text-sm sm:col-span-3" placeholder="Correo destino para alerta" />
-                <button id="send-alert-email" class="rounded-lg bg-slate-900 text-white px-3 py-2 text-sm font-semibold hover:bg-slate-800">Enviar correo</button>
+                <input id="alert-email-to" type="email" class="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent sm:col-span-3" placeholder="Correo destino para alerta" />
+                <button id="send-alert-email" class="rounded-lg bg-blue-600 hover:bg-blue-700 text-white px-3 py-2.5 text-sm font-medium shadow-sm transition-colors">Enviar correo</button>
               </div>
             </div>
             <div class="advanced-card">
@@ -862,20 +865,12 @@
               <div id="sim-result" class="mt-3 rounded-lg border border-slate-200 bg-white p-3 text-sm text-slate-600"></div>
             </div>
 
-            <div class="advanced-card">
-              <p class="tiny-label mb-3">Presupuesto vs Real</p>
-              <div class="space-y-2">
-                <input id="budget-input" type="number" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="Presupuesto mensual" />
-                <button id="budget-save" class="w-full rounded-lg bg-primary text-white px-3 py-2 text-sm font-semibold">Guardar presupuesto</button>
+            <div class="advanced-card xl:col-span-3">
+              <div class="flex items-center justify-between mb-3">
+                <p class="tiny-label">Objetivos por Área</p>
+                <a href="#" data-page="config" class="nav-link text-xs font-medium text-primary hover:underline">Editar objetivos →</a>
               </div>
-              <div id="budget-result" class="mt-3 rounded-lg border border-slate-200 bg-white p-3 text-sm"></div>
-            </div>
-            <div class="advanced-card xl:col-span-2">
-              <p class="tiny-label mb-3">Objetivos por Área</p>
-              <div class="rounded-lg bg-slate-50 border border-slate-200 px-3 py-2 mb-3 text-xs text-slate-600">
-                <strong>Origen de metas:</strong> Los objetivos se calculan automáticamente como el 96% del costo real del área. Puedes personalizar las metas por área haciendo clic en el valor y editándolo; se guardan en tu navegador (localStorage).
-              </div>
-              <div id="goals-area" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+              <div id="goals-area" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
             </div>
 
             <div class="advanced-card">
@@ -885,22 +880,7 @@
               </div>
               <div id="forecast-summary" class="space-y-2 text-sm"></div>
             </div>
-            <div class="advanced-card xl:col-span-2">
-              <p class="tiny-label mb-3">Copilot de Negocio</p>
-              <div class="rounded-lg bg-indigo-50 border border-indigo-200 px-3 py-2 mb-3 text-xs text-indigo-800">
-                <strong>¿Cómo funciona?</strong> El Copilot analiza los datos de nómina del período y año seleccionados en los filtros. Detecta patrones de concentración de costo por área, variaciones mensuales y riesgos operativos. Prueba preguntas como: "¿Cuál es el mayor riesgo?", "¿Qué área explica más el costo?" o "¿Qué acciones tomar para reducir la desviación?". Las respuestas se basan en los datos reales de tu nómina.
-              </div>
-              <div class="flex flex-wrap gap-2 mb-3">
-                <button class="text-xs px-2 py-1 rounded border border-slate-200 hover:bg-slate-50" data-copilot-prompt="¿Cuál es el mayor riesgo de costo este mes?">Riesgo principal</button>
-                <button class="text-xs px-2 py-1 rounded border border-slate-200 hover:bg-slate-50" data-copilot-prompt="¿Qué área explica más el costo y por qué?">Driver por área</button>
-                <button class="text-xs px-2 py-1 rounded border border-slate-200 hover:bg-slate-50" data-copilot-prompt="¿Qué acciones priorizar para reducir la desviación?">Plan de acción</button>
-              </div>
-              <div class="flex gap-2 mb-2">
-                <input id="business-copilot-input" class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="Pregunta de negocio (costos, riesgos, áreas, acciones)" />
-                <button id="business-copilot-send" class="rounded-lg bg-primary text-white px-3 py-2 text-sm font-semibold">Preguntar</button>
-              </div>
-              <div id="business-copilot-output" class="rounded-lg border border-slate-200 bg-white p-3 text-sm text-slate-700">Haz una pregunta para recibir recomendaciones ejecutivas.</div>
-            </div>
+            <!-- Copilot de Negocio removido — funcionalidad movida a KapiBot -->
             <div class="advanced-card">
               <p class="tiny-label mb-3">Detección de Anomalías</p>
               <div id="anomaly-summary" class="space-y-2 text-sm"></div>
@@ -953,10 +933,10 @@
               <h3 class="text-lg font-bold mb-1">Desglose de Provisiones</h3>
               <p class="text-sm text-slate-500 mb-6">Distribución porcentual</p>
               <div class="relative flex justify-center mb-6">
-                <svg class="w-40 h-40 transform -rotate-90" id="donut-chart"></svg>
+                <svg class="w-44 h-44 transform -rotate-90" id="donut-chart"></svg>
                 <div class="absolute inset-0 flex items-center justify-center flex-col">
-                  <span class="text-2xl font-bold" id="donut-total">100%</span>
-                  <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">Total</span>
+                  <span class="font-bold leading-tight" id="donut-total" style="font-size:clamp(0.75rem, 3.5vw, 1.15rem)">100%</span>
+                  <span class="text-[9px] text-slate-400 font-medium uppercase tracking-widest">Total</span>
                 </div>
               </div>
               <div class="space-y-3" id="breakdown-list"></div>
@@ -1164,10 +1144,10 @@
               <h3 class="text-lg font-bold mb-2">Distribución de Aportes</h3>
               <p class="text-sm text-slate-500 mb-6">Personal vs Patronal</p>
               <div class="relative flex justify-center mb-8">
-                <svg class="w-40 h-40 transform -rotate-90" id="iess-donut"></svg>
+                <svg class="w-44 h-44 transform -rotate-90" id="iess-donut"></svg>
                 <div class="absolute inset-0 flex items-center justify-center flex-col">
-                  <span class="text-2xl font-bold" id="iess-donut-total">100%</span>
-                  <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">Total</span>
+                  <span class="font-bold leading-tight" id="iess-donut-total" style="font-size:clamp(0.75rem, 3.5vw, 1.15rem)">100%</span>
+                  <span class="text-[9px] text-slate-400 font-medium uppercase tracking-widest">Total</span>
                 </div>
               </div>
               <div class="space-y-3" id="iess-breakdown-list"></div>
@@ -1291,7 +1271,7 @@
                 <div class="relative flex justify-center">
                   <svg class="w-40 h-40 transform -rotate-90" id="he-donut"></svg>
                   <div class="absolute inset-0 flex items-center justify-center flex-col">
-                    <span class="text-lg font-bold" id="he-donut-total">$0</span>
+                    <span class="font-bold leading-tight" id="he-donut-total" style="font-size:clamp(0.75rem, 3.5vw, 1.1rem)">$0</span>
                     <span class="text-[10px] text-slate-400 uppercase">Total</span>
                   </div>
                 </div>
@@ -1325,6 +1305,107 @@
           </div>
         </div>
         <!-- FIN PÁGINA: ANÁLISIS HORAS EXTRA -->
+
+        <!-- PÁGINA: CONFIGURACIÓN -->
+        <div class="p-4 sm:p-6 lg:p-8 page-content hidden" id="page-config">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold text-slate-900">Configuración</h2>
+            <p class="text-sm text-gray-500">Ajusta presupuestos, objetivos por área y parámetros del sistema</p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Presupuesto Mensual -->
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+              <h3 class="text-lg font-semibold tracking-tight mb-1">Presupuesto Mensual</h3>
+              <p class="text-sm text-gray-500 mb-4">Define el presupuesto mensual de nómina para comparar contra el gasto real</p>
+              <div class="space-y-3">
+                <div>
+                  <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Monto del presupuesto (USD)</label>
+                  <input id="budget-input" type="number" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Ej: 50000" />
+                </div>
+                <button id="budget-save" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium shadow-sm transition-colors text-sm">
+                  Guardar presupuesto
+                </button>
+              </div>
+              <div id="budget-result" class="mt-4 rounded-lg border border-gray-200 bg-slate-50 p-4 text-sm"></div>
+            </div>
+
+            <!-- Umbrales de Alertas -->
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+              <h3 class="text-lg font-semibold tracking-tight mb-1">Umbrales de Alertas</h3>
+              <p class="text-sm text-gray-500 mb-4">Define los umbrales para generar alertas automáticas en el dashboard</p>
+              <div class="space-y-4">
+                <div>
+                  <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Desviación máxima de presupuesto (%)</label>
+                  <input id="config-budget-threshold" type="number" value="10" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="10" />
+                </div>
+                <div>
+                  <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Umbral horas extra por empleado (USD)</label>
+                  <input id="config-he-threshold" type="number" value="500" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="500" />
+                </div>
+                <div>
+                  <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Correo para alertas automáticas</label>
+                  <input id="config-alert-email" type="email" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="admin@empresa.com" />
+                </div>
+                <button id="config-save-thresholds" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium shadow-sm transition-colors text-sm">
+                  Guardar umbrales
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Objetivos por Área -->
+          <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-8">
+            <h3 class="text-lg font-semibold tracking-tight mb-1">Objetivos de Costo por Área</h3>
+            <p class="text-sm text-gray-500 mb-4">Define metas de costo mensual por departamento. Estos objetivos se muestran en el dashboard.</p>
+            <div id="config-goals-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            <button id="config-save-goals" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium shadow-sm transition-colors text-sm">
+              Guardar objetivos
+            </button>
+          </div>
+
+          <!-- Configuración General -->
+          <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+            <h3 class="text-lg font-semibold tracking-tight mb-1">Preferencias Generales</h3>
+            <p class="text-sm text-gray-500 mb-4">Ajustes de visualización y comportamiento del tablero</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Moneda de visualización</label>
+                <select id="config-currency" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="USD">USD — Dólar estadounidense</option>
+                  <option value="EUR">EUR — Euro</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Formato de fecha</label>
+                <select id="config-date-format" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                  <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                  <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Rol por defecto</label>
+                <select id="config-default-role" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="ceo">CEO</option>
+                  <option value="finanzas">Finanzas</option>
+                  <option value="rrhh">RRHH</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">Datos de origen</label>
+                <select id="config-data-source" class="mt-1 w-full bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  <option value="bigquery">BigQuery</option>
+                  <option value="sheets">Google Sheets</option>
+                </select>
+              </div>
+            </div>
+            <button id="config-save-general" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-medium shadow-sm transition-colors text-sm">
+              Guardar preferencias
+            </button>
+          </div>
+        </div>
+        <!-- FIN PÁGINA: CONFIGURACIÓN -->
 
       </main>
     </div>
@@ -1445,9 +1526,9 @@
       };
 
       const ROLE_PAGE_ACCESS = {
-        ceo: ['dashboard', 'provisiones', 'iess', 'horas-extra'],
-        finanzas: ['dashboard', 'provisiones', 'iess'],
-        rrhh: ['dashboard', 'empleados', 'horas-extra']
+        ceo: ['dashboard', 'provisiones', 'iess', 'horas-extra', 'config'],
+        finanzas: ['dashboard', 'provisiones', 'iess', 'config'],
+        rrhh: ['dashboard', 'empleados', 'horas-extra', 'config']
       };
 
       const getBanner = () => document.getElementById('data-status-banner');
@@ -4016,6 +4097,100 @@
         localStorage.setItem('tablero_onboarding_seen', '1');
       });
 
+      // ── CONFIG PAGE LOGIC ──
+      const initConfigPage = () => {
+        // Load saved thresholds
+        const savedThresholds = JSON.parse(localStorage.getItem('tablero_thresholds') || '{}');
+        if (savedThresholds.budget) document.getElementById('config-budget-threshold').value = savedThresholds.budget;
+        if (savedThresholds.he) document.getElementById('config-he-threshold').value = savedThresholds.he;
+        if (savedThresholds.email) document.getElementById('config-alert-email').value = savedThresholds.email;
+
+        // Load saved budget
+        const savedBudget = localStorage.getItem('tablero_budget');
+        if (savedBudget && document.getElementById('budget-input')) {
+          document.getElementById('budget-input').value = savedBudget;
+        }
+
+        // Save thresholds
+        document.getElementById('config-save-thresholds')?.addEventListener('click', () => {
+          const thresholds = {
+            budget: Number(document.getElementById('config-budget-threshold')?.value || 10),
+            he: Number(document.getElementById('config-he-threshold')?.value || 500),
+            email: document.getElementById('config-alert-email')?.value || ''
+          };
+          localStorage.setItem('tablero_thresholds', JSON.stringify(thresholds));
+          logAudit('umbrales_guardados', JSON.stringify(thresholds));
+          pushToast('Umbrales guardados correctamente');
+        });
+
+        // Render goals editors
+        const renderConfigGoals = () => {
+          const node = document.getElementById('config-goals-area');
+          if (!node) return;
+          const byArea = {};
+          lastFilteredEmployees.forEach((e) => {
+            const area = e.area || 'Sin area';
+            byArea[area] = (byArea[area] || 0) + (e.total_ingresos || 0) + (e.total_provisiones || 0);
+          });
+          const goals = JSON.parse(localStorage.getItem('tablero_area_goals') || '{}');
+          node.innerHTML = Object.entries(byArea).map(([area, value]) => {
+            const goal = goals[area] || Math.round(value * 0.96);
+            return `
+              <div class="rounded-lg border border-gray-200 p-3">
+                <label class="text-xs font-medium text-gray-600 uppercase tracking-wider">${area}</label>
+                <p class="text-xs text-gray-400 mb-1">Actual: ${formatCurrency(value, 'USD')}</p>
+                <input type="number" class="config-goal-input w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  data-area="${area}" value="${goal}" placeholder="Meta mensual" />
+              </div>
+            `;
+          }).join('') || '<p class="text-sm text-gray-500 col-span-3">Carga datos en el dashboard primero para definir objetivos por área.</p>';
+        };
+
+        // Observe page switch to render goals
+        const observer = new MutationObserver(() => {
+          const configPage = document.getElementById('page-config');
+          if (configPage && !configPage.classList.contains('hidden')) {
+            renderConfigGoals();
+            updateBudgetVsReal();
+          }
+        });
+        const configPage = document.getElementById('page-config');
+        if (configPage) observer.observe(configPage, { attributes: true, attributeFilter: ['class'] });
+
+        // Save goals
+        document.getElementById('config-save-goals')?.addEventListener('click', () => {
+          const goals = {};
+          document.querySelectorAll('.config-goal-input').forEach(input => {
+            if (input.dataset.area) goals[input.dataset.area] = Number(input.value || 0);
+          });
+          localStorage.setItem('tablero_area_goals', JSON.stringify(goals));
+          logAudit('objetivos_guardados', JSON.stringify(goals));
+          pushToast('Objetivos por área guardados');
+          renderGoalsByArea();
+        });
+
+        // Save general preferences
+        document.getElementById('config-save-general')?.addEventListener('click', () => {
+          const prefs = {
+            currency: document.getElementById('config-currency')?.value,
+            dateFormat: document.getElementById('config-date-format')?.value,
+            defaultRole: document.getElementById('config-default-role')?.value,
+            dataSource: document.getElementById('config-data-source')?.value
+          };
+          localStorage.setItem('tablero_preferences', JSON.stringify(prefs));
+          logAudit('preferencias_guardadas', JSON.stringify(prefs));
+          pushToast('Preferencias guardadas');
+        });
+
+        // Load saved preferences
+        const savedPrefs = JSON.parse(localStorage.getItem('tablero_preferences') || '{}');
+        if (savedPrefs.currency) document.getElementById('config-currency').value = savedPrefs.currency;
+        if (savedPrefs.dateFormat) document.getElementById('config-date-format').value = savedPrefs.dateFormat;
+        if (savedPrefs.defaultRole) document.getElementById('config-default-role').value = savedPrefs.defaultRole;
+        if (savedPrefs.dataSource) document.getElementById('config-data-source').value = savedPrefs.dataSource;
+      };
+
+      initConfigPage();
       initCommandPalette();
       applyRolePreset(selectedRole, false);
       initTheme();
