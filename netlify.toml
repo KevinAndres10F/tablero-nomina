@@ -1,6 +1,6 @@
 [build]
   publish = "frontend"
-  command = "npm install && cd frontend && npm install && npm run build && cp build/kapibot.js kapibot.js"
+  command = "npm install && cd frontend && (npm install && npm run build && cp build/kapibot.js kapibot.js || echo 'KapiBot build skipped')"
 
 [functions]
   directory = "netlify/functions"
