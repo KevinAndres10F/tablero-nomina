@@ -15,7 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 
-from app.services import excel_service
+from app.services import bigquery_service, google_sheets_service
 
 app = FastAPI(title="KAPIROLL Dashboard API", version="1.0.0")
 
@@ -23,17 +23,16 @@ DEFAULT_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzOoZm5eWkQtx
 
 
 def _get_data_service():
-    source = os.getenv("DATA_SOURCE", "excel").strip().lower()
+    source = os.getenv("DATA_SOURCE", "bigquery").strip().lower()
     if source == "bigquery":
-        from app.services import bigquery_service
         return bigquery_service
-    if source == "supabase":
+    elif source == "supabase":
         from app.services import supabase_service
         return supabase_service
-    if source == "sheets":
-        from app.services import google_sheets_service
-        return google_sheets_service
-    return excel_service
+    elif source == "excel":
+        from app.services import excel_service
+        return excel_service
+    return google_sheets_service
 
 app.add_middleware(
     CORSMiddleware,
@@ -203,11 +202,10 @@ def _generate_business_answer(question: str, overview: Dict[str, Any]) -> str:
 
 @app.get("/api/health")
 def health_check() -> dict:
-    data_source = os.getenv("DATA_SOURCE", "excel").strip().lower()
+    data_source = os.getenv("DATA_SOURCE", "bigquery").strip().lower()
     return {
         "status": "ok",
         "data_source": data_source,
-        "excel_path": os.getenv("EXCEL_DATA_PATH", "backend/app/data/NOMINA_EJEMPLO.xlsx"),
         "google_sheet_id": os.getenv("GOOGLE_SHEET_ID", "1pyzugIeZBDCMq0kTCyWBis9toyzTXWmubGjLhng9vhk"),
         "project": os.getenv("BQ_PROJECT_ID", "not-set"),
         "dataset": os.getenv("BQ_DATASET", "not-set"),
