@@ -846,7 +846,7 @@
                 <button id="send-alert-email" class="rounded-lg bg-slate-900 text-white px-3 py-2 text-sm font-semibold hover:bg-slate-800">Enviar correo</button>
               </div>
             </div>
-            <div class="advanced-card">
+            <div class="advanced-card hidden" data-feature="whatif">
               <p class="tiny-label mb-3">Escenarios What-if</p>
               <div class="rounded-lg bg-cyan-50 border border-cyan-200 px-3 py-2 mb-3 text-xs text-cyan-800">
                 <strong>¿Qué es esto?</strong> Simula el impacto en el costo de nómina ajustando salarios, horas extra o estructura organizacional. Mueve los controles deslizantes y observa cómo cambia el presupuesto proyectado respecto al costo actual.
@@ -885,7 +885,7 @@
               </div>
               <div id="forecast-summary" class="space-y-2 text-sm"></div>
             </div>
-            <div class="advanced-card xl:col-span-2">
+            <div class="advanced-card xl:col-span-2 hidden" data-feature="copilot">
               <p class="tiny-label mb-3">Copilot de Negocio</p>
               <div class="rounded-lg bg-indigo-50 border border-indigo-200 px-3 py-2 mb-3 text-xs text-indigo-800">
                 <strong>¿Cómo funciona?</strong> El Copilot analiza los datos de nómina del período y año seleccionados en los filtros. Detecta patrones de concentración de costo por área, variaciones mensuales y riesgos operativos. Prueba preguntas como: "¿Cuál es el mayor riesgo?", "¿Qué área explica más el costo?" o "¿Qué acciones tomar para reducir la desviación?". Las respuestas se basan en los datos reales de tu nómina.
@@ -954,9 +954,9 @@
               <p class="text-sm text-slate-500 mb-6">Distribución porcentual</p>
               <div class="relative flex justify-center mb-6">
                 <svg class="w-40 h-40 transform -rotate-90" id="donut-chart"></svg>
-                <div class="absolute inset-0 flex items-center justify-center flex-col">
-                  <span class="text-2xl font-bold" id="donut-total">100%</span>
-                  <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">Total</span>
+                <div class="absolute inset-0 flex items-center justify-center flex-col px-2 text-center pointer-events-none">
+                  <span class="text-lg font-bold leading-tight max-w-[110px] whitespace-nowrap overflow-hidden text-ellipsis" id="donut-total">$0</span>
+                  <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest mt-1">Total</span>
                 </div>
               </div>
               <div class="space-y-3" id="breakdown-list"></div>
@@ -1890,6 +1890,15 @@
           style: "currency",
           currency,
           maximumFractionDigits: 0,
+        }).format(value || 0);
+      };
+
+      const formatCompactCurrency = (value, currency = "USD") => {
+        return new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency,
+          notation: "compact",
+          maximumFractionDigits: 1,
         }).format(value || 0);
       };
 
@@ -2933,7 +2942,8 @@
         ];
 
         if (donutTotal) {
-          donutTotal.textContent = employees.length ? formatCurrency(total, currency) : '$0';
+          donutTotal.textContent = employees.length ? formatCompactCurrency(total, currency) : '$0';
+          donutTotal.title = employees.length ? formatCurrency(total, currency) : '';
         }
 
         if (!employees.length || total === 0) {
