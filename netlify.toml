@@ -1,10 +1,11 @@
 [build]
   publish = "frontend"
-  command = "npm install && cd frontend && npm install && npm run build && cp build/kapibot.js kapibot.js"
+  command = "npm install && npm run build:data && cd frontend && npm install && npm run build && cp build/kapibot.js kapibot.js"
 
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+  included_files = ["netlify/functions/nomina-data.json"]
 
 # Security headers only for HTML pages (not API responses)
 [[headers]]
