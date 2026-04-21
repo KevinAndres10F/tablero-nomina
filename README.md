@@ -1,10 +1,10 @@
 # PayrollOS - Tablero de Nómina
 
-Tablero de visualización tipo Power BI con backend en FastAPI y datos de BigQuery (Google Sheets queda como alternativa opcional).
+Tablero de visualización tipo Power BI con backend en FastAPI. Por defecto lee los datos desde el archivo Excel `NOMINA_EJEMPLO.xlsx` incluido en el repositorio (BigQuery y Google Sheets quedan como alternativas opcionales).
 
 ## Requisitos
 - Python 3.10+
-- Credenciales de servicio de Google (recomendado si la hoja no es publica)
+- (Opcional) Credenciales de servicio de Google si usas BigQuery o Sheets privadas
 
 ## Backend
 1. Copia el archivo de ejemplo y configura tus variables:
@@ -17,10 +17,20 @@ Tablero de visualización tipo Power BI con backend en FastAPI y datos de BigQue
 El endpoint principal es:
 - GET /api/overview
 
-### Fuente de datos por defecto: BigQuery
-El backend vuelve a operar como antes, consultando BigQuery.
+### Fuente de datos por defecto: Excel (NOMINA_EJEMPLO.xlsx)
+El backend lee el archivo `backend/app/data/NOMINA_EJEMPLO.xlsx` que se versiona junto al código. No requiere credenciales externas.
 
-Variables recomendadas en `backend/.env`:
+Variables opcionales en `backend/.env`:
+
+- `DATA_SOURCE=excel` (valor por defecto)
+- `EXCEL_DATA_PATH=/ruta/absoluta/otra_nomina.xlsx` (opcional, para apuntar a otro archivo)
+
+Formato esperado (mismo que `NOMINA_EJEMPLO.xlsx`):
+- Encabezados en la fila 3, datos desde la fila 4.
+- Columnas clave: `NOMBRES`, `CEDULA`, `TIPO CONTRATO`, `FEC_INGRESO`, `CANAL DE VENTA` (se mapea a `area`), `PERIODO` (YYYY-MM), `TOTAL INGRESOS`, `TOTAL DESCUENTOS`, `TOTAL PROVISIONES`, `VALOR A RECIBIR`, `VALOR HORAS EXT 100%`, `VALOR REC.NOCTURNO`, `DECIMO 13`, `DECIMO 14 S`, `VACACIONES`, `FOND.RESERVA`, `IESS PATRONA`, `IESSPERSONAL`, `PR. H IESS`, `PR. Q IESS`.
+
+### Fuente alternativa: BigQuery
+Si quieres volver a BigQuery, define en `backend/.env`:
 
 - `DATA_SOURCE=bigquery`
 - `BQ_PROJECT_ID=<tu-proyecto>`
