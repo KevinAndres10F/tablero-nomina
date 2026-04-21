@@ -1096,6 +1096,7 @@
               <h3 class="text-lg font-bold">Costo Total por Décimo</h3>
               <div class="flex gap-2" id="decimos-mode-btns">
                 <button class="decimos-mode-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors" data-mode="prov">Provisión mensual</button>
+                <button class="decimos-mode-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors" data-mode="mens">Valores mensualizados</button>
               </div>
             </div>
             <div class="relative h-80">
@@ -3890,11 +3891,17 @@
             { label: 'Décimo 14 Sierra',data: sortedP.map(p => byPeriodo[p].d14s),      backgroundColor: CLR_D14S, borderRadius: 6 },
             { label: 'Décimo 14 Costa', data: sortedP.map(p => byPeriodo[p].d14c),      backgroundColor: CLR_D14C, borderRadius: 6 },
           ],
-          // Provisión mensual: mismas 3 series de provisión, vista explícita
+          // Provisión mensual: DECIMO 13 + DECIMO 14 S + DECIMO 14 C
           prov: [
-            { label: 'DECIMO 13',   data: sortedP.map(p => byPeriodo[p].decimo_13), backgroundColor: CLR_D13,  borderRadius: 6 },
-            { label: 'DECIMO 14 S', data: sortedP.map(p => byPeriodo[p].d14s),      backgroundColor: CLR_D14S, borderRadius: 6 },
-            { label: 'DECIMO 14 C', data: sortedP.map(p => byPeriodo[p].d14c),      backgroundColor: CLR_D14C, borderRadius: 6 },
+            { label: 'Décimo 13',       data: sortedP.map(p => byPeriodo[p].decimo_13), backgroundColor: CLR_D13,  borderRadius: 6 },
+            { label: 'Décimo 14 Sierra',data: sortedP.map(p => byPeriodo[p].d14s),      backgroundColor: CLR_D14S, borderRadius: 6 },
+            { label: 'Décimo 14 Costa', data: sortedP.map(p => byPeriodo[p].d14c),      backgroundColor: CLR_D14C, borderRadius: 6 },
+          ],
+          // Valores mensualizados: D13 MENS + D14 MENS SIE + D14 MENS COS
+          mens: [
+            { label: 'D13 Mens.',       data: sortedP.map(p => byPeriodo[p].d13m),  backgroundColor: CLR_D13,  borderRadius: 6 },
+            { label: 'D14 Mens. Sierra',data: sortedP.map(p => byPeriodo[p].d14ms), backgroundColor: CLR_D14S, borderRadius: 6 },
+            { label: 'D14 Mens. Costa', data: sortedP.map(p => byPeriodo[p].d14mc), backgroundColor: CLR_D14C, borderRadius: 6 },
           ],
         };
         // Función reutilizable para construir / actualizar el gráfico
