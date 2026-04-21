@@ -849,7 +849,7 @@
                 <button id="send-alert-email" class="rounded-lg bg-slate-900 text-white px-3 py-2 text-sm font-semibold hover:bg-slate-800">Enviar correo</button>
               </div>
             </div>
-            <div class="advanced-card">
+            <div class="advanced-card hidden" data-feature="whatif">
               <p class="tiny-label mb-3">Escenarios What-if</p>
               <div class="rounded-lg bg-cyan-50 border border-cyan-200 px-3 py-2 mb-3 text-xs text-cyan-800">
                 <strong>¿Qué es esto?</strong> Simula el impacto en el costo de nómina ajustando salarios, horas extra o estructura organizacional. Mueve los controles deslizantes y observa cómo cambia el presupuesto proyectado respecto al costo actual.
@@ -888,7 +888,7 @@
               </div>
               <div id="forecast-summary" class="space-y-2 text-sm"></div>
             </div>
-            <div class="advanced-card xl:col-span-2">
+            <div class="advanced-card xl:col-span-2 hidden" data-feature="copilot">
               <p class="tiny-label mb-3">Copilot de Negocio</p>
               <div class="rounded-lg bg-indigo-50 border border-indigo-200 px-3 py-2 mb-3 text-xs text-indigo-800">
                 <strong>¿Cómo funciona?</strong> El Copilot analiza los datos de nómina del período y año seleccionados en los filtros. Detecta patrones de concentración de costo por área, variaciones mensuales y riesgos operativos. Prueba preguntas como: "¿Cuál es el mayor riesgo?", "¿Qué área explica más el costo?" o "¿Qué acciones tomar para reducir la desviación?". Las respuestas se basan en los datos reales de tu nómina.
@@ -2859,52 +2859,8 @@
         setupScrollReveal();
         renderAdvancedSuite();
 
-        // Proactive AI insights (async, non-blocking)
-        requestProactiveInsights(employees, dashboardData);
-      };
-
-      // Proactive insight engine — asks AI to detect anomalies
-      let insightDebounce = null;
-      const requestProactiveInsights = (employees, dashboardData) => {
-        clearTimeout(insightDebounce);
-        insightDebounce = setTimeout(async () => {
-          const container = document.getElementById('proactive-insights');
-          if (!container || !employees.length) { if (container) container.classList.add('hidden'); return; }
-          try {
-            const ctx = window.__getKapibotContext ? window.__getKapibotContext() : null;
-            if (!ctx) return;
-            const contextStr = `Empleados: ${ctx.totalEmpleados}. KPIs: ${(ctx.kpis || []).map(k => k.label + '=' + k.value).join(', ')}. Areas: ${(ctx.areas || []).join(', ')}. Periodo: ${ctx.periodoActual}.`;
-            const res = await fetch('/.netlify/functions/ai', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                action: 'chat',
-                messages: [{ role: 'user', content: '[INSIGHT_MODE] Analiza los datos actuales y detecta las 2 anomalias o patrones mas importantes. Para cada una, explica POR QUE ocurre. Responde JSON: {"insights": [{"titulo": "...", "explicacion": "...", "severidad": "alta|media|baja"}], "message": "resumen"}' }],
-                pageContext: contextStr
-              })
-            });
-            const data = await res.json();
-            const parsed = typeof data.message === 'string' ? (() => { try { return JSON.parse(data.message); } catch { return data; } })() : data;
-            const insights = parsed.insights || [];
-            if (insights.length === 0) { container.classList.add('hidden'); return; }
-            container.innerHTML = '';
-            container.classList.remove('hidden');
-            const sevColors = { alta: 'from-rose-50 to-white border-rose-100 text-rose-600', media: 'from-amber-50 to-white border-amber-100 text-amber-600', baja: 'from-emerald-50 to-white border-emerald-100 text-emerald-600' };
-            const sevIcons = { alta: 'warning', media: 'info', baja: 'check_circle' };
-            insights.slice(0, 2).forEach(ins => {
-              const sev = ins.severidad || 'media';
-              const cls = sevColors[sev] || sevColors.media;
-              const icon = sevIcons[sev] || 'info';
-              const card = document.createElement('div');
-              card.className = `bg-gradient-to-br ${cls} border rounded-xl p-4`;
-              card.innerHTML = `<div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-lg">${icon}</span><p class="text-xs font-bold uppercase tracking-wider">Insight AI &middot; ${sev}</p></div><p class="text-sm font-semibold text-slate-800 mb-1">${ins.titulo}</p><p class="text-xs text-slate-600 leading-relaxed">${ins.explicacion}</p>`;
-              container.appendChild(card);
-            });
-          } catch (e) {
-            // Silent fail — proactive insights are non-critical
-            console.debug('Proactive insights skipped:', e.message);
-          }
-        }, 3000);
+        const proactive = document.getElementById('proactive-insights');
+        if (proactive) proactive.classList.add('hidden');
       };
 
       // Calcular distribución por campo
@@ -4565,6 +4521,9 @@
       verifyDataSource();
       loadDashboard();
     </script>
-    <script src="./kapibot.js" defer></script>
+    <style>
+      #kapibot-toggle,
+      #kapibot-panel { display: none !important; }
+    </style>
   </body>
 </html>
