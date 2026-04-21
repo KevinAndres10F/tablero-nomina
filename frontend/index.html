@@ -719,23 +719,26 @@
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <button id="export-csv" class="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors">
+              <button id="export-csv" class="flex items-center justify-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors w-28">
                 <span class="material-symbols-outlined text-sm">download</span>
-                <span class="hidden md:inline">CSV</span>
+                <span>CSV</span>
               </button>
-              <button id="export-pdf" class="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors">
+              <button id="export-pdf" class="flex items-center justify-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors w-28">
                 <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
-                <span class="hidden md:inline">PDF</span>
+                <span>PDF</span>
               </button>
-              <button id="presentation-mode-btn" class="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors">
+              <button id="presentation-mode-btn" class="flex items-center justify-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors w-28">
                 <span class="material-symbols-outlined text-sm">slideshow</span>
-                <span class="hidden lg:inline">Presentación</span>
+                <span>Presentación</span>
               </button>
-              <label for="theme-toggle" class="theme-switch flex items-center gap-1.5 bg-white border border-slate-200 px-2.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors cursor-pointer" title="Cambiar tema">
+              <button id="gerencial-mode-btn" class="flex items-center justify-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors w-36 whitespace-nowrap">
+                <span class="material-symbols-outlined text-sm">business_center</span>
+                <span>Modo gerencial</span>
+              </button>
+              <label for="theme-toggle" class="theme-switch flex items-center justify-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors cursor-pointer w-36 whitespace-nowrap" title="Cambiar tema">
                 <span id="theme-toggle-icon" class="material-symbols-outlined text-sm">dark_mode</span>
-                <span id="theme-toggle-label" class="hidden">Modo nocturno</span>
-                <input id="theme-toggle" type="checkbox" role="switch" aria-label="Cambiar modo nocturno" />
-                <span class="theme-switch-track" aria-hidden="true"></span>
+                <span id="theme-toggle-label">Modo nocturno</span>
+                <input id="theme-toggle" type="checkbox" role="switch" aria-label="Cambiar modo nocturno" class="sr-only" />
               </label>
               <div class="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
               <div class="flex items-center gap-2">
@@ -809,7 +812,7 @@
 
         <!-- PÁGINA: DASHBOARD -->
         <div class="p-4 sm:p-6 lg:p-8 page-content" id="page-dashboard">
-          <div id="insights-strip" class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+          <div id="insights-strip" class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6 hidden">
             <div class="insight-pill rounded-xl p-4">
               <p class="text-[11px] uppercase tracking-[0.18em] text-slate-500 mb-2">Insight Principal</p>
               <p id="insight-main" class="text-sm font-semibold text-slate-700">Cargando insights ejecutivos...</p>
@@ -824,12 +827,12 @@
             </div>
           </div>
 
-          <div id="alerts-strip" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"></div>
+          <div id="alerts-strip" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 hidden"></div>
 
           <!-- Proactive AI Insight Cards -->
           <div id="proactive-insights" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 hidden"></div>
 
-          <div class="advanced-grid grid-cols-1 xl:grid-cols-3 mb-8" id="advanced-suite">
+          <div class="advanced-grid grid-cols-1 xl:grid-cols-3 mb-8 hidden" id="advanced-suite">
             <div class="advanced-card xl:col-span-2">
               <div class="flex items-center justify-between mb-3">
                 <p class="tiny-label">Centro de Alertas</p>
@@ -913,6 +916,42 @@
 
           </div>
 
+          <!-- HR KPIs (siempre visible) -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="hr-kpi-grid">
+            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm" id="hr-kpi-empleados">
+              <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">Total Empleados</p>
+              <h3 class="text-2xl font-bold text-slate-800" id="hr-val-empleados">—</h3>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm" id="hr-kpi-discapacidad">
+              <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">Con Discapacidad</p>
+              <div class="flex items-end gap-2">
+                <h3 class="text-2xl font-bold text-slate-800" id="hr-val-discapacidad-pct">—</h3>
+                <span class="text-xs text-slate-400 mb-0.5" id="hr-val-discapacidad-n"></span>
+              </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm" id="hr-kpi-juvenil">
+              <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">Contrato Juvenil</p>
+              <div class="flex items-end gap-2">
+                <h3 class="text-2xl font-bold text-slate-800" id="hr-val-juvenil-pct">—</h3>
+                <span class="text-xs text-slate-400 mb-0.5" id="hr-val-juvenil-n"></span>
+              </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm" id="hr-kpi-genero">
+              <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-2">Distribución Género</p>
+              <div class="flex items-center gap-3">
+                <div class="flex-1">
+                  <div class="flex justify-between text-[11px] text-slate-500 mb-1">
+                    <span id="hr-genero-f-label">F</span><span id="hr-genero-m-label">M</span>
+                  </div>
+                  <div class="h-3 bg-slate-100 rounded-full overflow-hidden flex">
+                    <div id="hr-genero-f-bar" class="h-full bg-pink-400 transition-all duration-500" style="width:50%"></div>
+                    <div id="hr-genero-m-bar" class="h-full bg-blue-400 transition-all duration-500" style="width:50%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8" id="kpi-grid">
             <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="flex justify-between items-start mb-3">
@@ -950,54 +989,52 @@
             </div>
 
             <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-              <h3 class="text-lg font-bold mb-1">Desglose de Provisiones</h3>
+              <h3 class="text-lg font-bold mb-1">Desglose Costo Nómina</h3>
               <p class="text-sm text-slate-500 mb-6">Distribución porcentual</p>
               <div class="relative flex justify-center mb-6">
                 <svg class="w-40 h-40 transform -rotate-90" id="donut-chart"></svg>
-                <div class="absolute inset-0 flex items-center justify-center flex-col">
-                  <span class="text-2xl font-bold" id="donut-total">100%</span>
-                  <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">Total</span>
+                <div class="absolute inset-0 flex items-center justify-center flex-col gap-0.5">
+                  <span class="text-xs font-bold text-center leading-tight whitespace-nowrap" id="donut-total">100%</span>
+                  <span class="text-[9px] text-slate-400 font-medium uppercase tracking-widest">Total</span>
                 </div>
               </div>
               <div class="space-y-3" id="breakdown-list"></div>
             </div>
           </div>
 
-          <!-- Gráficas de pastel: Tipo de Contrato y Área -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8">
+          <!-- Gráficas: Tipo de Contrato y Área -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-6">
             <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <h3 class="text-lg font-bold mb-1">Distribución por Tipo de Contrato</h3>
-              <p class="text-sm text-slate-500 mb-6">Empleados por modalidad contractual</p>
-              <div class="flex items-center gap-8">
-                <div class="relative flex justify-center">
+              <p class="text-sm text-slate-500 mb-4">Empleados por modalidad contractual</p>
+              <div class="flex items-center gap-6">
+                <div class="relative flex justify-center shrink-0">
                   <svg class="w-36 h-36 transform -rotate-90" id="pie-contrato"></svg>
                 </div>
                 <div class="space-y-2 flex-1" id="legend-contrato"></div>
               </div>
             </div>
-            
+
             <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <h3 class="text-lg font-bold mb-1">Distribución por Área</h3>
-              <p class="text-sm text-slate-500 mb-6">Empleados por departamento</p>
-              <div class="flex items-center gap-8">
-                <div class="relative flex justify-center">
-                  <svg class="w-36 h-36 transform -rotate-90" id="pie-area"></svg>
-                </div>
-                <div class="space-y-2 flex-1" id="legend-area"></div>
-              </div>
+              <p class="text-sm text-slate-500 mb-4">Empleados por departamento</p>
+              <div id="bars-area" class="space-y-1.5 max-h-56 overflow-y-auto pr-1"></div>
             </div>
+          </div>
+
+          <!-- Gráfico de líneas: Empleados por Centro Comercial -->
+          <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm mb-8">
+            <h3 class="text-lg font-bold mb-1">Empleados por Centro Comercial</h3>
+            <p class="text-sm text-slate-500 mb-4">Evolución mensual por mall</p>
+            <div id="mall-line-chart" class="w-full"></div>
           </div>
         </div>
         <!-- FIN PÁGINA: DASHBOARD -->
 
         <!-- PÁGINA: PROVISIONES -->
         <div class="p-4 sm:p-6 lg:p-8 page-content hidden" id="page-provisiones">
-          <div class="mb-6">
-            <h2 class="text-2xl font-bold text-slate-900">Análisis de Provisiones</h2>
-            <p class="text-slate-500">Desglose de provisiones: D13, D14, Vacaciones, Fondos Reserva, Aporte Patronal</p>
-          </div>
-          
-          <!-- KPIs de Provisiones -->
+
+          <!-- KPIs de Provisiones (originales) -->
           <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8" id="prov-kpi-grid">
             <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="p-2 bg-indigo-50 rounded-lg text-indigo-600 w-fit mb-3">
@@ -1020,7 +1057,7 @@
               </div>
               <p class="text-slate-500 text-xs font-medium uppercase">Décimo Cuarto</p>
               <h3 class="text-xl font-bold mt-1" id="prov-d14">$0</h3>
-              <p class="text-[10px] text-slate-400 mt-1">Cálculo: Ago 1 – Jul 31 (Sierra) / Mar 1 – Feb 28 (Costa) · Pago: hasta 15 Mar / 15 Ago</p>
+              <p class="text-[10px] text-slate-400 mt-1">Sierra: Ago–Jul · Costa: Mar–Feb</p>
             </div>
             <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="p-2 bg-emerald-500/10 rounded-lg text-emerald-500 w-fit mb-3">
@@ -1038,41 +1075,10 @@
             </div>
           </div>
 
-          <!-- Proyección Décimo Tercero en Diciembre -->
-          <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm mb-8">
-            <div class="flex items-center gap-3 mb-3">
-              <div class="p-2 bg-amber-500/10 rounded-lg text-amber-500">
-                <span class="material-symbols-outlined">calendar_month</span>
-              </div>
-              <div>
-                <h3 class="text-lg font-bold">Proyección del 13er Sueldo — Pago Diciembre</h3>
-                <p class="text-sm text-slate-500">Estimación del monto total a desembolsar en diciembre por concepto de Décimo Tercero</p>
-              </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="rounded-lg border border-slate-200 p-3">
-                <p class="text-xs text-slate-500 uppercase mb-1">Provisión mensual acumulada</p>
-                <h4 class="text-xl font-bold" id="prov-d13-monthly">$0</h4>
-                <p class="text-[10px] text-slate-400">Promedio mensual D13 del período visible</p>
-              </div>
-              <div class="rounded-lg border border-slate-200 p-3">
-                <p class="text-xs text-slate-500 uppercase mb-1">Proyección anual (×12)</p>
-                <h4 class="text-xl font-bold text-amber-600" id="prov-d13-projected">$0</h4>
-                <p class="text-[10px] text-slate-400">Total proyectado a pagar en diciembre</p>
-              </div>
-              <div class="rounded-lg border border-slate-200 p-3">
-                <p class="text-xs text-slate-500 uppercase mb-1">Meses restantes para pago</p>
-                <h4 class="text-xl font-bold" id="prov-d13-months-left">0</h4>
-                <p class="text-[10px] text-slate-400">Hasta 24 de diciembre</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Scatter Plot de Provisiones -->
+          <!-- Gráficos originales -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-              <h3 class="text-lg font-bold mb-2">Evolución de Provisiones por Período</h3>
-              <p class="text-sm text-slate-500 mb-4">Total y desglose mensual</p>
+              <h3 class="text-lg font-bold mb-4">Evolución de Provisiones por Período</h3>
               <div class="relative h-80" id="scatter-container">
                 <canvas id="scatter-chart"></canvas>
               </div>
@@ -1081,6 +1087,80 @@
               <h3 class="text-lg font-bold mb-2">Desglose de Provisiones</h3>
               <p class="text-sm text-slate-500 mb-6">Distribución por componente</p>
               <div class="h-64 flex items-end justify-between gap-4 px-2" id="prov-bars"></div>
+            </div>
+          </div>
+
+          <!-- Costo Total por Décimo con selector de modo -->
+          <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+              <h3 class="text-lg font-bold">Costo Total por Décimo</h3>
+              <div class="flex gap-2" id="decimos-mode-btns">
+                <button class="decimos-mode-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors" data-mode="prov">Provisión mensual</button>
+              </div>
+            </div>
+            <div class="relative h-80">
+              <canvas id="chart-costo-decimos"></canvas>
+            </div>
+          </div>
+
+          <!-- Proyección inteligente de décimos -->
+          <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm mb-8" id="prov-proyeccion-card">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
+              <div class="flex items-center gap-3">
+                <div class="p-2 bg-amber-500/10 rounded-lg text-amber-500 shrink-0">
+                  <span class="material-symbols-outlined">calendar_month</span>
+                </div>
+                <div>
+                  <h3 class="text-lg font-bold">Proyección de Décimos</h3>
+                  <p class="text-sm text-slate-500" id="proj-period-label">Cálculo inteligente según período activo y fechas de pago</p>
+                </div>
+              </div>
+              <!-- Selector D13 / D14S / D14C -->
+              <div class="flex gap-2 shrink-0">
+                <button class="proj-type-btn active px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors" data-type="d13">Décimo 13</button>
+                <button class="proj-type-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors" data-type="d14s">D14 Sierra</button>
+                <button class="proj-type-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors" data-type="d14c">D14 Costa</button>
+              </div>
+            </div>
+            <!-- Info del período activo -->
+            <div class="rounded-lg bg-slate-50 border border-slate-200 px-4 py-2 mb-4 text-xs text-slate-600 flex flex-wrap gap-x-6 gap-y-1" id="proj-info-strip">
+              <span>Período de cálculo: <strong id="proj-calc-period">—</strong></span>
+              <span>Fecha de pago: <strong id="proj-pay-date">—</strong></span>
+              <span>Meses transcurridos: <strong id="proj-elapsed">—</strong></span>
+              <span>Meses restantes: <strong id="proj-remaining">—</strong></span>
+            </div>
+            <!-- KPIs de proyección -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+              <div class="rounded-lg border border-slate-200 p-3">
+                <p class="text-xs text-slate-500 uppercase mb-1">Provisión acumulada</p>
+                <h4 class="text-xl font-bold text-indigo-600" id="proj-provisioned">$0</h4>
+                <p class="text-[10px] text-slate-400">Total en el período visible</p>
+              </div>
+              <div class="rounded-lg border border-slate-200 p-3">
+                <p class="text-xs text-slate-500 uppercase mb-1">Prom. mensual</p>
+                <h4 class="text-xl font-bold" id="proj-monthly-avg">$0</h4>
+                <p class="text-[10px] text-slate-400">Provisión ÷ meses transcurridos</p>
+              </div>
+              <div class="rounded-lg border border-slate-200 p-3">
+                <p class="text-xs text-slate-500 uppercase mb-1">Proyección total (×12)</p>
+                <h4 class="text-xl font-bold text-amber-600" id="proj-total">$0</h4>
+                <p class="text-[10px] text-slate-400">Estimado a pagar al cierre</p>
+              </div>
+              <div class="rounded-lg border border-slate-200 p-3">
+                <p class="text-xs text-slate-500 uppercase mb-1">Faltante por provisionar</p>
+                <h4 class="text-xl font-bold text-rose-500" id="proj-pending">$0</h4>
+                <p class="text-[10px] text-slate-400">Para completar proyección</p>
+              </div>
+            </div>
+            <!-- Barra de progreso -->
+            <div>
+              <div class="flex justify-between text-xs text-slate-500 mb-1">
+                <span>Avance del período</span>
+                <span id="proj-progress-pct">0%</span>
+              </div>
+              <div class="h-3 bg-slate-100 rounded-full overflow-hidden">
+                <div id="proj-progress-bar" class="h-full rounded-full bg-indigo-500 transition-all duration-700" style="width:0%"></div>
+              </div>
             </div>
           </div>
 
@@ -1093,14 +1173,14 @@
               <table class="data-table w-full text-left border-collapse">
                 <thead class="sticky top-0 z-[1]">
                   <tr class="bg-slate-50">
-                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase text-right">D13</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase text-right">D14</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase text-right">Vacaciones</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase text-right">Fondos Reserva</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase text-right">IESS Patronal</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase text-right">Total</th>
+                    <th class="px-4 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
+                    <th class="px-4 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
+                    <th class="px-4 py-4 text-xs font-semibold text-slate-500 uppercase text-right">Prov D13</th>
+                    <th class="px-4 py-4 text-xs font-semibold text-slate-500 uppercase text-right">Prov D14 C</th>
+                    <th class="px-4 py-4 text-xs font-semibold text-slate-500 uppercase text-right">Prov D14 S</th>
+                    <th class="px-4 py-4 text-xs font-semibold text-slate-500 uppercase text-right">D13 MENS</th>
+                    <th class="px-4 py-4 text-xs font-semibold text-slate-500 uppercase text-right">D14 MENS C</th>
+                    <th class="px-4 py-4 text-xs font-semibold text-slate-500 uppercase text-right">D14 MENS S</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200" id="prov-table"></tbody>
@@ -1112,20 +1192,15 @@
 
         <!-- PÁGINA: ANÁLISIS IESS -->
         <div class="p-4 sm:p-6 lg:p-8 page-content hidden" id="page-iess">
-          <div class="mb-6">
-            <h2 class="text-2xl font-bold text-slate-900">Análisis IESS</h2>
-            <p class="text-slate-500">Comparativa de aportes y descuentos del Instituto Ecuatoriano de Seguridad Social</p>
-          </div>
-          
           <!-- KPIs de IESS -->
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
             <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="p-2 bg-indigo-50 rounded-lg text-indigo-600 w-fit mb-3">
                 <span class="material-symbols-outlined">account_balance</span>
               </div>
               <p class="text-slate-500 text-xs font-medium uppercase">Total IESS a Pagar</p>
               <h3 class="text-xl font-bold mt-1" id="iess-total">$0</h3>
-              <p class="text-[10px] text-slate-400 mt-1">Personal + Patronal</p>
+              <p class="text-[10px] text-slate-400 mt-1">Personal + Patronal + Seg. T.P.</p>
             </div>
             <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
               <div class="p-2 bg-rose-500/10 rounded-lg text-rose-500 w-fit mb-3">
@@ -1150,6 +1225,14 @@
               <p class="text-slate-500 text-xs font-medium uppercase">Fondos de Reserva</p>
               <h3 class="text-xl font-bold mt-1" id="iess-fondos">$0</h3>
               <p class="text-[10px] text-slate-400 mt-1">8.33% del sueldo</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+              <div class="p-2 bg-teal-500/10 rounded-lg text-teal-600 w-fit mb-3">
+                <span class="material-symbols-outlined">schedule</span>
+              </div>
+              <p class="text-slate-500 text-xs font-medium uppercase">Seguro Tiempo Parcial</p>
+              <h3 class="text-xl font-bold mt-1" id="iess-seg-tp">$0</h3>
+              <p class="text-[10px] text-slate-400 mt-1">AD 4.41 JP</p>
             </div>
           </div>
 
@@ -1186,6 +1269,7 @@
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Empleado</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Período</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase text-right">IESS Personal</th>
+                    <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase text-right">Seg. T. Parcial</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase text-right">Préstamo Hip.</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase text-right">Préstamo Quir.</th>
                     <th class="px-6 py-4 text-xs font-semibold text-slate-500 uppercase text-right">IESS Patronal</th>
@@ -1230,11 +1314,6 @@
 
         <!-- PÁGINA: ANÁLISIS HORAS EXTRA -->
         <div class="p-4 sm:p-6 lg:p-8 page-content hidden" id="page-horas-extra">
-          <div class="mb-6">
-            <h2 class="text-2xl font-bold text-slate-900">Análisis de Horas Extra</h2>
-            <p class="text-slate-500">Desglose y análisis de horas extraordinarias, nocturnas y recargos</p>
-          </div>
-          
           <!-- KPIs de Horas Extra -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="horas-extra-kpis">
             <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
@@ -1411,7 +1490,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script>
-      const DEFAULT_RENDER_API_BASE = "";
+      const DEFAULT_RENDER_API_BASE = "http://localhost:8000";
       const API_BASE = (window.__KAPIROLL_API_BASE__ || window.__TABLERO_NOMINA_API_BASE__ || DEFAULT_RENDER_API_BASE).replace(/\/$/, "");
       const API_PREFIX = API_BASE ? `${API_BASE}/api` : "/api";
       const KAPIBOT_API_URL = `${API_PREFIX}/chat`;  // legacy, unused
@@ -1509,9 +1588,18 @@
         const icon = document.getElementById('theme-toggle-icon');
         const label = document.getElementById('theme-toggle-label');
         const toggle = document.getElementById('theme-toggle');
+        const themeBtn = document.getElementById('theme-toggle')?.closest('label');
         if (toggle) toggle.checked = isDark;
         if (icon) icon.textContent = isDark ? 'light_mode' : 'dark_mode';
         if (label) label.textContent = isDark ? 'Modo claro' : 'Modo nocturno';
+        if (themeBtn) {
+          themeBtn.classList.toggle('bg-indigo-600', isDark);
+          themeBtn.classList.toggle('text-white', isDark);
+          themeBtn.classList.toggle('border-indigo-600', isDark);
+          themeBtn.classList.toggle('bg-white', !isDark);
+          themeBtn.classList.toggle('text-slate-700', !isDark);
+          themeBtn.classList.toggle('border-slate-200', !isDark);
+        }
         logTelemetry('theme_change', { theme });
       };
 
@@ -1971,9 +2059,12 @@
           breakdown.innerHTML = Array.from({ length: 3 }).map(() => '<div class="skeleton h-4 w-full"></div>').join('');
         }
         if (pieContrato) pieContrato.innerHTML = '';
+        const barsContrato = document.getElementById('bars-contrato');
+        if (barsContrato) barsContrato.innerHTML = Array.from({ length: 3 }).map(() => '<div class="skeleton h-10 w-full rounded-lg"></div>').join('');
         if (pieArea) pieArea.innerHTML = '';
+        const barsArea = document.getElementById('bars-area');
         if (legendContrato) legendContrato.innerHTML = Array.from({ length: 3 }).map(() => '<div class="skeleton h-4 w-full"></div>').join('');
-        if (legendArea) legendArea.innerHTML = Array.from({ length: 3 }).map(() => '<div class="skeleton h-4 w-full"></div>').join('');
+        if (barsArea) barsArea.innerHTML = Array.from({ length: 6 }).map(() => '<div class="skeleton h-5 w-full rounded-lg"></div>').join('');
       };
 
       const deriveInsights = (employees, monthlyData = []) => {
@@ -2521,6 +2612,10 @@
           subtitleEl.textContent = pageMeta[page].subtitle;
         }
 
+        // Scroll al inicio del contenido principal al cambiar de página
+        const mainEl = document.querySelector('main');
+        if (mainEl) mainEl.scrollTo({ top: 0, behavior: 'instant' });
+
         setupScrollReveal();
         closeSidebarOnMobile();
       };
@@ -2745,12 +2840,21 @@
         const distContrato = calcDistribution(employees, 'tipo_contrato');
         const distArea = calcDistribution(employees, 'area');
         
-        // Calcular costos mensuales desde empleados filtrados
-        const monthlyCosts = calcMonthlyCosts(employees);
+        // Usar monthly_costs del API (contiene todos los meses del año)
+        let monthlyCosts = (dashboardData?.monthly_costs?.length)
+          ? dashboardData.monthly_costs
+          : calcMonthlyCosts(employees);
+
+        // Si hay filtro de período, mostrar desde inicio del año hasta ese mes
+        if (filters.periodo) {
+          monthlyCosts = monthlyCosts.filter(m => (m.periodo || '') <= filters.periodo);
+        }
 
         buildMonthlyLineChart(monthlyCosts, currency);
+        buildHRKPIs(employees);
         buildPieChart('contrato', distContrato);
-        buildPieChart('area', distArea);
+        buildAreaBarChart(distArea);
+        buildMallLineChart(employees);
         setupScrollReveal();
         renderAdvancedSuite();
 
@@ -2993,13 +3097,14 @@
           return;
         }
         
-        const width = 600;
+        const width = container.clientWidth || 800;
         const height = 240;
-        const padding = { top: 20, right: 20, bottom: 40, left: 70 };
+        const padding = { top: 20, right: 24, bottom: 40, left: 70 };
         const chartWidth = width - padding.left - padding.right;
         const chartHeight = height - padding.top - padding.bottom;
-        
+
         activeSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+        activeSvg.setAttribute("preserveAspectRatio", "none");
         
         // Obtener máximo para escala
         const maxValue = Math.max(...monthlyData.map(d => Math.max(d.costo_total || 0, d.ingresos || 0)));
@@ -3081,9 +3186,19 @@
           });
         };
         
+        // Línea guía vertical (inicialmente oculta)
+        const guideLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        guideLine.setAttribute("y1", padding.top);
+        guideLine.setAttribute("y2", padding.top + chartHeight);
+        guideLine.setAttribute("stroke", "#cbd5e1");
+        guideLine.setAttribute("stroke-width", "1");
+        guideLine.setAttribute("stroke-dasharray", "4,3");
+        guideLine.style.display = 'none';
+        activeSvg.appendChild(guideLine);
+
         createLine(monthlyData, "costo_total", "#13a4ec");
         createLine(monthlyData, "ingresos", "#10b981");
-        
+
         // Etiquetas del eje X (meses)
         monthlyData.forEach((d, i) => {
           const x = xScale(i);
@@ -3096,9 +3211,264 @@
           label.textContent = d.month || d.periodo?.split('-')[1] || '';
           activeSvg.appendChild(label);
         });
+
+        // Tooltip HTML flotante
+        let tooltip = document.getElementById('monthly-chart-tooltip');
+        if (!tooltip) {
+          tooltip = document.createElement('div');
+          tooltip.id = 'monthly-chart-tooltip';
+          tooltip.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;display:none;' +
+            'background:white;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px;' +
+            'box-shadow:0 4px 16px rgba(0,0,0,0.10);min-width:160px;';
+          document.body.appendChild(tooltip);
+        }
+
+        // Zonas de hit invisibles por cada mes (franja vertical)
+        monthlyData.forEach((d, i) => {
+          const x = xScale(i);
+          const zoneW = chartWidth / (monthlyData.length || 1);
+          const hit = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          hit.setAttribute("x", x - zoneW / 2);
+          hit.setAttribute("y", padding.top);
+          hit.setAttribute("width", zoneW);
+          hit.setAttribute("height", chartHeight);
+          hit.setAttribute("fill", "transparent");
+          hit.style.cursor = 'crosshair';
+
+          hit.addEventListener('mouseenter', (e) => {
+            guideLine.setAttribute("x1", x);
+            guideLine.setAttribute("x2", x);
+            guideLine.style.display = '';
+
+            const month  = d.month || d.periodo || '';
+            const costo  = formatCurrency(d.costo_total || 0, currency);
+            const ingr   = formatCurrency(d.ingresos   || 0, currency);
+            const emps   = d.empleados != null ? `<div class="flex justify-between gap-6"><span style="color:#94a3b8;font-size:11px">Empleados</span><span style="font-weight:600;font-size:12px">${d.empleados}</span></div>` : '';
+            tooltip.innerHTML = `
+              <div style="font-weight:700;font-size:13px;margin-bottom:6px;color:#1e293b">${month}</div>
+              <div class="flex justify-between gap-6"><span style="color:#13a4ec;font-size:11px">● Costo Total</span><span style="font-weight:600;font-size:12px">${costo}</span></div>
+              <div style="margin-top:4px" class="flex justify-between gap-6"><span style="color:#10b981;font-size:11px">● Ingresos</span><span style="font-weight:600;font-size:12px">${ingr}</span></div>
+              ${emps}
+            `;
+            tooltip.style.display = 'block';
+          });
+
+          hit.addEventListener('mousemove', (e) => {
+            const offset = 16;
+            const tw = tooltip.offsetWidth;
+            const left = e.clientX + offset + tw > window.innerWidth
+              ? e.clientX - tw - offset : e.clientX + offset;
+            tooltip.style.left = left + 'px';
+            tooltip.style.top  = (e.clientY - 40) + 'px';
+          });
+
+          hit.addEventListener('mouseleave', () => {
+            guideLine.style.display = 'none';
+            tooltip.style.display = 'none';
+          });
+
+          activeSvg.appendChild(hit);
+        });
+
+        // Ocultar tooltip si el mouse sale del SVG
+        activeSvg.addEventListener('mouseleave', () => {
+          guideLine.style.display = 'none';
+          tooltip.style.display = 'none';
+        });
       };
       
-      // Gráfico de pastel para distribuciones
+      const buildHRKPIs = (employees) => {
+        if (!employees || !employees.length) return;
+
+        // Empleados únicos por cédula (el más reciente)
+        const byId = {};
+        employees.forEach(e => {
+          const key = e.cedula || e.nombre;
+          if (!byId[key] || (e.periodo || '') > (byId[key].periodo || '')) byId[key] = e;
+        });
+        const unique = Object.values(byId);
+        const total  = unique.length;
+
+        // Discapacidad
+        const discap = unique.filter(e => e.discapacidad === true).length;
+        const discapPct = total > 0 ? (discap / total * 100).toFixed(1) : '0';
+
+        // Contrato Juvenil
+        const juvenil = unique.filter(e => (e.tipo_contrato || '').toUpperCase().includes('JUVENIL')).length;
+        const juvenilPct = total > 0 ? (juvenil / total * 100).toFixed(1) : '0';
+
+        // Género
+        const fCount = unique.filter(e => (e.genero || '').toUpperCase() === 'F').length;
+        const mCount = unique.filter(e => (e.genero || '').toUpperCase() === 'M').length;
+        const fPct   = total > 0 ? (fCount / total * 100) : 50;
+        const mPct   = total > 0 ? (mCount / total * 100) : 50;
+
+        // Rellenar DOM
+        const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+        const setW = (id, w) => { const el = document.getElementById(id); if (el) el.style.width = w; };
+
+        set('hr-val-empleados',        total);
+        set('hr-val-discapacidad-pct', `${discapPct}%`);
+        set('hr-val-discapacidad-n',   `${discap} personas`);
+        set('hr-val-juvenil-pct',      `${juvenilPct}%`);
+        set('hr-val-juvenil-n',        `${juvenil} personas`);
+        set('hr-genero-f-label',       `F · ${fCount} (${fPct.toFixed(0)}%)`);
+        set('hr-genero-m-label',       `M · ${mCount} (${mPct.toFixed(0)}%)`);
+        setW('hr-genero-f-bar',        `${fPct}%`);
+        setW('hr-genero-m-bar',        `${mPct}%`);
+      };
+
+      const buildMallLineChart = (employees) => {
+        const container = document.getElementById('mall-line-chart');
+        if (!container) return;
+        container.innerHTML = '';
+
+        if (!employees || !employees.length) {
+          renderEmptyState('mall-line-chart', 'Sin datos', 'No hay información de malls para este período.', 'store');
+          return;
+        }
+
+        // Contar empleados únicos por mall (usar cédula como ID único)
+        const mallCount = {};
+        const seen = {};
+        employees.forEach(e => {
+          const key  = e.cedula || e.nombre;
+          const mall = e.mall || 'Sin mall';
+          if (!seen[key]) { seen[key] = mall; }
+          // Contar cada aparición (permite múltiples períodos)
+          mallCount[mall] = (mallCount[mall] || 0) + 1;
+        });
+
+        const MALL_COLORS = ['#13a4ec','#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#14b8a6','#f97316','#06b6d4','#84cc16','#a855f7'];
+
+        const barData = Object.entries(mallCount)
+          .map(([mall, count]) => ({ mall, count }))
+          .sort((a, b) => b.count - a.count);
+
+        if (window._mallChart) { window._mallChart.destroy(); window._mallChart = null; }
+
+        const canvas = document.createElement('canvas');
+        container.style.height = '280px';
+        container.appendChild(canvas);
+
+        window._mallChart = new Chart(canvas, {
+          type: 'bar',
+          data: {
+            labels: barData.map(d => d.mall),
+            datasets: [{
+              label: 'Empleados',
+              data: barData.map(d => d.count),
+              backgroundColor: barData.map((_, i) => MALL_COLORS[i % MALL_COLORS.length]),
+              borderRadius: 6,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: { callbacks: { label: c => `${c.raw} empleados` } }
+            },
+            scales: {
+              x: { grid: { display: false }, ticks: { font: { size: 11 }, maxRotation: 30 } },
+              y: {
+                beginAtZero: true,
+                grid: { color: '#e2e8f0', borderDash: [4, 4] },
+                ticks: { stepSize: 1, font: { size: 11 } }
+              }
+            }
+          }
+        });
+      };
+
+      const buildContractBars = (data) => {
+        const container = document.getElementById('bars-contrato');
+        if (!container) return;
+        container.innerHTML = '';
+
+        if (!data || data.length === 0) {
+          renderEmptyState('bars-contrato', 'Sin distribución', 'No hay información de contratos.', 'contract');
+          return;
+        }
+
+        const total = data.reduce((sum, d) => sum + (d.count || 0), 0);
+        if (total === 0) return;
+
+        const colors = ["#13a4ec", "#6366f1", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
+
+        data.forEach((item, index) => {
+          const pct = (item.count / total * 100);
+          const color = colors[index % colors.length];
+
+          const block = document.createElement('div');
+          block.className = 'cursor-pointer group';
+          block.innerHTML = `
+            <div class="flex items-center justify-between mb-1.5">
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full shrink-0" style="background:${color}"></div>
+                <span class="text-xs font-semibold text-slate-700 uppercase tracking-wide">${item.label}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-lg font-bold text-slate-800">${item.count}</span>
+                <span class="text-xs text-slate-400 font-medium">${pct.toFixed(0)}%</span>
+              </div>
+            </div>
+            <div class="h-3 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-700 group-hover:brightness-110" style="width:${pct}%;background:${color}"></div>
+            </div>
+          `;
+          block.addEventListener('click', () => {
+            filters.contrato = item.label;
+            const sel = document.getElementById('filter-contrato');
+            if (sel) sel.value = item.label;
+            applyFilters();
+            pushToast('Filtrado por: ' + item.label);
+          });
+          container.appendChild(block);
+        });
+      };
+
+      const buildAreaBarChart = (data) => {
+        const container = document.getElementById('bars-area');
+        if (!container) return;
+        container.innerHTML = '';
+
+        if (!data || data.length === 0) {
+          renderEmptyState('bars-area', 'Sin distribución', 'No hay información suficiente para esta segmentación.', 'bar_chart');
+          return;
+        }
+
+        const total = data.reduce((sum, d) => sum + (d.count || 0), 0);
+        if (total === 0) return;
+
+        const maxCount = Math.max(...data.map(d => d.count || 0));
+        const colors = ["#13a4ec","#6366f1","#10b981","#f59e0b","#ef4444","#8b5cf6","#ec4899","#14b8a6","#f97316","#06b6d4","#84cc16","#a855f7","#e11d48","#0ea5e9","#d97706","#16a34a","#7c3aed","#db2777"];
+
+        data.forEach((item, index) => {
+          const pct = (item.count / total * 100);
+          const barWidth = maxCount > 0 ? (item.count / maxCount * 100) : 0;
+          const color = colors[index % colors.length];
+
+          const row = document.createElement('div');
+          row.className = 'flex items-center gap-2 cursor-pointer hover:bg-slate-50 rounded-lg px-2 py-1 transition-colors';
+          row.innerHTML = `
+            <span class="text-xs font-medium text-slate-600 uppercase w-28 shrink-0" title="${item.label}">${item.label}</span>
+            <div class="flex-1 h-4 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-500" style="width:${barWidth}%;background:${color}"></div>
+            </div>
+            <span class="text-xs font-semibold text-slate-700 w-16 shrink-0 text-right">${item.count} <span class="text-slate-400 font-normal">(${pct.toFixed(0)}%)</span></span>
+          `;
+          row.addEventListener('click', () => {
+            filters.area = item.label;
+            const sel = document.getElementById('filter-area');
+            if (sel) sel.value = item.label;
+            applyFilters();
+            pushToast('Filtrado por: ' + item.label);
+          });
+          container.appendChild(row);
+        });
+      };
+
       const buildPieChart = (type, data) => {
         const svg = document.getElementById(`pie-${type}`);
         const legend = document.getElementById(`legend-${type}`);
@@ -3216,213 +3586,367 @@
       // PÁGINA: PROVISIONES
       let scatterChart = null;
       
+      // Variables de gráficos de provisiones
+      let chartCostoDecimos = null;
+      let _provEmployeesCache = [];
+      let _decimosMode = 'total'; // 'total' | 'prov' | 'pago'
+      // Paleta de colores unificada por tipo de décimo
+      const CLR_D13  = '#f59e0b'; // amber   — Décimo 13
+      const CLR_D14S = '#6366f1'; // indigo  — Décimo 14 Sierra
+      const CLR_D14C = '#10b981'; // emerald — Décimo 14 Costa
+      let _provCurrencyCache  = 'USD';
+      let _projTypeActive     = 'd13';
+
+      // ── Cálculo inteligente de proyección ────────────────────────────────
+      const _calcProyeccion = (type, employees, currency) => {
+        // Determinar mes/año de referencia desde filtro activo
+        let refMonth, refYear;
+        if (filters && filters.periodo) {
+          const parts = filters.periodo.split('-');
+          refYear  = parseInt(parts[0]);
+          refMonth = parseInt(parts[1]); // 1-12
+        } else {
+          const now = new Date();
+          refYear  = now.getFullYear();
+          refMonth = now.getMonth() + 1;
+        }
+
+        let elapsed, remaining, calcPeriod, payDate, provField, color;
+
+        if (type === 'd13') {
+          // Período: Dic 1 → Nov 30  (12 meses)  | Pago: 24 Dic
+          provField = 'decimo_13';
+          color = '#f59e0b';
+          elapsed   = refMonth === 12 ? 1 : refMonth + 1; // Dic=1, Ene=2,…, Nov=12
+          remaining = 12 - elapsed;
+          const payY   = refMonth === 12 ? refYear + 1 : refYear;
+          const startY = refMonth === 12 ? refYear      : refYear - 1;
+          calcPeriod = `Dic ${startY} — Nov ${payY}`;
+          payDate    = `24 Diciembre ${payY}`;
+
+        } else if (type === 'd14s') {
+          // Período: Ago 1 → Jul 31  (12 meses)  | Pago: 15 Ago
+          provField = 'decimo_14_s';
+          color = '#6366f1';
+          elapsed   = refMonth >= 8 ? refMonth - 7 : refMonth + 5; // Ago=1,…,Jul=12
+          remaining = 12 - elapsed;
+          const payY   = refMonth >= 8 ? refYear + 1 : refYear;
+          const startY = refMonth >= 8 ? refYear      : refYear - 1;
+          calcPeriod = `Ago ${startY} — Jul ${payY}`;
+          payDate    = `15 Agosto ${payY}`;
+
+        } else {
+          // d14c  Período: Mar 1 → Feb 28  (12 meses)  | Pago: 15 Mar
+          provField = 'decimo_14_c';
+          color = '#10b981';
+          elapsed   = refMonth >= 3 ? refMonth - 2 : refMonth + 10; // Mar=1,…,Feb=12
+          remaining = 12 - elapsed;
+          const payY   = refMonth >= 3 ? refYear + 1 : refYear;
+          const startY = refMonth >= 3 ? refYear      : refYear - 1;
+          calcPeriod = `Mar ${startY} — Feb ${payY}`;
+          payDate    = `15 Marzo ${payY}`;
+        }
+
+        const totalProvisioned = employees.reduce((s, e) => s + (e[provField] || 0), 0);
+        const avgMonthly       = elapsed > 0 ? totalProvisioned / elapsed : 0;
+        const projectedTotal   = avgMonthly * 12;
+        const pending          = Math.max(0, projectedTotal - totalProvisioned);
+        const progressPct      = projectedTotal > 0
+          ? Math.min(100, (totalProvisioned / projectedTotal) * 100).toFixed(1)
+          : '0.0';
+
+        return { elapsed, remaining, calcPeriod, payDate, totalProvisioned,
+                 avgMonthly, projectedTotal, pending, progressPct, color };
+      };
+
+      const _renderProyeccion = (type, employees, currency) => {
+        const r = _calcProyeccion(type, employees, currency);
+        document.getElementById('proj-calc-period').textContent  = r.calcPeriod;
+        document.getElementById('proj-pay-date').textContent     = r.payDate;
+        document.getElementById('proj-elapsed').textContent      = `${r.elapsed} de 12`;
+        document.getElementById('proj-remaining').textContent    = `${r.remaining} mes${r.remaining !== 1 ? 'es' : ''}`;
+        document.getElementById('proj-provisioned').textContent  = formatCurrency(r.totalProvisioned, currency);
+        document.getElementById('proj-monthly-avg').textContent  = formatCurrency(r.avgMonthly, currency);
+        document.getElementById('proj-total').textContent        = formatCurrency(r.projectedTotal, currency);
+        document.getElementById('proj-pending').textContent      = formatCurrency(r.pending, currency);
+        document.getElementById('proj-progress-pct').textContent = `${r.progressPct}%`;
+        const bar = document.getElementById('proj-progress-bar');
+        if (bar) { bar.style.width = `${r.progressPct}%`; bar.style.background = r.color; }
+
+        // Estilo botones selector
+        document.querySelectorAll('.proj-type-btn').forEach(btn => {
+          const isActive = btn.dataset.type === type;
+          btn.classList.toggle('bg-indigo-600',   isActive);
+          btn.classList.toggle('text-white',       isActive);
+          btn.classList.toggle('border-indigo-600',isActive);
+          btn.classList.toggle('bg-white',        !isActive);
+          btn.classList.toggle('text-slate-600',  !isActive);
+          btn.classList.toggle('border-slate-200',!isActive);
+        });
+      };
+
+      // ── Scatter series buttons: colores por índice ───────────────────
+      const _SCATTER_COLORS = ['#13a4ec','#f59e0b','#6366f1','#10b981','#8b5cf6','#ef4444'];
+
+      const _refreshScatterBtns = () => {
+        document.querySelectorAll('.scatter-series-btn').forEach(btn => {
+          const idx   = parseInt(btn.dataset.series);
+          const color = _SCATTER_COLORS[idx];
+          const hidden = scatterChart?.data?.datasets?.[idx]?.hidden ?? false;
+          const active = !hidden;
+          btn.style.background   = active ? color : '#fff';
+          btn.style.color        = active ? '#fff' : '#64748b';
+          btn.style.borderColor  = active ? color  : '#e2e8f0';
+        });
+      };
+
+      // Inicializar listeners una sola vez (delegación en el contenedor)
+      document.getElementById('scatter-series-btns')?.addEventListener('click', e => {
+        const btn = e.target.closest('.scatter-series-btn');
+        if (!btn || !scatterChart) return;
+        const idx = parseInt(btn.dataset.series);
+        const allVisible = scatterChart.data.datasets.every(ds => !ds.hidden);
+
+        if (allVisible) {
+          // Aislar la serie clicada
+          scatterChart.data.datasets.forEach((ds, i) => { ds.hidden = (i !== idx); });
+        } else {
+          const wasHidden = !!scatterChart.data.datasets[idx].hidden;
+          scatterChart.data.datasets[idx].hidden = !wasHidden;
+          // Si quedan todas ocultas, mostrar todas
+          if (scatterChart.data.datasets.every(ds => ds.hidden)) {
+            scatterChart.data.datasets.forEach(ds => { ds.hidden = false; });
+          }
+        }
+        scatterChart.update();
+        _refreshScatterBtns();
+      });
+
+      // Listeners de los botones de proyección (se inicializan una vez)
+      document.querySelectorAll('.proj-type-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          _projTypeActive = btn.dataset.type;
+          _renderProyeccion(_projTypeActive, _provEmployeesCache, _provCurrencyCache);
+        });
+      });
+
+      // Listeners botones modo "Costo Total por Décimo"
+      document.getElementById('decimos-mode-btns')?.addEventListener('click', e => {
+        const btn = e.target.closest('.decimos-mode-btn');
+        if (!btn) return;
+        const mode = btn.dataset.mode;
+        // Toggle: si ya estaba activo, volver a total
+        const newMode = (_decimosMode === mode) ? 'total' : mode;
+        _decimosMode = newMode;
+        // Actualizar estilos de botones
+        document.querySelectorAll('.decimos-mode-btn').forEach(b => {
+          const isActive = b.dataset.mode === newMode;
+          b.classList.toggle('bg-indigo-600',   isActive);
+          b.classList.toggle('text-white',       isActive);
+          b.classList.toggle('border-indigo-600',isActive);
+          b.classList.toggle('bg-white',         !isActive);
+          b.classList.toggle('text-slate-600',   !isActive);
+          b.classList.toggle('border-slate-200', !isActive);
+        });
+        window._buildCostoDecimosChart?.();
+      });
+
       const buildProvisionesPage = (employees, currency) => {
-        if (!employees.length) {
+        _provEmployeesCache = employees || [];
+        _provCurrencyCache  = currency;
+        const provTable = document.getElementById('prov-table');
+
+        if (!employees || !employees.length) {
+          ['prov-total','prov-d13','prov-d14','prov-vac','prov-iess'].forEach(id => {
+            const el = document.getElementById(id); if (el) el.textContent = '$0';
+          });
           const provBars = document.getElementById('prov-bars');
-          const provTable = document.getElementById('prov-table');
-          document.getElementById('prov-total').textContent = '$0';
-          document.getElementById('prov-d13').textContent = '$0';
-          document.getElementById('prov-d14').textContent = '$0';
-          document.getElementById('prov-vac').textContent = '$0';
-          document.getElementById('prov-iess').textContent = '$0';
           if (provBars) renderEmptyState('prov-bars', 'Sin datos de provisiones', 'No existen registros con los filtros actuales.', 'savings');
-          if (provTable) provTable.innerHTML = '<tr><td colspan="8" class="px-6 py-10"><div class="empty-state rounded-xl p-6 text-center text-sm text-slate-500">Sin registros para mostrar en provisiones.</div></td></tr>';
+          if (provTable) provTable.innerHTML = '<tr><td colspan="8" class="px-6 py-10 text-center text-sm text-slate-500">Sin registros para mostrar en provisiones.</td></tr>';
           return;
         }
 
-        // KPIs
-        const d13 = employees.reduce((sum, e) => sum + (e.decimo_13 || 0), 0);
-        const d14 = employees.reduce((sum, e) => sum + (e.decimo_14 || 0), 0);
-        const vac = employees.reduce((sum, e) => sum + (e.vacaciones_prov || 0), 0);
-        const fondos = employees.reduce((sum, e) => sum + (e.fondos_reserva || 0), 0);
-        const iessP = employees.reduce((sum, e) => sum + (e.iess_patronal || 0), 0);
-        const total = d13 + d14 + vac + fondos + iessP;
-        
-        document.getElementById('prov-total').textContent = formatCurrency(total, currency);
-        document.getElementById('prov-d13').textContent = formatCurrency(d13, currency);
-        document.getElementById('prov-d14').textContent = formatCurrency(d14, currency);
-        document.getElementById('prov-vac').textContent = formatCurrency(vac, currency);
-        document.getElementById('prov-iess').textContent = formatCurrency(iessP, currency);
-        
-        // Agrupar datos por período
-        const periodoData = {};
-        (employees || []).forEach(e => {
-          const periodo = e.periodo || 'Sin período';
-          if (!periodoData[periodo]) {
-            periodoData[periodo] = { decimo_13: 0, decimo_14: 0, vacaciones_prov: 0, fondos_reserva: 0, iess_patronal: 0, total: 0 };
-          }
-          periodoData[periodo].decimo_13 += (e.decimo_13 || 0);
-          periodoData[periodo].decimo_14 += (e.decimo_14 || 0);
-          periodoData[periodo].vacaciones_prov += (e.vacaciones_prov || 0);
-          periodoData[periodo].fondos_reserva += (e.fondos_reserva || 0);
-          periodoData[periodo].iess_patronal += (e.iess_patronal || 0);
-          periodoData[periodo].total += (e.decimo_13 || 0) + (e.decimo_14 || 0) + (e.vacaciones_prov || 0) + (e.fondos_reserva || 0) + (e.iess_patronal || 0);
-        });
+        // ── KPIs originales ───────────────────────────────────────────────
+        const d13   = employees.reduce((s, e) => s + (e.decimo_13      || 0), 0);
+        const d14   = employees.reduce((s, e) => s + (e.decimo_14      || 0), 0); // ya es C+S
+        const vac   = employees.reduce((s, e) => s + (e.vacaciones_prov|| 0), 0);
+        const fond  = employees.reduce((s, e) => s + (e.fondos_reserva || 0), 0);
+        const iessP = employees.reduce((s, e) => s + (e.iess_patronal  || 0), 0);
+        const total = d13 + d14 + vac + fond + iessP;
 
-        // Proyección del 13er sueldo para diciembre
-        const periodosCount = Object.keys(periodoData).length || [...new Set((employees || []).map(e => e.periodo))].filter(Boolean).length || 1;
-        const d13Monthly = d13 / periodosCount;
-        const d13Projected = d13Monthly * 12;
-        const now13 = new Date();
-        const monthsLeft = Math.max(0, 11 - now13.getMonth() + (now13.getDate() <= 24 ? 1 : 0));
-        if (document.getElementById('prov-d13-monthly')) document.getElementById('prov-d13-monthly').textContent = formatCurrency(d13Monthly, currency);
-        if (document.getElementById('prov-d13-projected')) document.getElementById('prov-d13-projected').textContent = formatCurrency(d13Projected, currency);
-        if (document.getElementById('prov-d13-months-left')) document.getElementById('prov-d13-months-left').textContent = String(monthsLeft);
-        
-        // Ordenar períodos cronológicamente
-        const sortedPeriodos = Object.keys(periodoData).sort();
-        
-        // Line Chart por período
-        const ctx = document.getElementById('scatter-chart');
-        if (scatterChart) scatterChart.destroy();
-        
-        scatterChart = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: sortedPeriodos,
-            datasets: [
-              {
-                label: 'Total',
-                data: sortedPeriodos.map(p => periodoData[p].total),
-                borderColor: '#13a4ec',
-                backgroundColor: 'rgba(19, 164, 236, 0.1)',
-                fill: true,
-                tension: 0.3,
-                borderWidth: 3,
-                pointRadius: 6,
-                pointHoverRadius: 10
-              },
-              {
-                label: 'D13',
-                data: sortedPeriodos.map(p => periodoData[p].decimo_13),
-                borderColor: '#f59e0b',
-                backgroundColor: 'transparent',
-                borderWidth: 2,
-                tension: 0.3,
-                pointRadius: 4,
-                pointHoverRadius: 8
-              },
-              {
-                label: 'D14',
-                data: sortedPeriodos.map(p => periodoData[p].decimo_14),
-                borderColor: '#6366f1',
-                backgroundColor: 'transparent',
-                borderWidth: 2,
-                tension: 0.3,
-                pointRadius: 4,
-                pointHoverRadius: 8
-              },
-              {
-                label: 'Vacaciones',
-                data: sortedPeriodos.map(p => periodoData[p].vacaciones_prov),
-                borderColor: '#10b981',
-                backgroundColor: 'transparent',
-                borderWidth: 2,
-                tension: 0.3,
-                pointRadius: 4,
-                pointHoverRadius: 8
-              },
-              {
-                label: 'Fondos Reserva',
-                data: sortedPeriodos.map(p => periodoData[p].fondos_reserva),
-                borderColor: '#8b5cf6',
-                backgroundColor: 'transparent',
-                borderWidth: 2,
-                tension: 0.3,
-                pointRadius: 4,
-                pointHoverRadius: 8
-              },
-              {
-                label: 'IESS Patronal',
-                data: sortedPeriodos.map(p => periodoData[p].iess_patronal),
-                borderColor: '#ef4444',
-                backgroundColor: 'transparent',
-                borderWidth: 2,
-                tension: 0.3,
-                pointRadius: 4,
-                pointHoverRadius: 8
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-              mode: 'index',
-              intersect: false
-            },
-            plugins: {
-              tooltip: {
-                callbacks: {
-                  label: (ctx) => `${ctx.dataset.label}: ${formatCurrency(ctx.raw, currency)}`
-                }
-              },
-              legend: {
-                position: 'bottom',
-                labels: { usePointStyle: true, padding: 15 }
-              }
-            },
-            scales: {
-              x: { 
-                title: { display: true, text: 'Período' },
-                grid: { display: false }
-              },
-              y: { 
-                title: { display: true, text: 'Monto ($)' },
-                beginAtZero: true
+        document.getElementById('prov-total').textContent = formatCurrency(total, currency);
+        document.getElementById('prov-d13').textContent   = formatCurrency(d13,   currency);
+        document.getElementById('prov-d14').textContent   = formatCurrency(d14,   currency);
+        document.getElementById('prov-vac').textContent   = formatCurrency(vac,   currency);
+        document.getElementById('prov-iess').textContent  = formatCurrency(iessP, currency);
+
+        // ── Agrupar por período ───────────────────────────────────────────
+        const byPeriodo = {};
+        employees.forEach(e => {
+          const p = e.periodo || 'Sin período';
+          if (!byPeriodo[p]) byPeriodo[p] = {
+            decimo_13: 0, decimo_14: 0, vacaciones_prov: 0, fondos_reserva: 0, iess_patronal: 0,
+            d13: 0, d14c: 0, d14s: 0, d13m: 0, d14mc: 0, d14ms: 0, total: 0
+          };
+          byPeriodo[p].decimo_13      += (e.decimo_13      || 0);
+          byPeriodo[p].decimo_14      += (e.decimo_14      || 0);
+          byPeriodo[p].vacaciones_prov+= (e.vacaciones_prov|| 0);
+          byPeriodo[p].fondos_reserva += (e.fondos_reserva || 0);
+          byPeriodo[p].iess_patronal  += (e.iess_patronal  || 0);
+          byPeriodo[p].d14c           += (e.decimo_14_c    || 0);
+          byPeriodo[p].d14s           += (e.decimo_14_s    || 0);
+          byPeriodo[p].d13m           += (e.d13_mens       || 0);
+          byPeriodo[p].d14mc          += (e.d14_mens_cos   || 0);
+          byPeriodo[p].d14ms          += (e.d14_mens_sie   || 0);
+          byPeriodo[p].total += (e.decimo_13||0)+(e.decimo_14||0)+(e.vacaciones_prov||0)+(e.fondos_reserva||0)+(e.iess_patronal||0);
+        });
+        const sortedP = Object.keys(byPeriodo).sort();
+
+        // ── Gráfico: Evolución de provisiones ────────────────────────────
+        // Si hay período filtrado, intentar ampliar datos desde inicio del año
+        let scatterByPeriodo = byPeriodo;
+        let scatterSortedP   = sortedP;
+        if (filters.periodo && sortedP.length <= 1) {
+          const year = filters.periodo.split('-')[0];
+          const cacheKey = `tablero_cache_all_${year}`;
+          try {
+            const raw = localStorage.getItem(cacheKey);
+            if (raw) {
+              const yearEmployees = (JSON.parse(raw).data?.employees || []).filter(e => e.periodo <= filters.periodo);
+              if (yearEmployees.length > 0) {
+                const ybp = {};
+                yearEmployees.forEach(e => {
+                  const p = e.periodo || 'Sin período';
+                  if (!ybp[p]) ybp[p] = { decimo_13:0, decimo_14:0, vacaciones_prov:0, fondos_reserva:0, iess_patronal:0, total:0 };
+                  ybp[p].decimo_13      += (e.decimo_13      || 0);
+                  ybp[p].decimo_14      += (e.decimo_14      || 0);
+                  ybp[p].vacaciones_prov+= (e.vacaciones_prov|| 0);
+                  ybp[p].fondos_reserva += (e.fondos_reserva || 0);
+                  ybp[p].iess_patronal  += (e.iess_patronal  || 0);
+                  ybp[p].total += (e.decimo_13||0)+(e.decimo_14||0)+(e.vacaciones_prov||0)+(e.fondos_reserva||0)+(e.iess_patronal||0);
+                });
+                scatterByPeriodo = ybp;
+                scatterSortedP   = Object.keys(ybp).sort();
               }
             }
+          } catch(_) {}
+        }
+        const ctx = document.getElementById('scatter-chart');
+        if (scatterChart) scatterChart.destroy();
+        if (ctx) {
+          scatterChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: scatterSortedP,
+              datasets: [
+                { label: 'Total',         data: scatterSortedP.map(p => scatterByPeriodo[p].total),           borderColor: '#13a4ec', backgroundColor: 'rgba(19,164,236,0.1)', fill: true, tension: 0.3, borderWidth: 3, pointRadius: 6 },
+                { label: 'D13',           data: scatterSortedP.map(p => scatterByPeriodo[p].decimo_13),        borderColor: CLR_D13,   backgroundColor: 'transparent', borderWidth: 2, tension: 0.3, pointRadius: 4 },
+                { label: 'D14',           data: scatterSortedP.map(p => scatterByPeriodo[p].decimo_14),        borderColor: CLR_D14S,  backgroundColor: 'transparent', borderWidth: 2, tension: 0.3, pointRadius: 4 },
+                { label: 'Vacaciones',    data: scatterSortedP.map(p => scatterByPeriodo[p].vacaciones_prov),  borderColor: '#10b981', backgroundColor: 'transparent', borderWidth: 2, tension: 0.3, pointRadius: 4 },
+                { label: 'Fondos Res.',   data: scatterSortedP.map(p => scatterByPeriodo[p].fondos_reserva),   borderColor: '#8b5cf6', backgroundColor: 'transparent', borderWidth: 2, tension: 0.3, pointRadius: 4 },
+                { label: 'IESS Patronal', data: scatterSortedP.map(p => scatterByPeriodo[p].iess_patronal),    borderColor: '#ef4444', backgroundColor: 'transparent', borderWidth: 2, tension: 0.3, pointRadius: 4 },
+              ]
+            },
+            options: {
+              responsive: true, maintainAspectRatio: false,
+              interaction: { mode: 'index', intersect: false },
+              plugins: {
+                tooltip: { callbacks: { label: c => `${c.dataset.label}: ${formatCurrency(c.raw, currency)}` } },
+                legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15 } }
+              },
+              scales: {
+                x: { title: { display: true, text: 'Período' }, grid: { display: false } },
+                y: { title: { display: true, text: 'Monto ($)' }, beginAtZero: true }
+              }
+            }
+          });
+        }
+
+        // ── Gráfico original: Barras de desglose ─────────────────────────
+        const provBars = document.getElementById('prov-bars');
+        if (provBars) {
+          provBars.innerHTML = '';
+          const breakdown = [
+            { label: 'D13', value: d13 }, { label: 'D14', value: d14 },
+            { label: 'Vacaciones', value: vac }, { label: 'Fondos Res.', value: fond }, { label: 'IESS Pat.', value: iessP }
+          ];
+          const maxV = Math.max(...breakdown.map(b => b.value));
+          const colors = ['#f59e0b','#6366f1','#10b981','#8b5cf6','#ef4444'];
+          breakdown.forEach((item, i) => {
+            const h = maxV > 0 ? (item.value / maxV) * 100 : 0;
+            const w = document.createElement('div');
+            w.className = 'flex flex-col items-center flex-1 gap-2';
+            w.innerHTML = `<div class="w-full bg-slate-100 rounded-t-lg relative" style="height:180px"><div class="absolute bottom-0 w-full rounded-t-lg" style="height:${h}%;background:${colors[i]}"></div></div><span class="text-xs font-medium text-slate-600">${item.label}</span><span class="text-xs font-bold" style="color:${colors[i]}">${formatCurrency(item.value, currency)}</span>`;
+            provBars.appendChild(w);
+          });
+        }
+
+        // ── Gráfico multi-modo: Costo Total / Provisión / Pago por Décimo ─
+        // Paleta: provisión = color sólido, pago = mismo color con 55% opacidad
+        const _decimosDatasets = {
+          // Total (sin botón): DECIMO 13 + D14 Sierra + D14 Costa (provisiones)
+          total: [
+            { label: 'Décimo 13',       data: sortedP.map(p => byPeriodo[p].decimo_13), backgroundColor: CLR_D13,  borderRadius: 6 },
+            { label: 'Décimo 14 Sierra',data: sortedP.map(p => byPeriodo[p].d14s),      backgroundColor: CLR_D14S, borderRadius: 6 },
+            { label: 'Décimo 14 Costa', data: sortedP.map(p => byPeriodo[p].d14c),      backgroundColor: CLR_D14C, borderRadius: 6 },
+          ],
+          // Provisión mensual: mismas 3 series de provisión, vista explícita
+          prov: [
+            { label: 'DECIMO 13',   data: sortedP.map(p => byPeriodo[p].decimo_13), backgroundColor: CLR_D13,  borderRadius: 6 },
+            { label: 'DECIMO 14 S', data: sortedP.map(p => byPeriodo[p].d14s),      backgroundColor: CLR_D14S, borderRadius: 6 },
+            { label: 'DECIMO 14 C', data: sortedP.map(p => byPeriodo[p].d14c),      backgroundColor: CLR_D14C, borderRadius: 6 },
+          ],
+        };
+        // Función reutilizable para construir / actualizar el gráfico
+        const _chartDecimosOpts = (currency) => ({
+          responsive: true, maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            tooltip: { callbacks: { label: c => `${c.dataset.label}: ${formatCurrency(c.raw, currency)}` } },
+            legend: { position: 'bottom', labels: { usePointStyle: true, padding: 12, font: { size: 11 } } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+            y: { beginAtZero: true, ticks: { callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0)+'K' : v) } }
           }
         });
-        
-        // Barras de provisiones
-        const provBars = document.getElementById('prov-bars');
-        provBars.innerHTML = '';
-        
-        const breakdown = [
-          { label: "D13", value: d13 },
-          { label: "D14", value: d14 },
-          { label: "Vacaciones", value: vac },
-          { label: "Fondos Res.", value: fondos },
-          { label: "IESS Pat.", value: iessP }
-        ];
-        
-        const maxValue = Math.max(...breakdown.map(b => b.value));
-        const colors = ["#f59e0b", "#6366f1", "#10b981", "#8b5cf6", "#ef4444"];
-        
-        breakdown.forEach((item, index) => {
-          const heightPercent = maxValue > 0 ? (item.value / maxValue) * 100 : 0;
-          const wrapper = document.createElement("div");
-          wrapper.className = "flex flex-col items-center flex-1 gap-2";
-          wrapper.innerHTML = `
-            <div class="w-full bg-slate-100 rounded-t-lg relative" style="height: 180px;">
-              <div class="absolute bottom-0 w-full rounded-t-lg transition-all" style="height: ${heightPercent}%; background: ${colors[index]};"></div>
-            </div>
-            <span class="text-xs font-medium text-slate-600">${item.label}</span>
-            <span class="text-xs font-bold" style="color: ${colors[index]}">${formatCurrency(item.value, currency)}</span>
-          `;
-          provBars.appendChild(wrapper);
-        });
-        
-        // Tabla de provisiones
-        const provTable = document.getElementById('prov-table');
-        provTable.innerHTML = '';
-        
-        employees.forEach(e => {
-          const row = document.createElement('tr');
-          const empTotal = (e.decimo_13 || 0) + (e.decimo_14 || 0) + (e.vacaciones_prov || 0) + (e.fondos_reserva || 0) + (e.iess_patronal || 0);
-          row.innerHTML = `
-            <td class="px-6 py-4 text-sm font-medium">${e.nombre}</td>
-            <td class="px-6 py-4 text-sm">${e.periodo || "—"}</td>
-            <td class="px-6 py-4 text-sm text-right">${formatCurrency(e.decimo_13, currency)}</td>
-            <td class="px-6 py-4 text-sm text-right">${formatCurrency(e.decimo_14, currency)}</td>
-            <td class="px-6 py-4 text-sm text-right">${formatCurrency(e.vacaciones_prov, currency)}</td>
-            <td class="px-6 py-4 text-sm text-right">${formatCurrency(e.fondos_reserva, currency)}</td>
-            <td class="px-6 py-4 text-sm text-right">${formatCurrency(e.iess_patronal, currency)}</td>
-            <td class="px-6 py-4 text-sm text-right font-bold">${formatCurrency(empTotal, currency)}</td>
-          `;
-          provTable.appendChild(row);
-        });
+        const ctxCosto = document.getElementById('chart-costo-decimos');
+        if (chartCostoDecimos) { chartCostoDecimos.destroy(); chartCostoDecimos = null; }
+        if (ctxCosto) {
+          chartCostoDecimos = new Chart(ctxCosto, {
+            type: 'bar',
+            data: { labels: sortedP, datasets: _decimosDatasets[_decimosMode] },
+            options: _chartDecimosOpts(currency),
+          });
+        }
+        // Guardar closure para reconstruir el gráfico al cambiar modo
+        window._buildCostoDecimosChart = () => {
+          if (!chartCostoDecimos) return;
+          chartCostoDecimos.data.datasets = _decimosDatasets[_decimosMode];
+          chartCostoDecimos.update();
+        };
+
+        // ── Proyección inteligente (render inicial con tipo activo) ───────
+        _renderProyeccion(_projTypeActive, employees, currency);
+
+        // ── Tabla ─────────────────────────────────────────────────────────
+        if (provTable) {
+          provTable.innerHTML = '';
+          employees.forEach(e => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td class="px-4 py-3 text-sm font-medium">${e.nombre}</td>
+              <td class="px-4 py-3 text-sm text-slate-500">${e.periodo || '—'}</td>
+              <td class="px-4 py-3 text-sm text-right">${formatCurrency(e.decimo_13    || 0, currency)}</td>
+              <td class="px-4 py-3 text-sm text-right">${formatCurrency(e.decimo_14_c  || 0, currency)}</td>
+              <td class="px-4 py-3 text-sm text-right">${formatCurrency(e.decimo_14_s  || 0, currency)}</td>
+              <td class="px-4 py-3 text-sm text-right text-rose-600 font-medium">${formatCurrency(e.d13_mens     || 0, currency)}</td>
+              <td class="px-4 py-3 text-sm text-right text-sky-600  font-medium">${formatCurrency(e.d14_mens_cos || 0, currency)}</td>
+              <td class="px-4 py-3 text-sm text-right text-teal-600 font-medium">${formatCurrency(e.d14_mens_sie || 0, currency)}</td>
+            `;
+            provTable.appendChild(row);
+          });
+        }
       };
 
       // PÁGINA: ANÁLISIS IESS
@@ -3430,41 +3954,43 @@
         if (!employees.length) {
           const iessBars = document.getElementById('iess-bars');
           const iessTable = document.getElementById('iess-table');
-          document.getElementById('iess-total').textContent = '$0';
-          document.getElementById('iess-personal').textContent = '$0';
-          document.getElementById('iess-patronal').textContent = '$0';
-          document.getElementById('iess-fondos').textContent = '$0';
+          ['iess-total','iess-personal','iess-patronal','iess-fondos','iess-seg-tp'].forEach(id => {
+            const el = document.getElementById(id); if (el) el.textContent = '$0';
+          });
           if (iessBars) renderEmptyState('iess-bars', 'Sin datos IESS', 'No se detectaron aportes para el filtro aplicado.', 'account_balance');
           if (iessTable) iessTable.innerHTML = '<tr><td colspan="8" class="px-6 py-10"><div class="empty-state rounded-xl p-6 text-center text-sm text-slate-500">Sin registros IESS para mostrar.</div></td></tr>';
           return;
         }
 
-        const iessPersonal = employees.reduce((sum, e) => sum + (e.iess_personal || 0), 0);
-        const iessPatronal = employees.reduce((sum, e) => sum + (e.iess_patronal || 0), 0);
-        const fondosReserva = employees.reduce((sum, e) => sum + (e.fondos_reserva || 0), 0);
-        const prHipotecario = employees.reduce((sum, e) => sum + (e.pr_h_iess || 0), 0);
-        const prQuirografario = employees.reduce((sum, e) => sum + (e.pr_q_iess || 0), 0);
-        const totalIESS = iessPersonal + iessPatronal;
-        
-        document.getElementById('iess-total').textContent = formatCurrency(totalIESS, currency);
+        const iessPersonal    = employees.reduce((sum, e) => sum + (e.iess_personal     || 0), 0);
+        const iessPatronal    = employees.reduce((sum, e) => sum + (e.iess_patronal     || 0), 0);
+        const fondosReserva   = employees.reduce((sum, e) => sum + (e.fondos_reserva    || 0), 0);
+        const prHipotecario   = employees.reduce((sum, e) => sum + (e.pr_h_iess        || 0), 0);
+        const prQuirografario = employees.reduce((sum, e) => sum + (e.pr_q_iess        || 0), 0);
+        const segTP           = employees.reduce((sum, e) => sum + (e.seg_tiempo_parcial|| 0), 0);
+        const totalIESS = iessPersonal + iessPatronal + segTP;
+
+        document.getElementById('iess-total').textContent    = formatCurrency(totalIESS,   currency);
         document.getElementById('iess-personal').textContent = formatCurrency(iessPersonal, currency);
         document.getElementById('iess-patronal').textContent = formatCurrency(iessPatronal, currency);
-        document.getElementById('iess-fondos').textContent = formatCurrency(fondosReserva, currency);
+        document.getElementById('iess-fondos').textContent   = formatCurrency(fondosReserva,currency);
+        document.getElementById('iess-seg-tp').textContent   = formatCurrency(segTP,        currency);
         
         // Barras de IESS
         const iessBars = document.getElementById('iess-bars');
         iessBars.innerHTML = '';
         
         const breakdown = [
-          { label: "IESS Personal", value: iessPersonal },
-          { label: "IESS Patronal", value: iessPatronal },
-          { label: "Pr. Hipotecario", value: prHipotecario },
-          { label: "Pr. Quirografario", value: prQuirografario },
-          { label: "Fondos Reserva", value: fondosReserva }
+          { label: "IESS Personal",    value: iessPersonal },
+          { label: "IESS Patronal",    value: iessPatronal },
+          { label: "Seg. T. Parcial",  value: segTP },
+          { label: "Pr. Hipotecario",  value: prHipotecario },
+          { label: "Pr. Quirografario",value: prQuirografario },
+          { label: "Fondos Reserva",   value: fondosReserva }
         ];
-        
+
         const maxValue = Math.max(...breakdown.map(b => Math.abs(b.value)));
-        const colors = ["#ef4444", "#6366f1", "#f59e0b", "#10b981", "#13a4ec"];
+        const colors = ["#ef4444", "#6366f1", "#14b8a6", "#f59e0b", "#10b981", "#13a4ec"];
 
         breakdown.forEach((item, index) => {
           const absValue = Math.abs(item.value);
@@ -3532,12 +4058,13 @@
         iessTable.innerHTML = '';
         
         employees.forEach(e => {
-          const empTotal = (e.iess_personal || 0) + (e.iess_patronal || 0) + (e.pr_h_iess || 0) + (e.pr_q_iess || 0);
+          const empTotal = (e.iess_personal || 0) + (e.iess_patronal || 0) + (e.pr_h_iess || 0) + (e.pr_q_iess || 0) + (e.seg_tiempo_parcial || 0);
           const row = document.createElement('tr');
           row.innerHTML = `
             <td class="px-6 py-4 text-sm font-medium">${e.nombre}</td>
             <td class="px-6 py-4 text-sm">${e.periodo || "—"}</td>
             <td class="px-6 py-4 text-sm text-right text-rose-500">${formatCurrency(e.iess_personal, currency)}</td>
+            <td class="px-6 py-4 text-sm text-right text-teal-600">${formatCurrency(e.seg_tiempo_parcial || 0, currency)}</td>
             <td class="px-6 py-4 text-sm text-right">${formatCurrency(e.pr_h_iess, currency)}</td>
             <td class="px-6 py-4 text-sm text-right">${formatCurrency(e.pr_q_iess, currency)}</td>
             <td class="px-6 py-4 text-sm text-right text-indigo-500">${formatCurrency(e.iess_patronal, currency)}</td>
@@ -3918,6 +4445,31 @@
       });
 
       document.getElementById('export-pdf')?.addEventListener('click', exportExecutivePdf);
+
+      // Modo Gerencial: muestra/oculta el bloque analítico avanzado
+      const gerencialBtn = document.getElementById('gerencial-mode-btn');
+      const gerencialPanels = [
+        document.getElementById('insights-strip'),
+        document.getElementById('alerts-strip'),
+        document.getElementById('proactive-insights'),
+        document.getElementById('advanced-suite'),
+      ].filter(Boolean);
+      let gerencialActivo = false;
+
+      const setGerencialStyle = (activo) => {
+        gerencialBtn.classList.toggle('bg-indigo-600', activo);
+        gerencialBtn.classList.toggle('text-white', activo);
+        gerencialBtn.classList.toggle('border-indigo-600', activo);
+        gerencialBtn.classList.toggle('bg-white', !activo);
+        gerencialBtn.classList.toggle('text-slate-700', !activo);
+        gerencialBtn.classList.toggle('border-slate-200', !activo);
+      };
+
+      gerencialBtn?.addEventListener('click', () => {
+        gerencialActivo = !gerencialActivo;
+        gerencialPanels.forEach(el => el.classList.toggle('hidden', !gerencialActivo));
+        setGerencialStyle(gerencialActivo);
+      });
 
       document.getElementById('drilldown-close')?.addEventListener('click', closeDrilldown);
       document.getElementById('drilldown-overlay')?.addEventListener('click', closeDrilldown);

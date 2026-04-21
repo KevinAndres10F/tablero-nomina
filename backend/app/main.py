@@ -29,6 +29,9 @@ def _get_data_service():
     elif source == "supabase":
         from app.services import supabase_service
         return supabase_service
+    elif source == "excel":
+        from app.services import excel_service
+        return excel_service
     return google_sheets_service
 
 app.add_middleware(
