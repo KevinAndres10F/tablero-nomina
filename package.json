@@ -6,7 +6,6 @@
     "build:data": "node scripts/build_nomina_data.js"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.21.0",
     "xlsx": "^0.18.5"
   }
 }

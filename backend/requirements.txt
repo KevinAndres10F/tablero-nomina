@@ -1,9 +1,4 @@
 fastapi==0.115.5
 uvicorn[standard]==0.30.6
-google-cloud-bigquery==3.25.0
-google-api-python-client==2.165.0
-google-auth==2.38.0
-google-auth-oauthlib==1.2.1
 python-dotenv==1.0.1
-supabase==2.13.0
 openpyxl==3.1.5
